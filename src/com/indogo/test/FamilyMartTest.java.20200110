@@ -47,7 +47,7 @@ public class FamilyMartTest {
 					.append("<OL_Code_1>060106KK1</OL_Code_1>")
 					.append("<OL_Code_2>002040A7265G8594</OL_Code_2>")
 					.append("<OL_Code_3>195900000002150</OL_Code_3>")
-					.append("<STORE_DESC>Â´ÃºÂ¸Ã•Â©Â±</STORE_DESC>")
+					.append("<STORE_DESC>´ú¸Õ©±</STORE_DESC>")
 					.append("<STATUS>S</STATUS>")
 					.append("<DESC></DESC>")
 				.append("</AP>")
@@ -116,25 +116,25 @@ public class FamilyMartTest {
 		try {
 			String url = "http://test.familynet.com.tw/pin/webec.asmx";
 			
-			String m_taxID = "27294437";       //Â±zÂªÂºÂ²ÃÂ½s
-			String m_termino = "KK1ZKK1";     //Â¼tÂ°Ã“Â¥NÂ½X+Â¥NÂ¦Â¬Â¥NÂ¸Â¹(Â¦@7Â½X)
-			String m_date = "20161217";        //Â¤Ã©Â´Ã YYYYMMDD
-			String m_time = "100430";      //Â®Ã‰Â¶Â¡ HHMMSS
-			String m_orderNo = "20161217000001";     //Â±zÂªÂºÂ­qÂ³Ã¦Â½sÂ¸Â¹
-			String m_amount = "5000";      //ÂªÃ·ÃƒB
+			String m_taxID = "27294437";       //±zªº²Î½s
+			String m_termino = "KK1ZKK1";     //¼t°Ó¥N½X+¥N¦¬¥N¸¹(¦@7½X)
+			String m_date = "20161217";        //¤é´Á YYYYMMDD
+			String m_time = "100430";      //®É¶¡ HHMMSS
+			String m_orderNo = "20161217000001";     //±zªº­q³æ½s¸¹
+			String m_amount = "5000";      //ª÷ÃB
 			String m_pinCode = "";    //PIN Code
-			String m_endDate = "20161218";     //ÃƒÂºÂ´ÃšÂºIÂ¤Ã®Â¤Ã©Â´Ã YYYYMMDD
-			String m_endTime = "235959";     //ÃƒÂºÂ´ÃšÂºIÂ¤Ã®Â®Ã‰Â¶Â¡ HHMMSS
-			String m_payType = "cash";     //ÃƒÂºÂ´ÃšÃƒÃ¾Â§O
-			String m_prdDesc = "remit";    //Â°Ã“Â«~Ã‚Â²Â­z
-			String m_payCompany = "IndoGO"; //Â¥IÂ´ÃšÂ¼tÂ°Ã“
-			String m_tradeType = "1";     //1:Â­nÂ¸Â¹, 3:Â¤GÂ¦Â¸Â¦CÂ¦L
-			String m_desc1 = "yosua baru";      //Â³Ã†ÂµÃ¹1
-			String m_desc2 = "Bank Code: 009";      //Â³Ã†ÂµÃ¹2
-			String m_desc3 = "Bank Name: BNI";      //Â³Ã†ÂµÃ¹3
-			String m_desc4 = "Acc: baru";      //Â³Ã†ÂµÃ¹4
-			String m_accountNo = "indogotest";  //Â±zÂªÂºÂ±bÂ¸Â¹
-			String m_password = "2qd3rf4g5j";   //Â±zÂªÂºÂ±KÂ½X
+			String m_endDate = "20161218";     //Ãº´ÚºI¤î¤é´Á YYYYMMDD
+			String m_endTime = "235959";     //Ãº´ÚºI¤î®É¶¡ HHMMSS
+			String m_payType = "cash";     //Ãº´ÚÃş§O
+			String m_prdDesc = "remit";    //°Ó«~Â²­z
+			String m_payCompany = "IndoGO"; //¥I´Ú¼t°Ó
+			String m_tradeType = "1";     //1:­n¸¹, 3:¤G¦¸¦C¦L
+			String m_desc1 = "yosua baru";      //³Æµù1
+			String m_desc2 = "Bank Code: 009";      //³Æµù2
+			String m_desc3 = "Bank Name: BNI";      //³Æµù3
+			String m_desc4 = "Acc: baru";      //³Æµù4
+			String m_accountNo = "indogotest";  //±zªº±b¸¹
+			String m_password = "2qd3rf4g5j";   //±zªº±K½X
 
 			StringBuilder sb = new StringBuilder(100);
 			sb.append("<?xml version='1.0' encoding='UTF-8'?>");
