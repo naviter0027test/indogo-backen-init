@@ -1,0 +1,1297 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category">Shop</td>
+			<td id="QUERY_SHOP"></td>
+		</tr>
+		<tr>
+			<td class="category">
+				<select class="lm_time_type">
+					<option value="lm_time_created" selected>Create Time</option>
+					<option value="lm_time_checkout">Checkout Time</option>
+					<option value="lm_time_shipped">Shipped Time</option>
+					<option value="lm_time_paid">Paid Time</option>
+					<option value="lm_time_returned">Returned Time</option>
+					<option value="lm_time_scrapped">Scrapped Time</option>
+				</select>
+			</td>
+			<td><input type="text" class="start_date"/> <select class="start_hour"></select>:<select class="start_min"></select>:<select class="start_sec"></select> to <input type="text" class="end_date"/> <select class="end_hour"></select>:<select class="end_min"></select>:<select class="end_sec"></select></td>
+		</tr>
+		<tr>
+			<td class="category">Status</td>
+			<td>
+				<input type="checkbox" class="status_id" value="1" id="STATUS_ID_1" checked/><label for="STATUS_ID_1">Created</label>
+				<input type="checkbox" class="status_id" value="2" id="STATUS_ID_2"/><label for="STATUS_ID_2">Checkout</label>
+				<input type="checkbox" class="status_id" value="3" id="STATUS_ID_3"/><label for="STATUS_ID_3">Shipped</label>
+				<input type="checkbox" class="status_id" value="4" id="STATUS_ID_4"/><label for="STATUS_ID_4">Paid</label>
+				<input type="checkbox" class="status_id" value="5" id="STATUS_ID_5"/><label for="STATUS_ID_5">Returned</label>
+				<input type="checkbox" class="status_id" value="6" id="STATUS_ID_6"/><label for="STATUS_ID_6">Scrapped</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Print Status</td>
+			<td>
+				<select class="is_print">
+					<option value="" selected></option>
+					<option value="0">Not yet printed</option>
+					<option value="1">Printed</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Shipping Type</td>
+			<td>
+				<input type="checkbox" class="freight_id" value="1" id="FREIGHT_ID_1"/><label for="FREIGHT_ID_1">黑貓</label>
+				<input type="checkbox" class="freight_id" value="2" id="FREIGHT_ID_2"/><label for="FREIGHT_ID_2">cash</label>
+				<input type="checkbox" class="freight_id" value="3" id="FREIGHT_ID_3"/><label for="FREIGHT_ID_3">郵局</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Customer Name</td>
+			<td><input type="text" class="member_name"/></td>
+		</tr>
+		<tr>
+			<td class="category">Customer Telp</td>
+			<td><input type="text" class="phone_no"/></td>
+		</tr>
+		<tr>
+			<td class="category">Product Name</td>
+			<td><input type="text" class="item_desc"/></td>
+		</tr>
+		<tr>
+			<td class="category">Sales Id</td>
+			<td><textarea class="sales_id" style="width: 380px; height: 90px;"></textarea></td>
+		</tr>
+		<tr>
+			<td class="category">Shipping Number</td>
+			<td><input type="text" class="ship_no"/></td>
+		</tr>
+		<tr>
+			<td class="category">Comment</td>
+			<td><input type="text" class="comment"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<table id="QUERY_SALES_ITEM" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="close">Close</button></td>
+		</tr>
+	</table>
+	<table id="TABLE_SALES_ITEM">
+	</table>
+</div>
+
+<div id="AREA3">
+	<form id="F">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Outlet</td>
+					<td><input type="text" class="shop_name" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">App Login Id</td>
+					<td><input type="text" class="member_login_id uppercase" name="member_login_id" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Member Name</td>
+					<td><input type="text" class="member_name uppercase" name="member_name" value="" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Phone No</td>
+					<td>
+						<input type="text" class="phone_no_1" value=""/><br/>
+						<input type="text" class="phone_no_2" value=""/><br/>
+						<input type="text" class="phone_no_3" value=""/>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Member Point</td>
+					<td><input type="text" class="remit_point" value="" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Shipping Address</td>
+					<td>
+						<table id="ADDRESS" class="winbond-table" style="margin-top: 4px;">
+							<thead>
+								<tr>
+									<td align="center">縣市</td>
+									<td align="center">鄉鎮市區</td>
+									<td align="center">道路或街名</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="even">
+									<td align="center"><select class="city reset"></select></td>
+									<td align="center"><select class="area empty"></select></td>
+									<td align="center"><select class="road empty"></select></td>
+								</tr>
+								<tr class="even">
+									<td align="center" colspan="3">
+										<input style="width: 25px" type="text" class="neighbor data reset"/> 鄰 <input style="width: 25px" type="text" class="lane data reset"/> 巷 <input style="width: 25px" type="text" class="alley data reset"/> 弄 <input style="width: 25px" type="text" class="no1 data reset"/> 號之 <input style="width: 25px" type="text" class="no2 data reset"/> <input style="width: 25px" type="text" class="floor1 data reset"/> 樓之 <input style="width: 25px" type="text" class="floor2 data reset"/> <input style="width: 25px" type="text" class="room data reset"/> 室
+									</td>
+								</tr>
+								<tr class="even">
+									<td colspan="3">
+										<button type="button" id="SET_ADDRESS">Set</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div style="margin-bottom: 4px; margin-top: 8px;"><input type="text" class="ship_address" name="ship_address" value=""/></div>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Items</td>
+					<td>
+						<table id="ITEM_LIST_ADD" class="query" style="margin-bottom: 10px; margin-top: 10px;">
+							<tr>
+								<td class="category">Product Name</td>
+								<td><input type="text" class="item_desc"/></td>
+							</tr>
+							<tr>
+								<td class="category">Barcode</td>
+								<td><textarea class="item_name"></textarea></td>
+							</tr>
+							<tr>
+								<td class="category"></td>
+								<td><button id="ADD_INVENTORY" type="button">add item</button> <button id="BROWSE_INVENTORY" type="button">browse item</button></td>
+							</tr>
+						</table>
+						<table id="ITEM_LIST" class="winbond-table" style="margin-bottom: 10px;">
+							<thead>
+								<tr>
+									<td><input type="checkbox" id="ITEM_LIST_CHECK_ALL"/></td>
+									<td><button type="button" id="ITEM_LIST_DELETE_CHECKED">delete_checked</button></td>
+									<td>Sales Qty</td>
+									<td>Current Qty</td>
+									<td>Price</td>
+									<td>Subtotal</td>
+									<td>Comment</td>
+									<td>Picture</td>
+									<td>Barcode</td>
+									<td>Product Name</td>
+									<td>Category</td>
+									<td>Color</td>
+									<td>Size</td>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Freight Type</td>
+					<td colspan="3">
+						<div>
+							<span class="image-radio">
+								<input type="radio" value="1" name="freight_id" class="freight_id"/>
+								<img src="ui/heimao.png" id="FREIGHT_ID_1_IMAGE"></img>
+							</span>
+							<span class="image-radio">
+								<input type="radio" value="2" name="freight_id" class="freight_id"/>
+								<img src="ui/cash.png" id="FREIGHT_ID_2_IMAGE"></img>
+							</span>
+							<span class="image-radio">
+								<input type="radio" value="3" name="freight_id" class="freight_id"/>
+								<img src="ui/post.png" id="FREIGHT_ID_3_IMAGE"></img>
+							</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Shipping Fee</td>
+					<td><input type="text" class="ship_fee" name="ship_fee" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Total</td>
+					<td><input type="text" class="total" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea class="comment" name="comment"></textarea></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Update</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+		<input type="hidden" name="sales_id" class="sales_id"/>
+		<input type="hidden" name="lm_time" class="lm_time"/>
+		<input type="hidden" class="shop_id"/>
+	</form>
+</div>
+
+<div id="AREA4">
+	<table id="QUERY_INVENTORY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category">Barcode</td>
+			<td><input type="text" class="item_name"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button> <button type="button" class="add_checked_item">Add Checked Item to List</button> <button type="button" class="close">Close</button></td>
+		</tr>
+	</table>
+	<table id="TABLE_INVENTORY">
+	</table>
+</div>
+
+<div id="DIALOG_SCRAP_COMMENT">
+	<form id="FORM_SCRAP_COMMENT">
+		<input type="hidden" name="sales_id" class="sales_id"/>
+		<input type="hidden" name="lm_time" class="lm_time"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Comment</td>
+					<td><input type="text" class="comment" name="comment"/></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_EDIT_COMMENT">
+	<form id="FORM_EDIT_COMMENT">
+		<input type="hidden" name="sales_id" class="sales_id"/>
+		<input type="hidden" name="lm_time" class="lm_time"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea class="comment" name="comment"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+
+<style type="text/css">
+#TABLE td.print {
+	text-align: center;
+}
+#F input.freight_id + img {
+	cursor: pointer;
+}
+#F input.freight_id:checked + img {
+    border: 5px solid red;
+}
+#F input.freight_id {
+	display: none
+}
+</style>
+
+<script type="text/javascript">
+var IS_POPUP_WINDOW = $.query.get('menu_row_id') == '33';
+var RELAY_ID_SALES = 'shop.sales';
+var RELAY_ID_SALES_SCRAP = 'shop.sales_scrap';
+var RELAY_ID_INVENTORY = 'shop.inventory';
+var RELAY_ID_MEMBER_CONFIG = 'member.member_config';
+var TABLE, TABLE_SALES_ITEM, TABLE_INVENTORY;
+var SHIP_FEE_HEIMAO = '150';
+var SHIP_FEE_POST = '0';
+var COPIED_ITEMS = {};
+
+$('#AREA2, #AREA3, #AREA4').hide();
+$('#QUERY input.start_date, #QUERY input.end_date').createDatePicker();
+$('#QUERY input.start_date').datepicker('setDate', moment().add(-14, 'days').toDate());
+$('#QUERY input.end_date').datepicker('setDate', new Date());
+
+var html = '';
+for (var i = 0; i <= 23; i++) {
+	html = html + '<option value="' + i + '">' + i + '</option>';
+}
+$('#QUERY select.start_hour, #QUERY select.end_hour').append(html);
+$('#QUERY select.start_hour').val('0');
+$('#QUERY select.end_hour').val('23');
+
+html = '';
+for (var i = 0; i <= 59; i++) {
+	html = html + '<option value="' + i + '">' + i + '</option>';
+}
+$('#QUERY select.start_min, #QUERY select.start_sec, #QUERY select.end_min, #QUERY select.end_sec').append(html);
+$('#QUERY select.start_min, #QUERY select.start_sec').val('0');
+$('#QUERY select.end_min, #QUERY select.end_sec').val('59');
+
+$('#F input.total').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true});
+$('#F input.phone_no_1, #F input.phone_no_2, #F input.phone_no_3').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: '', lZero: 'keep', strictDigitOnly: true});
+
+$("#F .image-radio img").click(function() {
+	var radioButton = $(this).prev();
+	radioButton.prop('checked', true);
+	
+	var freight_id = radioButton.val();
+	if (freight_id == 1) {
+		// heimao
+		$('#F input.ship_fee').val(SHIP_FEE_HEIMAO);
+	} else if (freight_id == 2) {
+		// cash
+		$('#F input.ship_fee').val('0');
+	} else if (freight_id == 3) {
+		// post
+		$('#F input.ship_fee').val(SHIP_FEE_POST);
+	}
+	
+	onCalculateTotal();
+});
+
+function onCalculateTotal() {
+	var total = $('#F input.ship_fee').val();
+	if (total.length == 0) {
+		total = 0;
+	} else {
+		total = parseInt(total, 10);
+	}
+	
+	$('#ITEM_LIST tbody tr').each(function(i, e) {
+		var row = $(e);
+		var qty = row.find('input.sales_qty').autoNumeric('get');
+		if (qty.length == 0) {
+			qty = 0;
+		} else {
+			qty = parseInt(qty, 10);
+		}
+		var price = row.find('input.sales_price').autoNumeric('get');
+		if (price.length == 0) {
+			price = 0;
+		} else {
+			price = parseInt(price, 10);
+		}
+		var discount = row.find('input.sales_discount').autoNumeric('get');
+		if (discount.length == 0) {
+			discount = 0;
+		} else {
+			discount = parseInt(discount, 10);
+		}
+		var subtotal = (qty * price) - discount;
+		
+		row.find('span.total').text(toCurrency(subtotal));
+		
+		total = total + subtotal;
+	});
+	
+	$('#F input.total').autoNumeric('set', total);
+}
+
+function onItemSelected(row) {
+	var item_id = row.find('td.item_id').text();
+	if ($('#ITEM_LIST tbody').find('input.item_id_' + item_id).length == 0) {
+		var item_image_url = row.find('td.item_image img').attr('src');
+		var item_name = row.find('td.item_name').text();
+		var item_desc = row.find('td.item_desc').text();
+		var category_name = row.find('td.category_name').text();
+		var color_name = row.find('td.color_name').text();
+		var size_name = row.find('td.size_name').text();
+		var price_sale = row.find('td.price_sale').text();
+		
+		var current_qty;
+		if (row.find('td.item_qty label').length > 0) {
+			current_qty = row.find('td.item_qty label').text();
+		} else {
+			current_qty = row.find('td.item_qty').text();
+		}
+		
+		var sales_qty = "1";
+		if (row.find('td.sales_qty').length > 0) {
+			sales_qty = row.find('td.sales_qty').text();
+		}
+		
+		var comment = "";
+		if (row.find('td.comment').length > 0) {
+			comment = row.find('td.comment').text();
+		}
+		
+		var html = '<tr class="even"><td><input type="checkbox" class="item_check"/></td><td><button type="button" class="item_delete">item_delete</button></td>';
+		html = html + '<td><input type="text" class="sales_qty" style="width: 100px;" value="' + sales_qty + '"/></td>';
+		html = html + '<td style="text-align: right">' + current_qty + '</td>';
+		html = html + '<td><input type="text" class="sales_price" style="width: 100px; display: none;"/><div><span class="sales_price" style="margin-right: 4px;"></span><button type="button" class="edit_sales_price">edit</button></div></td>';
+		html = html + '<td style="text-align: right"><span class="total">' + price_sale + '</span><input type="hidden" class="sales_discount" style="width: 100px;"/></td>';
+		html = html + '<td><input type="text" class="comment" style="width: 100px;" value="' + comment + '"/></td>';
+		html = html + '<td><img src="' + item_image_url + '"/><input type="hidden" class="item_id item_id_' + item_id + '" value="' + item_id + '"/></td>';
+		html = html + '<td>' + item_name + '</td>';
+		html = html + '<td>' + item_desc + '</td>';
+		html = html + '<td>' + category_name + '</td>';
+		html = html + '<td>' + color_name + '</td>';
+		html = html + '<td>' + size_name + '</td>';
+		html = html + '</tr>';
+		
+		var newRow = $(html);
+		newRow.find('button.item_delete').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+			$(this).parent().parent().remove();
+			onCalculateTotal();
+		});
+		
+		newRow.find('input.sales_qty, input.sales_discount').change(onCalculateTotal).autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true});
+		newRow.find('input.sales_qty').incrementOnEnter();
+		
+		newRow.find('input.sales_price').change(onCalculateTotal).autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true}).autoNumeric('set', price_sale.replace(/,/g, ''));
+		newRow.find('span.sales_price').text(price_sale);
+		newRow.find('button.edit_sales_price').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+			var cell = $(this).parent().parent();
+			cell.children('div').hide();
+			cell.children('input.sales_price').show();
+		});
+		
+		if (COPIED_ITEMS[item_id] !== undefined) {
+			var copied_item = COPIED_ITEMS[item_id];
+			newRow.find('input.sales_qty').autoNumeric('set', copied_item.sales_qty);
+			newRow.find('input.sales_discount').autoNumeric('set', copied_item.sales_discount);
+			newRow.find('input.comment').val(copied_item.comment);
+		}
+		
+		$('#ITEM_LIST tbody').append(newRow);
+		
+		onCalculateTotal();
+	}
+};
+
+function onShipAddressChanged() {
+	var address = $('#F input.ship_address').val();
+	if (address.includes('金門') || address.includes('澎湖') || address.includes('連江')) {
+		$('#FREIGHT_ID_3_IMAGE').click();
+	}
+};
+
+$('#F input.ship_address').change(onShipAddressChanged);
+
+$('#DIALOG_SCRAP_COMMENT').dialog({
+	modal: true,
+	width: 600,
+	autoOpen: false,
+	buttons: {
+		'Scrap': function() {
+			$('#FORM_SCRAP_COMMENT').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_SALES_SCRAP,
+					'action': 'delete'
+				}, success: function(data) {
+					var tokens = data.split(char_31);
+					
+					var lm_time = tokens.shift();
+					var lm_user = tokens.shift();
+					var status_name = tokens.shift();
+					var status_id = tokens.shift();
+					
+					var row = $('#DIALOG_SCRAP_COMMENT').data('row');
+					row.filter('td.action').parent().addClass('disable-delete').addClass('disable-update').find('button.winbond-table-cell-control-box-delete').button('disable').end().find('button.winbond-table-cell-control-box-update').button('disable');
+					row.filter('td.lm_time').text(lm_time);
+					row.filter('td.lm_user').text(lm_user);
+					row.filter('td.status_name').text(status_name);
+					row.filter('td.status_id').text(status_id);
+					row.filter('td.comment').text($('#FORM_SCRAP_COMMENT input.comment').val());
+					
+					$('#DIALOG_SCRAP_COMMENT').dialog('close');
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+$('#DIALOG_EDIT_COMMENT').dialog({
+	modal: true,
+	width: 600,
+	autoOpen: false,
+	buttons: {
+		'Ok': function() {
+			$('#FORM_EDIT_COMMENT').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_SALES,
+					'action': 'update_comment'
+				}, success: function(lm_time) {
+					var row = $('#FORM_EDIT_COMMENT').data('row');
+					row.find('td.lm_time').text(lm_time);
+					row.find('td.comment span.comment').text($('#FORM_EDIT_COMMENT textarea.comment').val());
+					$('#DIALOG_EDIT_COMMENT').dialog('close');
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_SALES,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		
+		var shop_list_size = parseInt(tokens.shift(), 10);
+		var html_query_shop = '';
+		for (var i = 0; i < shop_list_size; i++) {
+			var shop_id = tokens.shift();
+			var shop_name = tokens.shift();
+			html_query_shop = html_query_shop + '<label for="QUERY_SHOP_' + shop_id + '"><input type="checkbox" value="' + shop_id + '" id="QUERY_SHOP_' + shop_id + '"/>' + shop_name + '</label> ';
+		}
+		$('#QUERY_SHOP').append(html_query_shop);
+		
+		SHIP_FEE_HEIMAO = tokens.shift();
+		SHIP_FEE_POST = tokens.shift();
+		var city = tokens.shift();
+		$('#ADDRESS select.city').empty().append('<option value="" selected="selected">請選擇縣市</option>').append(city);
+	}
+})
+
+TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.onlineshopping.Sales',
+	disableInsert: true,
+	showCheckBox: true,
+	maxRow: 50,
+	afterSetTableColumnEvent: function() {
+		var button_print = $('<button style="margin-left: 4px;">Print</button>').button().click(function() {
+			var sales_ids = [];
+			var rows = TABLE.funcGetCheckedRows();
+			for (var i = 0; i < rows.length; i++) {
+				var sales_id = rows[i].find('td.sales_id').text();
+				sales_ids.push(sales_id);
+			}
+			
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_SALES,
+					'action': 'print',
+					'sales_ids': $.join(sales_ids)
+				}, success: function(data) {
+					sendRequest.downloadPdf(data, 'N');
+					
+					for (var i = 0; i < rows.length; i++) {
+						rows[i].find('td.is_print').text('1');
+						rows[i].find('td.print').html('&#10003;');
+					}
+				}
+			});
+		});
+		
+		$('#TABLE button.export-to-excel').parent().append(button_print);
+		
+		$('#QUERY button.ok').click();
+	},
+	afterSetTableDataEvent: function(rows) {
+		rows.find('td.action').each(function(i, e) {
+			var cell = $(e);
+			var row = cell.parent();
+			var status_id = parseInt(row.find('td.status_id').text(), 10);
+			var freight_id = parseInt(row.find('td.freight_id').text(), 10);
+			
+			var button_item = $('<button type="button">show items</button>').button({icon: 'ui-icon-cart', showLabel: false}).click(function() {
+				var row = $(this).parent().parent();
+				var sales_id = row.find('td.sales_id').text();
+				
+				window.open('page.html?menu_row_id=35&sales_id=' + sales_id, 'Customer Receipt', 'width=1100,height=600');
+				
+				return false;
+			});
+			
+			cell.append(button_item);
+			
+			if (status_id == 3 && freight_id == 3) {
+				// status is shipped and freight is post
+				var button_paid = $('<button type="button" class="change_to_paid" style="margin-left: 4px;">paid</button>').button().click(function() {
+					var row = $(this).parent().parent();
+					var sales_id = row.find('td.sales_id').text();
+					var lm_time = row.find('td.lm_time').text();
+					sendRequest.relay({
+						data: {
+							'RelayId': RELAY_ID_SALES,
+							'action': 'paid',
+							'sales_id': sales_id,
+							'lm_time': lm_time
+						},
+						success: function(data) {
+							var tokens = data.split(char_31);
+							var status_name = tokens.shift();
+							var status_id = tokens.shift();
+							var lm_time = tokens.shift();
+							var lm_user = tokens.shift();
+							row.find('td.status_name').text(status_name);
+							row.find('td.status_id').text(status_id);
+							row.find('td.lm_time').text(lm_time);
+							row.find('td.lm_time_paid').text(lm_time);
+							row.find('td.lm_user').text(lm_user);
+							row.find('td.lm_user_paid').text(lm_user);
+							row.find('td.action button.change_to_paid').remove();
+						}
+					});
+					
+					return false;
+				});
+				cell.append(button_paid);
+			}
+			
+			if (status_id != 1 && status_id != 2) {
+				if (status_id == 4 && freight_id == 2) {
+					
+				} else {
+					row.addClass('disable-delete');
+				}
+			}
+			
+			if (status_id != 1) {
+				row.addClass('disable-update');
+			}
+		});
+		
+		rows.find('td.print').each(function(i, e) {
+			var cell = $(e);
+			var row = cell.parent();
+			var is_print = row.find('td.is_print').text();
+			
+			if (is_print == '1') {
+				cell.html('&#10003;');
+			}
+		});
+		
+		rows.find('td.comment').each(function(i, e) {
+			var cell = $(e);
+			var comment = cell.text();
+			
+			var button_edit_comment = $('<button type="button">edit comment</button>').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+				var row = $(this).parent().parent();
+				var sales_id = row.find('td.sales_id').text();
+				var lm_time = row.find('td.lm_time').text();
+				var comment = row.find('td.comment span.comment').text();
+				
+				$('#FORM_EDIT_COMMENT input.sales_id').val(sales_id);
+				$('#FORM_EDIT_COMMENT input.lm_time').val(lm_time);
+				$('#FORM_EDIT_COMMENT textarea.comment').val(comment);
+				$('#FORM_EDIT_COMMENT').data('row', row);
+				
+				$('#DIALOG_EDIT_COMMENT').dialog('open');
+			});
+			
+			cell.empty().append(button_edit_comment).append('<span class="comment" style="margin-left: 4px;">' + comment + '</span>');
+		});
+	},
+	executeDelete: function(row, callback) {
+		var sales_id = row.filter('.sales_id').text();
+		var lm_time = row.filter('.lm_time').text();
+		
+		$('#FORM_SCRAP_COMMENT input.sales_id').val(sales_id);
+		$('#FORM_SCRAP_COMMENT input.lm_time').val(lm_time);
+		$('#DIALOG_SCRAP_COMMENT').data('row', row);
+		$('#DIALOG_SCRAP_COMMENT').dialog('open');
+	},
+	executeUpdate: function(row, callback) {
+		var sales_id = row.filter('.sales_id').text();
+		
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_SALES,
+				'action': 'get',
+				'sales_id': sales_id
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				
+				var shop_id = tokens.shift();
+				var shop_name = tokens.shift();
+				var ship_address = tokens.shift();
+				var freight_id = tokens.shift();
+				var ship_fee = tokens.shift();
+				var point_used = tokens.shift();
+				var comment = tokens.shift();
+				var member_login_id = tokens.shift();
+				var member_name = tokens.shift();
+				var phone_no = tokens.shift();
+				var remit_point = tokens.shift();
+				var is_wait_confirm = parseInt(tokens.shift(), 10);
+				var lm_time = tokens.shift();
+				
+				$('#F').clearForm().resetForm();
+				$('#ITEM_LIST tbody').empty();
+				
+				$('#F input.shop_id').val(shop_id);
+				$('#F input.shop_name').val(shop_name);
+				$('#F input.member_login_id').val(member_login_id);
+				$('#F input.member_name').val(member_name);
+				$('#F input.lm_time').val(lm_time);
+				
+				if (is_wait_confirm == -1) {
+					$('#F input.member_login_id, #F input.member_name').attr('readonly', false);
+				} else {
+					$('#F input.member_login_id, #F input.member_name').attr('readonly', true);
+				}
+				
+				var phone_tokens = phone_no.split('.');
+				phone_tokens.shift();
+				var phone_no_1 = phone_tokens.shift();
+				if (phone_no_1 == undefined) {
+					phone_no_1 = '';
+				}
+				var phone_no_2 = phone_tokens.shift();
+				if (phone_no_2 == undefined) {
+					phone_no_2 = '';
+				}
+				var phone_no_3 = phone_tokens.shift();
+				if (phone_no_3 == undefined) {
+					phone_no_3 = '';
+				}
+				$('#F input.phone_no_1').autoNumeric('set', phone_no_1);
+				$('#F input.phone_no_2').autoNumeric('set', phone_no_2);
+				$('#F input.phone_no_3').autoNumeric('set', phone_no_3);
+				
+				$('#F input.remit_point').val(remit_point);
+				$('#F input.ship_address').val(ship_address);
+				$('#FREIGHT_ID_' + freight_id + '_IMAGE').click();
+				$('#F input.ship_fee').val(ship_fee);
+				$('#F textarea.comment').val(comment);
+				$('#F input.sales_id').val(sales_id);
+				
+				var size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < size; i++) {
+					var sales_qty = tokens.shift();
+					var item_id = tokens.shift();
+					var item_qty = tokens.shift();
+					var price_sale = tokens.shift();
+					var item_comment = tokens.shift();
+					var image_url = tokens.shift();
+					var item_name = tokens.shift();
+					var item_desc = tokens.shift();
+					var category_name = tokens.shift();
+					var color_name = tokens.shift();
+					var size_name = tokens.shift();
+					
+					var html = '<tr>';
+					html += '<td class="item_id">' + item_id + '</td>';
+					html += '<td class="item_image">' + image_url + '</td>';
+					html += '<td class="item_name">' + item_name + '</td>';
+					html += '<td class="item_desc">' + item_desc + '</td>';
+					html += '<td class="category_name">' + category_name + '</td>';
+					html += '<td class="color_name">' + color_name + '</td>';
+					html += '<td class="size_name">' + size_name + '</td>';
+					html += '<td class="price_sale">' + price_sale + '</td>';
+					html += '<td class="item_qty">' + item_qty + '</td>';
+					html += '<td class="sales_qty">' + sales_qty + '</td>';
+					html += '<td class="comment">' + item_comment + '</td>';
+					html += '</tr>';
+					
+					onItemSelected($(html));
+				}
+				
+				$('#F button.ok').data('action', 'update');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA3').show();
+			}
+		});
+	}
+})[0];
+
+TABLE_SALES_ITEM = $('#TABLE_SALES_ITEM').createTable({
+	className: 'com.indogo.relay.onlineshopping.SalesItem',
+	viewMode: true,
+	disablePaging: true,
+	afterSetTableColumnEvent: function() {
+		
+	},
+	afterSetTableDataEvent: function() {
+		
+	}
+})[0];
+
+function onQuery(is_using_temp_table, lm_time_created_start, lm_time_created_end) {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	if (is_using_temp_table) {
+		sessionId = GLOBAL_SID;
+		pageId = 'sales';
+		joinSql = 'a.sales_id = b.long1';
+	}
+	
+	var shop_ids = [];
+	$('#QUERY_SHOP input:checked').each(function(i, e) {
+		shop_ids.push($(e).val());
+	});
+	if (shop_ids.length == 0) {
+		$('#QUERY_SHOP input').each(function(i, e) {
+			shop_ids.push($(e).val());
+		});
+	}
+	
+	c.push('shop_id');
+	o.push('IN');
+	v.push($.join(shop_ids, ','));
+	
+	var lm_time_type = $('#QUERY select.lm_time_type').val();
+	
+	c.push(lm_time_type);
+	o.push('BETWEEN');
+	v.push(lm_time_created_start + char_31 + lm_time_created_end);
+	
+	var status_ids = [];
+	$('#QUERY input.status_id:checked').each(function(i, e) {
+		status_ids.push($(e).val());
+	});
+	if (status_ids.length > 0) {
+		c.push('status_id');
+		o.push('IN');
+		v.push($.join(status_ids, ','));
+	}
+	
+	var is_print = $('#QUERY select.is_print').val();
+	if (is_print.length > 0) {
+		c.push('is_print');
+		o.push('=');
+		v.push(is_print);
+	}
+	
+	var freight_ids = [];
+	$('#QUERY input.freight_id:checked').each(function(i, e) {
+		freight_ids.push($(e).val());
+	});
+	if (freight_ids.length > 0) {
+		c.push('freight_id');
+		o.push('IN');
+		v.push($.join(freight_ids, ','));
+	}
+	
+	var sales_id = $('#QUERY textarea.sales_id').val();
+	if (sales_id.length > 0) {
+		var lines = sales_id.split('\n');
+		var ary = [];
+		for (var i = 0; i < lines.length; i++) {
+			lines[i] = $.trim(lines[i]);
+			if (lines[i].length > 0) {
+				ary.push(lines[i]);
+			}
+		}
+		
+		c.push('sales_id');
+		o.push('IN');
+		v.push($.join(ary, ','));
+	}
+	
+	var ship_no = $('#QUERY input.ship_no').val();
+	if (ship_no.length > 0) {
+		c.push('ship_no');
+		o.push('=');
+		v.push(ship_no);
+	}
+	
+	var comment = $('#QUERY input.comment').val();
+	if (comment.length > 0) {
+		c.push('comment');
+		o.push('LIKE');
+		v.push('%' + comment + '%');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+}
+
+$('#QUERY button.ok').button().click(function() {
+	var start_date = $('#QUERY input.start_date').val();
+	var start_hour = $('#QUERY select.start_hour').val();
+	var start_min = $('#QUERY select.start_min').val();
+	var start_sec = $('#QUERY select.start_sec').val();
+
+	var end_date = $('#QUERY input.end_date').val();
+	var end_hour = $('#QUERY select.end_hour').val();
+	var end_min = $('#QUERY select.end_min').val();
+	var end_sec = $('#QUERY select.end_sec').val();
+	
+	var lm_time_created_start = start_date + ' ' + start_hour + ':' + start_min + ':' + start_sec;
+	var lm_time_created_end = end_date + ' ' + end_hour + ':' + end_min + ':' + end_sec;
+	
+	var member_name = $('#QUERY input.member_name').val();
+	var phone_no = $('#QUERY input.phone_no').val();
+	var item_desc = $('#QUERY input.item_desc').val();
+	
+	if (member_name.length > 0 || phone_no.length > 0 || item_desc.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_SALES,
+				'action': 'sql_temp_table',
+				'lm_time_created_start': lm_time_created_start,
+				'lm_time_created_end': lm_time_created_end,
+				'member_name': member_name,
+				'phone_no': phone_no,
+				'item_desc': item_desc
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					onQuery(true, lm_time_created_start, lm_time_created_end);
+				} else {
+					TABLE.funcEmptyTableBody();
+				}
+			}
+		});
+	} else {
+		onQuery(false, lm_time_created_start, lm_time_created_end);
+	}
+});
+
+$('#QUERY_SALES_ITEM button.close').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	var callback = $(this).data('callback');
+	
+	var items = [];
+	$('#ITEM_LIST tbody tr').each(function(i, e) {
+		var row = $(e);
+		var item_id = row.find('input.item_id').val();
+		var sales_qty = row.find('input.sales_qty').autoNumeric('get');
+		if (sales_qty.length == 0) {
+			sales_qty = '0';
+		}
+		var sales_price = row.find('input.sales_price').autoNumeric('get');
+		if (sales_price.length == 0) {
+			sales_price = '0';
+		}
+		var sales_discount = row.find('input.sales_discount').autoNumeric('get');
+		if (sales_discount.length == 0) {
+			sales_discount = '0';
+		}
+		var comment = row.find('input.comment').val();
+		items.push(item_id + char_30 + sales_qty + char_30 + sales_price + char_30 + sales_discount + char_30 + comment);
+	});
+	
+	var phone_no1 = $('#F input.phone_no_1').autoNumeric('get');
+	var phone_no2 = $('#F input.phone_no_2').autoNumeric('get');
+	var phone_no3 = $('#F input.phone_no_3').autoNumeric('get');
+	var phone_no = '.' + phone_no1 + '.' + phone_no2 + '.' + phone_no3;
+	
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_SALES,
+			'action': action,
+			'items': $.join(items),
+			'phone_no': phone_no
+		}, success: function(row) {
+			callback(row);
+			$('#AREA3').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA3').hide();
+	$('#AREA1').show();
+});
+
+TABLE_INVENTORY = $('#TABLE_INVENTORY').createTable({
+	className: 'com.indogo.relay.onlineshopping.Inventory',
+	viewMode: true,
+	showCheckBox: true,
+	afterSetTableColumnEvent: function() {
+		
+	},
+	afterSetTableDataEvent: function(rows) {
+		if ($('#AREA4').is(':hidden')) {
+			rows.each(function(i, e) {
+				onItemSelected($(e));
+			});
+		}
+	}
+})[0];
+
+$('#ADD_INVENTORY').button().click(function() {
+	var shop_id = $('#F input.shop_id').val();
+	if (shop_id.length <= 0) {
+		page.showWarningDialog('shop cannot empty');
+		return false;
+	}
+	
+	var item_name = $.trim($('#ITEM_LIST_ADD textarea.item_name').val());
+	var item_desc = $('#ITEM_LIST_ADD input.item_desc').val();
+	
+	if (item_name.length > 0 || item_desc.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INVENTORY,
+				'action': 'sql_temp_table',
+				'item_name': item_name,
+				'item_desc': item_desc
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					var c = [];
+					var o = [];
+					var v = [];
+					var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+					
+					c.push('shop_id');
+					o.push('=');
+					v.push(shop_id);
+					
+					sessionId = GLOBAL_SID;
+					pageId = 'inventory';
+					joinSql = 'a.item_id = b.long1';
+					
+					TABLE_INVENTORY.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+				}
+				
+				$('#ITEM_LIST_ADD textarea.item_name').val('');
+			}
+		});
+	}
+});
+
+$('#BROWSE_INVENTORY').button().click(function() {
+	var shop_id = $('#F input.shop_id').val();
+	if (shop_id.length <= 0) {
+		page.showWarningDialog('Please select a Shop');
+		return false;
+	}
+	
+	window.open('page.html?menu_row_id=26&shop_id=' + shop_id + '&item_hide=0', 'browse_current_stock', 'width=800,height=600');
+});
+
+var queryInventory = function(joinSql) {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '';
+	
+	var shop_id = $('#F input.shop_id').val();
+	if (shop_id.length <= 0) {
+		return false;
+	}
+	
+	c.push('shop_id');
+	o.push('=');
+	v.push(shop_id);
+	
+	if (joinSql.length > 0) {
+		sessionId = GLOBAL_SID;
+		pageId = 'inventory';
+	}
+	
+	TABLE_INVENTORY.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+};
+
+$('#QUERY_INVENTORY button.ok').button().click(function() {
+	var item_name = $('#QUERY_INVENTORY input.item_name').val();
+	if (item_name.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INVENTORY,
+				'action': 'sql_temp_table',
+				'item_name': item_name
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					queryInventory('a.item_id = b.long1');
+				} else {
+					TABLE_INVENTORY.funcEmptyTableBody();
+				}
+			}
+		});
+	} else
+		queryInventory('');
+});
+
+$('#QUERY_INVENTORY button.close').button().click(function() {
+	$('#AREA4').hide();
+	$('#AREA3').show();
+});
+
+$('#QUERY_INVENTORY button.add_checked_item').button().click(function() {
+	var rows = TABLE_INVENTORY.funcGetCheckedRows();
+	for (var i = 0; i < rows.length; i++) {
+		onItemSelected(rows[i]);
+	}
+});
+
+$('#ITEM_LIST_DELETE_CHECKED').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+	$('#ITEM_LIST tbody input.item_check:checked').each(function(i, e) {
+		$(e).parent().parent().remove();
+	});
+	$('#ITEM_LIST_CHECK_ALL').prop('checked', false);
+	onCalculateTotal();
+});
+
+$('#ITEM_LIST_CHECK_ALL').change(function() {
+	var value = $(this).prop('checked');
+	$('#ITEM_LIST tbody input.item_check').prop('checked', value);
+});
+
+$('#ITEM_LIST_ADD input.item_name').keydown(function(e) {
+	if (e.which == 13) {
+		$('#ADD_INVENTORY').click();
+	}
+});
+
+funcAreaChange = function() {
+	var v = $('#ADDRESS select.city option:selected').val();
+	if (v.length == 0)
+		return;
+	
+	var tokens = v.split(String.fromCharCode(30));
+	var city = tokens[0];
+	
+	v = $('#ADDRESS select.area option:selected').val();
+	if (v.length == 0)
+		return;
+	
+	tokens = v.split(String.fromCharCode(31));
+	var area = tokens[0];
+	
+	sendRequest.relay({
+		data:
+		{
+			'RelayId': RELAY_ID_MEMBER_CONFIG,
+			'action': 'getAddressRoad',
+			'city': city,
+			'area': area
+		},
+		success: function(data) {
+			$('#ADDRESS select.road').empty().append(data);
+		}
+	});
+};
+
+funcClearAddress = function() {
+	$('#ADDRESS .reset').val('');
+	$('#ADDRESS .empty').empty();
+};
+
+$('#ADDRESS select.city').change(function() {
+	var v = $(this).val();
+	if (v.length == 0)
+		return;
+	
+	var tokens = v.split(String.fromCharCode(30));
+	var city = tokens[0];
+	
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER_CONFIG,
+			'action': 'getAddressArea',
+			'city': city
+		},
+		success: function(data) {
+			$('#ADDRESS select.area').empty().append(data);
+			funcAreaChange();
+		}
+	});
+});
+
+$('#ADDRESS select.area').change(funcAreaChange);
+$('#ADDRESS input.data').createNumericTextInput();
+$('#SET_ADDRESS').button().click(function() {
+	var v = $('#ADDRESS select.city option:selected').val();
+	if (v.length == 0)
+		return;
+	var tokens = v.split(String.fromCharCode(30));
+	var city_cname = tokens[0];
+	var city_ename = tokens[1];
+	
+	v = $('#ADDRESS select.area option:selected').val();
+	if (v.length == 0)
+		return;
+	tokens = v.split(String.fromCharCode(31));
+	var area_cname = tokens[0];
+	var area_ename = tokens[1];
+	
+	v = $('#ADDRESS select.road option:selected').val();
+	if (v.length == 0)
+		return;
+	tokens = v.split(String.fromCharCode(31));
+	var road_cname = tokens[0];
+	var road_ename = tokens[1];
+	var zipcode = tokens[2];
+	
+	var neighbor = $('#ADDRESS input.neighbor').val();
+	var lane = $('#ADDRESS input.lane').val();
+	var alley = $('#ADDRESS input.alley').val();
+	var no1 = $('#ADDRESS input.no1').val();
+	var no2 = $('#ADDRESS input.no2').val();
+	var floor1 = $('#ADDRESS input.floor1').val();
+	var floor2 = $('#ADDRESS input.floor2').val();
+	var room = $('#ADDRESS input.room').val();
+
+	var chinese = city_cname + area_cname + road_cname;
+	var english = road_ename + ', ' + area_ename + ', ' + city_ename + ' ' + zipcode + ', Taiwan (R.O.C.)';
+	
+	if (neighbor.length > 0) {
+		chinese += neighbor + '鄰';
+		english = 'Neighbor ' + neighbor + ', ' + english;
+	}
+	
+	if (lane.length > 0) {
+		chinese += lane + '巷';
+		english = 'Ln. ' + lane + ', ' + english;
+	}
+	
+	if (alley.length > 0) {
+		chinese += alley + '弄';
+		english = 'Aly. ' + alley + ', ' + english;
+	}
+	
+	if (no1.length > 0 && no2.length > 0) {
+		chinese += no1 + '號之' + no2;
+		english = 'No. ' + no1 + '-' + no2 + ', ' + english;
+	}
+	else if (no1.length > 0) {
+		chinese += no1 + '號';
+		english = 'No. ' + no1 + ', ' + english;
+	}
+	
+	if (floor1.length > 0 && floor2.length > 0) {
+		chinese += floor1 + '樓之' + floor2;
+		english = floor1 + 'F.-' + floor2 + ', ' + english;
+	}
+	else if (floor1.length > 0) {
+		chinese += floor1 + '樓';
+		english = floor1 + 'F., ' + english;
+	}
+	
+	if (room.length > 0) {
+		chinese += room + '室';
+		english = 'Rm. ' + room + ', ' + english;
+	}
+	
+	$('#F input.ship_address').val(chinese);
+	onShipAddressChanged();
+});
+
+if (IS_POPUP_WINDOW) {
+	var start_date = $.query.get('start_date');
+	var end_date = $.query.get('end_date');
+	var sales_id = $.query.get('sales_id');
+	var status_id = $.query.get('status_id');
+	
+	$('#QUERY input.start_date').datepicker('setDate', moment(start_date).toDate());
+	$('#QUERY input.end_date').datepicker('setDate', moment(end_date).toDate());
+	$('#QUERY textarea.sales_id').val(sales_id);
+	$('#QUERY input.status_id').prop('checked', false);
+	
+	if (status_id == '6') {
+		$('#QUERY select.lm_time_type').val('lm_time_scrapped');
+	}
+}
+
+//# sourceURL=sales.js
+</script>

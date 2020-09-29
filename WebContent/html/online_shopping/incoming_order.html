@@ -1,0 +1,306 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"><label class="shop_name">shop_name</label></td>
+			<td id="QUERY_SHOP"></td>
+		</tr>
+		<tr>
+			<td class="category"><label class="create_time">create_time</label></td>
+			<td><input type="text" class="start_time"/> ~ <input type="text" class="end_time"/></td>
+		</tr>
+		<tr>
+			<td class="category"><label class="status_name">status_name</label></td>
+			<td>
+				<input type="checkbox" class="status_id" value="1" id="STATUS_ID_1" checked="checked"/><label for="STATUS_ID_1" id="STATUS_NAME_1">created</label>
+				<input type="checkbox" class="status_id" value="2" id="STATUS_ID_2"/><label for="STATUS_ID_2" id="STATUS_NAME_2">deleted</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">發票號碼</td>
+			<td><input type="text" class="invoice_no"/></td>
+		</tr>
+		<tr>
+			<td class="category">Vendor Name</td>
+			<td><input type="text" class="vendor_name"/></td>
+		</tr>
+		<tr>
+			<td class="category">Product Name</td>
+			<td><input type="text" class="item_desc"/></td>
+		</tr>
+		<tr>
+			<td class="category">Comment</td>
+			<td><input type="text" class="comment"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<table id="QUERY_INCOMING_ORDER_ITEM" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"><label class="vendor_name">vendor_name</label></td>
+			<td><input type="text" class="vendor_name" readonly="readonly"/></td>
+		</tr>
+		<tr>
+			<td class="category"><label class="invoice_no">invoice_no</label></td>
+			<td><input type="text" class="invoice_no" readonly="readonly"/></td>
+		</tr>
+		<tr>
+			<td class="category">Total</td>
+			<td><input type="text" class="total" readonly="readonly"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="close">Close</button></td>
+		</tr>
+	</table>
+	<table id="TABLE_INCOMING_ORDER_ITEM">
+	</table>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_INCOMING_ORDER = 'shop.incoming_order';
+var TABLE, TABLE_INCOMING_ORDER_ITEM;
+
+$('#AREA2').hide();
+
+$('#QUERY input.start_time, #QUERY input.end_time').createDatePicker();
+var end_time = new Date();
+var start_time = new Date();
+start_time.setDate(end_time.getDate() - 30);
+$('#QUERY input.start_time').datepicker('setDate', start_time);
+$('#QUERY input.end_time').datepicker('setDate', end_time);
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_INCOMING_ORDER,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		var label_shop_name = tokens.shift();
+		var label_create_time = tokens.shift();
+		var label_status_name = tokens.shift();
+		var label_status_name_created = tokens.shift();
+		var label_status_name_deleted = tokens.shift();
+		var label_button_search = tokens.shift();
+		var label_button_cancel = tokens.shift();
+		var label_button_show_incoming_order_items = tokens.shift();
+		var label_button_close = tokens.shift();
+		var label_invoice_no = tokens.shift();
+		var label_vendor_name = tokens.shift();
+		
+		var shop_list_size = parseInt(tokens.shift(), 10);
+		var html_query_shop = '';
+		for (var i = 0; i < shop_list_size; i++) {
+			var shop_id = tokens.shift();
+			var shop_name = tokens.shift();
+			html_query_shop = html_query_shop + '<label for="QUERY_SHOP_' + shop_id + '"><input type="checkbox" value="' + shop_id + '" id="QUERY_SHOP_' + shop_id + '"/>' + shop_name + '</label> ';
+		}
+		
+		$('label.shop_name').text(label_shop_name);
+		$('label.create_time').text(label_create_time);
+		$('label.status_name').text(label_status_name);
+		$('#STATUS_NAME_1').text(label_status_name_created);
+		$('#STATUS_NAME_2').text(label_status_name_deleted);
+		$('#QUERY button.ok').button({label: label_button_search}).attr('title', label_button_search);
+		$('#QUERY_SHOP').append(html_query_shop);
+		$('#QUERY_INCOMING_ORDER_ITEM button.close').button({label: label_button_close}).attr('title', label_button_close);
+		$('#QUERY_INCOMING_ORDER_ITEM label.invoice_no').text(label_invoice_no);
+		$('#QUERY_INCOMING_ORDER_ITEM label.vendor_name').text(label_vendor_name);
+		
+		TABLE = $('#TABLE').createTable({
+			className: 'com.indogo.relay.onlineshopping.IncomingOrder',
+			viewMode: true,
+			afterSetTableColumnEvent: function() {
+				$('#QUERY button.ok').click();
+			},
+			afterSetTableDataEvent: function(rows) {
+				rows.find('td.action').each(function(i, e) {
+					var cell = $(e);
+					var row = cell.parent();
+					
+					var button_item = $('<button type="button">' + label_button_show_incoming_order_items + '</button>').button({icon: 'ui-icon-cart', showLabel: false}).click(function() {
+						var row = $(this).parent().parent();
+						var order_id = row.find('td.order_id').text();
+						var invoice_no = row.find('td.invoice_no').text();
+						var vendor_name = row.find('td.vendor_name').text();
+						var total = row.find('td.total').text();
+						
+						$('#QUERY_INCOMING_ORDER_ITEM input.invoice_no').val(invoice_no);
+						$('#QUERY_INCOMING_ORDER_ITEM input.vendor_name').val(vendor_name);
+						$('#QUERY_INCOMING_ORDER_ITEM input.total').val(total);
+						
+						var c = [];
+						var o = [];
+						var v = [];
+						
+						c.push('order_id');
+						o.push('=');
+						v.push(order_id);
+						
+						TABLE_INCOMING_ORDER_ITEM.searchFor(c, o, v);
+						
+						$('#AREA1').hide();
+						$('#AREA2').show();
+					});
+					cell.append(button_item);
+					
+					var status_id = row.find('td.status_id').text();
+					if (status_id == '1') {
+						var button_delete = $('<button type="button" class="delete" style="margin-left: 4px;">' + label_button_cancel + '</button>').button({icon: 'ui-icon-close', showLabel: false}).click(function() {
+							var row = $(this).parent().parent();
+							var order_id = row.find('td.order_id').text();
+							var lm_time = row.find('td.lm_time').text();
+							var lm_user = row.find('td.lm_user').text();
+							sendRequest.relay({
+								data: {
+									'RelayId': RELAY_ID_INCOMING_ORDER,
+									'action': 'delete',
+									'order_id': order_id,
+									'lm_time': lm_time,
+									'lm_user': lm_user
+								}, success: function(data) {
+									var tokens = data.split(char_31);
+									var new_lm_time = tokens.shift();
+									var new_lm_user = tokens.shift();
+									var status_id = tokens.shift();
+									var status_name = tokens.shift();
+									
+									row.find('button.delete').remove();
+									row.find('td.lm_time').text(new_lm_time);
+									row.find('td.lm_user').text(new_lm_user);
+									row.find('td.status_id').text(status_id);
+									row.find('td.status_name').text(status_name);
+								}
+							});
+						});
+						cell.append(button_delete);
+					}
+				});
+			}
+		})[0];
+		
+		TABLE_INCOMING_ORDER_ITEM = $('#TABLE_INCOMING_ORDER_ITEM').createTable({
+			className: 'com.indogo.relay.onlineshopping.IncomingOrderItem',
+			viewMode: true,
+			disablePaging: true,
+			afterSetTableColumnEvent: function() {
+				
+			},
+			afterSetTableDataEvent: function() {
+				
+			}
+		})[0];
+	}
+});
+
+function onQuery(is_using_temp_table) {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	if (is_using_temp_table) {
+		sessionId = GLOBAL_SID;
+		pageId = 'incoming_order';
+		joinSql = 'a.order_id = b.long1';
+	}
+	
+	var shop_ids = [];
+	$('#QUERY_SHOP input:checked').each(function(i, e) {
+		shop_ids.push($(e).val());
+	});
+	if (shop_ids.length == 0) {
+		$('#QUERY_SHOP input').each(function(i, e) {
+			shop_ids.push($(e).val());
+		});
+	}
+	
+	c.push('shop_id');
+	o.push('IN');
+	v.push($.join(shop_ids, ','));
+	
+	var start_time = $('#QUERY input.start_time').val();
+	var end_time = $('#QUERY input.end_time').val();
+	if (start_time.length > 0 && end_time.length > 0) {
+		c.push('create_time');
+		o.push('BETWEEN');
+		v.push(start_time + ' 00:00:00' + char_31 + end_time + ' 23:59:59');
+	} else if (start_time.length > 0) {
+		c.push('create_time');
+		o.push('>=');
+		v.push(start_time + ' 00:00:00');
+	} else if (end_time.length > 0) {
+		c.push('create_time');
+		o.push('<=');
+		v.push(end_time + ' 23:59:59');
+	}
+	
+	var status_ids = [];
+	$('#QUERY input.status_id:checked').each(function(i, e) {
+		status_ids.push($(e).val());
+	});
+	if (status_ids.length > 0) {
+		c.push('status_id');
+		o.push('IN');
+		v.push($.join(status_ids, ','));
+	}
+	
+	var invoice_no = $('#QUERY input.invoice_no').val();
+	if (invoice_no.length > 0) {
+		c.push('invoice_no');
+		o.push('=');
+		v.push(invoice_no);
+	}
+	
+	var comment = $('#QUERY input.comment').val();
+	if (comment.length > 0) {
+		c.push('comment');
+		o.push('LIKE');
+		v.push('%' + comment + '%');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+}
+
+$('#QUERY button.ok').button().click(function() {
+	var start_time = $('#QUERY input.start_time').val() + ' 00:00:00';
+	var end_time = $('#QUERY input.end_time').val() + ' 23:59:59';
+	var vendor_name = $('#QUERY input.vendor_name').val();
+	var item_desc = $('#QUERY input.item_desc').val();
+	
+	if (vendor_name.length > 0 || item_desc.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INCOMING_ORDER,
+				'action': 'sql_temp_table',
+				'start_time': start_time,
+				'end_time': end_time,
+				'vendor_name': vendor_name,
+				'item_desc': item_desc
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					onQuery(true);
+				} else {
+					TABLE.funcEmptyTableBody();
+				}
+			}
+		});
+	} else {
+		onQuery(false);
+	}
+});
+
+$('#QUERY_INCOMING_ORDER_ITEM button.close').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+//# sourceURL=incoming_order.js
+</script>

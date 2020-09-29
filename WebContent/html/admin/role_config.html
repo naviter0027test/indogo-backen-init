@@ -1,0 +1,275 @@
+<div id="AREA0">
+	<button type="button" id="REFRESH">Refresh</button> <button type="button" id="CREATE_NEW_ROLE">Add New Role</button> <button type="button" id="DELETE_ROLE">Delete Role</button>
+</div>
+
+<div id="AREA1">
+</div>
+
+<div id="DIALOG_CREATE_NEW_ROLE" title="Create New Role">
+	<form id="FORM_CREATE_NEW_ROLE">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Role Name</td>
+					<td><input type="text" class="role_name" name="role_name"/></td>
+				</tr>
+				<tr>
+					<td class="category">Role Description</td>
+					<td><input type="text" class="role_desc" name="role_desc"/></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_DELETE_ROLE" title="Select One Role to Delete">
+	<form id="FORM_DELETE_ROLE">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Role Name</td>
+					<td><select class="role_id" name="role_id"></select></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_ROLE_CONFIG = 'admin.role_config';
+
+var MENU_PATH = {};
+var PATH_ROW_IDS = [];
+var ROLE = {};
+var ROLE_IDS = [];
+var ROLE_MENU = {};
+
+var method = {
+	init: function() {
+		MENU_PATH = {};
+		PATH_ROW_IDS = [];
+		ROLE = {};
+		ROLE_IDS = [];
+		ROLE_MENU = {};
+		$('#AREA1').empty();
+		
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ROLE_CONFIG,
+				'action': 'init'
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				
+				var size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < size; i++) {
+					var role_id = parseInt(tokens.shift(), 10);
+					var role_name = tokens.shift();
+					var role_desc = tokens.shift();
+					ROLE[role_id] = { 'role_name': role_name, 'role_desc': role_desc };
+					ROLE_IDS.push(role_id);
+				}
+				
+				size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < size; i++) {
+					var path_row_id = parseInt(tokens.shift(), 10);
+					var path_name = tokens.shift();
+					MENU_PATH[path_row_id] = { 'path_name': path_name, 'menu': [] };
+					PATH_ROW_IDS.push(path_row_id);
+				}
+				
+				size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < size; i++) {
+					var menu_row_id = parseInt(tokens.shift(), 10);
+					var title = tokens.shift();
+					var path_row_id = parseInt(tokens.shift(), 10);
+					var display_seq = parseInt(tokens.shift(), 10);
+					
+					var m = MENU_PATH[path_row_id];
+					m.menu.push({
+						'menu_row_id': menu_row_id,
+						'title': title,
+						'display_seq': display_seq
+					});
+					MENU_PATH[path_row_id] = m;
+				}
+				
+				size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < size; i++) {
+					var role_id = parseInt(tokens.shift(), 10);
+					var menu_row_id = parseInt(tokens.shift(), 10);
+					var x = ROLE_MENU[role_id];
+					if (x == undefined) {
+						ROLE_MENU[role_id] = {};
+					}
+					ROLE_MENU[role_id][menu_row_id] = true;
+				}
+				
+				for (var i = 0; i < PATH_ROW_IDS.length; i++) {
+					var m = MENU_PATH[PATH_ROW_IDS[i]];
+					var html = '<table style="margin-top: 20px;" class="winbond-table"><thead><tr><td style="min-width: 250px;">' + m.path_name + '</td>';
+					for (var j = 0; j < ROLE_IDS.length; j++) {
+						html += '<td>' + ROLE[ROLE_IDS[j]].role_name + '</td>';
+					}
+					html += '</tr></thead><tbody>';
+					var menus = m.menu;
+					for (var j = 0; j < menus.length; j++) {
+						var menu = menus[j];
+						var class_name;
+						if (j % 2 == 0) {
+							class_name = "even";
+						} else {
+							class_name = "odd";
+						}
+						html += '<tr class="' + class_name + '"><td style="min-width: 250px;">' + menu.title + '</td>';
+						for (var k = 0; k < ROLE_IDS.length; k++) {
+							var role_id = ROLE_IDS[k];
+							var checked = "";
+							var r = ROLE_MENU[role_id];
+							if (r != undefined) {
+								if (r[menu.menu_row_id]) {
+									checked = " checked";
+								}
+							}
+							html += '<td style="text-align: center"><input type="checkbox" value="' + ROLE_IDS[k] + '" class="role_id"' + checked + '/><input type="hidden" class="menu_row_id" value="' + menu.menu_row_id + '"/></td>';
+						}
+						html += '</tr>';
+					}
+					html += '</tbody></table>';
+					
+					$('#AREA1').append(html);
+				}
+				
+				$('#AREA1').find('input.role_id').change(method.role_id_checkbox_change);
+			}
+		});
+	},
+	insert: function(role_id, menu_row_id) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ROLE_CONFIG,
+				'action': 'insert',
+				'role_id': role_id,
+				'menu_row_id': menu_row_id
+			},
+			success: function(data) {
+				
+			}
+		});
+	},
+	delete: function(role_id, menu_row_id) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ROLE_CONFIG,
+				'action': 'delete',
+				'role_id': role_id,
+				'menu_row_id': menu_row_id
+			},
+			success: function(data) {
+				
+			}
+		});
+	},
+	role_id_checkbox_change: function() {
+		var cb = $(this);
+		var role_id = cb.val();
+		var menu_row_id = cb.next().val();
+		var is_checked = cb.is(':checked');
+		console.log(role_id + ':' + menu_row_id + ':' + is_checked);
+		if (is_checked) {
+			method.insert(role_id, menu_row_id);
+		} else {
+			method.delete(role_id, menu_row_id);
+		}
+	}
+};
+
+$('#DIALOG_CREATE_NEW_ROLE').dialog({
+	modal: true,
+	width: 600,
+	autoOpen: false,
+	buttons: {
+		'Create New': function() {
+			$('#FORM_CREATE_NEW_ROLE').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_ROLE_CONFIG,
+					'action': 'create_new_role'
+				}, success: function(role_id) {
+					var role_name = $('#FORM_CREATE_NEW_ROLE input.role_name').val();
+					var role_desc = $('#FORM_CREATE_NEW_ROLE input.role_desc').val();
+					
+					ROLE[role_id] = { 'role_name': role_name, 'role_desc': role_desc };
+					ROLE_IDS.push(role_id);
+					
+					$('#AREA1 table thead tr').append('<td>' + role_name + '</td>');
+					
+					$('#AREA1 table tbody tr').each(function(i, e) {
+						var row = $(e);
+						var menu_row_id = row.find('input.menu_row_id').first().val();
+						var td = $('<td style="text-align: center"><input type="checkbox" value="' + role_id + '" class="role_id"/><input type="hidden" class="menu_row_id" value="' + menu_row_id + '"/></td>');
+						td.find('input.role_id').change(method.role_id_checkbox_change);
+						row.append(td);
+					});
+					
+					$('#DIALOG_CREATE_NEW_ROLE').dialog('close');
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+$('#CREATE_NEW_ROLE').button().click(function() {
+	$('#FORM_CREATE_NEW_ROLE').resetForm().clearForm();
+	$('#DIALOG_CREATE_NEW_ROLE').dialog('open');
+});
+
+$('#DIALOG_DELETE_ROLE').dialog({
+	modal: true,
+	width: 300,
+	autoOpen: false,
+	buttons: {
+		'Delete': function() {
+			$('#FORM_DELETE_ROLE').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_ROLE_CONFIG,
+					'action': 'delete_role'
+				}, success: function(data) {
+					var role_id = $('#FORM_DELETE_ROLE select.role_id').val();
+					
+					$('#DIALOG_DELETE_ROLE').dialog('close');
+					
+					method.init();
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+$('#DELETE_ROLE').button().click(function() {
+	$('#FORM_DELETE_ROLE').resetForm().clearForm();
+	
+	var html = '<option value=""></option>';
+	for (var i = 0; i < ROLE_IDS.length; i++) {
+		var role_id = ROLE_IDS[i];
+		var role_name = ROLE[role_id].role_name;
+		html += '<option value="' + role_id + '">' + role_name + '</option>';
+	}
+	$('#FORM_DELETE_ROLE select.role_id').empty().append(html);
+	
+	$('#DIALOG_DELETE_ROLE').dialog('open');
+});
+
+$('#REFRESH').button().click(method.init);
+
+method.init();
+
+//# sourceURL=role_config.js
+</script>

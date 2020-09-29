@@ -1,0 +1,35 @@
+table.menu-toolbar tr td {
+	padding: 5px;
+	cursor: pointer;
+}
+
+table.menu-item {
+	position: absolute;
+	border-collapse: collapse;
+	z-index: 999;
+}
+
+table.menu-item tr td {
+	padding: 5px;
+	cursor: pointer;
+	font-weight: normal;
+	min-width: 100px;
+}
+
+table.menu-item tr td.ui-state-hover, table.menu-item tr td.ui-state-default {
+	font-weight: normal;
+}
+
+table.menu-toolbar tr td.menu-toolbar-has-child {
+	padding-right: 28px;
+	background-image: url(img/asc.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+}
+
+table.menu-item tr td.menu-item-has-child {
+	padding-right: 28px;
+	background-image: url(img/east.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+}

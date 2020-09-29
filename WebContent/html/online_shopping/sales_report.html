@@ -1,0 +1,152 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category">
+				<select class="lm_time_type">
+					<option value="1">Create Time</option>
+					<option value="2" selected>Checkout Time</option>
+					<option value="3">Shipped Time</option>
+					<option value="4">Paid Time</option>
+					<option value="5">Returned Time</option>
+					<option value="6">Scrapped Time</option>
+				</select>
+			</td>
+			<td><input type="text" class="start_date"/> ~ <input type="text" class="end_date"/></td>
+		</tr>
+		<tr>
+			<td class="category">Status</td>
+			<td>
+				<input type="checkbox" class="status_id" value="1" id="STATUS_ID_1"/><label for="STATUS_ID_1">Created</label>
+				<input type="checkbox" class="status_id" value="2" id="STATUS_ID_2"/><label for="STATUS_ID_2">Checkout</label>
+				<input type="checkbox" class="status_id" value="3" id="STATUS_ID_3"/><label for="STATUS_ID_3">Shipped</label>
+				<input type="checkbox" class="status_id" value="4" id="STATUS_ID_4"/><label for="STATUS_ID_4">Paid</label>
+				<input type="checkbox" class="status_id" value="5" id="STATUS_ID_5"/><label for="STATUS_ID_5">Returned</label>
+				<input type="checkbox" class="status_id" value="6" id="STATUS_ID_6"/><label for="STATUS_ID_6">Scrapped</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category"><label class="category_name">Product Category</label></td>
+			<td id="QUERY_ITEM_CATEGORY"></td>
+		</tr>
+		<tr>
+			<td class="category">Sales Id</td>
+			<td><textarea class="sales_id" style="width: 380px; height: 90px;"></textarea></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_SALES_REPORT = 'shop.sales_report';
+var TABLE;
+
+$('#QUERY input.start_date, #QUERY input.end_date').createDatePicker();
+$('#QUERY input.start_date, #QUERY input.end_date').datepicker('setDate', new Date());
+
+var method = {
+	init: function() {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_SALES_REPORT,
+				'action': 'init'
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				var size = parseInt(tokens.shift(), 10);
+				var html = '';
+				for (var i = 0; i < size; i++) {
+					var category_id = tokens.shift();
+					var category_name = tokens.shift();
+					var item_name_prefix = tokens.shift();
+					html = html + '<label for="QUERY_ITEM_CATEGORY_' + category_id + '"><input type="checkbox" value="' + category_id + '" id="QUERY_ITEM_CATEGORY_' + category_id + '"/> ' + category_name + '</label>';
+				}
+				$('#QUERY_ITEM_CATEGORY').append(html);
+				
+				TABLE = $('#TABLE').createTable({
+					className: 'com.indogo.relay.onlineshopping.SalesReport',
+					viewMode: true,
+					maxRow: 50,
+					afterSetTableColumnEvent: function() {
+						method.query();
+					},
+					afterSetTableDataEvent: function(rows) {
+					}
+				})[0];
+			}
+		});
+	},
+	query: function() {
+		var start_time = $('#QUERY input.start_date').val() + ' 00:00:00';
+		var end_time = $('#QUERY input.end_date').val() + ' 23:59:59';
+		
+		var category_ids = [];
+		$('#QUERY_ITEM_CATEGORY input:checked').each(function(i, e) {
+			category_ids.push($(e).val());
+		});
+		
+		var status_ids = [];
+		$('#QUERY input.status_id:checked').each(function(i, e) {
+			status_ids.push($(e).val());
+		});
+
+		var sales_ids = [];
+		var sales_id = $('#QUERY textarea.sales_id').val();
+		if (sales_id.length > 0) {
+			var lines = sales_id.split('\n');
+			for (var i = 0; i < lines.length; i++) {
+				lines[i] = $.trim(lines[i]);
+				if (lines[i].length > 0) {
+					sales_ids.push(lines[i]);
+				}
+			}
+		}
+		
+		var lm_time_type = $('#QUERY select.lm_time_type').val();
+		
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_SALES_REPORT,
+				'action': 'get',
+				'start_time': start_time,
+				'end_time': end_time,
+				'category_ids': $.join(category_ids),
+				'status_ids': $.join(status_ids),
+				'sales_ids': $.join(sales_ids),
+				'lm_time_type': lm_time_type
+			},
+			success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					var c = [];
+					var o = [];
+					var v = [];
+					var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+					
+					c.push('session_id');
+					o.push('=');
+					v.push(GLOBAL_SID);
+					
+					c.push('page_id');
+					o.push('=');
+					v.push('sales_report');
+					
+					TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+				} else {
+					TABLE.funcEmptyTableBody();
+				}
+			}
+		});
+	}
+};
+
+$('#QUERY button.ok').button().click(method.query);
+
+method.init();
+
+//# sourceURL=sales_report.js
+</script>

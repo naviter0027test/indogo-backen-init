@@ -1,0 +1,89 @@
+<div id="AREA1">
+	<form id="F">
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Email Server 設定表</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Host Name / IP Address</td>
+					<td><input type="text" name="host_name" class="host_name" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Port Id</td>
+					<td><input type="text" name=smtp_port class="smtp_port" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">帳號</td>
+					<td><input type="text" name="user_name" class="user_name" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">密碼</td>
+					<td><input type="password" name="password" class="password" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">使用 TLS</td>
+					<td><input type="checkbox" name="with_tls" class="with_tls" value="true"/></td>
+				</tr>
+				<tr>
+					<td class="category">寄件者名稱</td>
+					<td><input type="text" name="mail_from" class="mail_from" value=""/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">更新</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID = 'CONFIG_EMAIL';
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID,
+		'action': 'init'
+	},
+	success: function(data) {
+		var tokens = data.split(String.fromCharCode(31));
+		$('#F .host_name').val(tokens[0]);
+		$('#F .smtp_port').val(tokens[1]);
+		$('#F .user_name').val(tokens[2]);
+		$('#F .password').val(tokens[3]);
+		if (tokens[4] == 'true') {
+			$('#F .with_tls').attr('checked', true);
+		}
+		else {
+			$('#F .with_tls').removeAttr('checked');
+		}
+		$('#F .mail_from').val(tokens[5]);
+	}
+});
+
+$('#F button.ok').button().click(function() {
+	var user_name = $('#F .user_name').val();
+	var password = $('#F .password').val();
+	if (user_name.length > 0 && password.length == 0) {
+		if (!confirm('你有輸入帳號但是沒有輸入密碼，確定要繼續做資料更新嗎？')) {
+			return;
+		}
+	}
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': 'update'
+		},
+		success: function(data) {
+			alert('success');
+		}
+	});
+});
+</script>

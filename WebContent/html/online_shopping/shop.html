@@ -1,0 +1,269 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"><label class="shop_name">shop_name</label></td>
+			<td><input type="text" class="shop_name"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="shop_id" name="shop_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category"><label class="shop_name">shop_name</label></td>
+					<td><input type="text" name="shop_name" class="shop_name"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="shop_telp">shop_telp</label></td>
+					<td><input type="text" name="shop_telp" class="shop_telp"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="shop_address">shop_address</label></td>
+					<td><input type="text" name="shop_address" class="shop_address"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="AREA3">
+	<form id="FORM_SHOP_USER">
+		<input type="hidden" class="shop_id" name="shop_id"/>
+		<input type="hidden" class="user_row_ids" name="user_row_ids"/>
+		<table id="TABLE_SHOP_USER" class="winbond-table">
+			<thead>
+				<tr>
+					<td><input type="checkbox" id="USER_ROW_ID_ALL"/></td>
+					<td class="user_name">user_name</td>
+					<td class="alias_id">alias_id</td>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_SHOP = 'shop.shop';
+var TABLE;
+$('#AREA2, #AREA3').hide();
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_SHOP,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		var label_shop_name = tokens.shift();
+		var label_shop_telp = tokens.shift();
+		var label_shop_address = tokens.shift();
+		var label_button_add_shop_user = tokens.shift();
+		
+		$('#F label.shop_name, #QUERY label.shop_name').text(label_shop_name);
+		$('#F label.shop_telp').text(label_shop_telp);
+		$('#F label.shop_address').text(label_shop_address);
+		
+		TABLE = $('#TABLE').createTable({
+			className: 'com.indogo.relay.onlineshopping.Shop',
+			disablePaging: true,
+			afterSetTableColumnEvent: function() {
+				$('#QUERY button.ok').click();
+			},
+			executeInsert: function(callback) {
+				$('#F').clearForm().resetForm();
+				$('#F button.ok').data('action', 'insert');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA2').show();
+			},
+			executeUpdate: function(row, callback) {
+				var shop_id = row.filter('.shop_id').text();
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID_SHOP,
+						'action': 'get',
+						'shop_id': shop_id
+					},
+					success: function(data) {
+						var tokens = data.split(char_31);
+						var shop_name = tokens.shift();
+						var shop_telp = tokens.shift();
+						var shop_address = tokens.shift();
+						
+						$('#F input.shop_id').val(shop_id);
+						$('#F input.shop_name').val(shop_name);
+						$('#F input.shop_telp').val(shop_telp);
+						$('#F input.shop_address').val(shop_address);
+						
+						$('#F button.ok').data('action', 'update');
+						$('#F button.ok').data('callback', callback);
+						$('#AREA1').hide();
+						$('#AREA2').show();
+					}
+				});
+			},
+			executeDelete: function(row, callback) {
+				var shop_id = row.filter('.shop_id').text();
+				var shop_name = row.filter('.shop_name').text();
+				if (confirm('are you sure to delete ' + shop_name + '?')) {
+					sendRequest.relay({
+						data: {
+							'RelayId': RELAY_ID_SHOP,
+							'action': 'delete',
+							'shop_id': shop_id
+						},
+						success: function(data) {
+							callback(data);
+						}
+					});
+				}
+			},
+			afterSetTableDataEvent: function(rows) {
+				rows.find('td.action').each(function(i, e) {
+					var cell = $(e);
+					
+					var button_add_user = $('<button type="button">' + label_button_add_shop_user + '</button>').button({icon: 'ui-icon-person', showLabel: false}).click(function() {
+						var row = $(this).parent().parent();
+						var shop_id = row.find('td.shop_id').text();
+						
+						sendRequest.relay({
+							data: {
+								'RelayId': RELAY_ID_SHOP,
+								'action': 'get_shop_user',
+								'shop_id': shop_id
+							}, success: function(data) {
+								var tokens = data.split(char_31);
+								
+								$('#FORM_SHOP_USER').clearForm().resetForm();
+								
+								var html = '';
+								var all_users_size = parseInt(tokens.shift(), 10);
+								for (var i = 0; i < all_users_size; i++) {
+									var users = tokens.shift().split(char_30);
+									var user_row_id = users[0];
+									var user_name = users[1];
+									var alias_id = users[2];
+									html = html + '<tr class="even"><td><input type="checkbox" id="USER_ROW_ID_' + user_row_id + '" class="user_row_id" value="' + user_row_id + '"/></td><td><label style="cursor: pointer;" for="USER_ROW_ID_' + user_row_id + '">' + user_name + '</label></td><td><label style="cursor: pointer;" for="USER_ROW_ID_' + user_row_id + '">' + alias_id + '</label></td></tr>\n';
+								}
+								$('#TABLE_SHOP_USER tbody').empty().append(html);
+								
+								var shop_users_size = parseInt(tokens.shift(), 10);
+								for (var i = 0; i < shop_users_size; i++) {
+									var users = tokens.shift().split(char_30);
+									var user_row_id = users[0];
+									var user_name = users[1];
+									var alias_id = users[2];
+									$('#USER_ROW_ID_' + user_row_id).prop('checked', true);
+								}
+								
+								$('#USER_ROW_ID_ALL').prop('checked', all_users_size == shop_users_size);
+								$('#FORM_SHOP_USER input.shop_id').val(shop_id);
+								$('#AREA1').hide();
+								$('#AREA3').show();
+							}
+						});
+					});
+					
+					cell.append(button_add_user);
+				});
+			}
+		})[0];
+	}
+});
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var shop_name = $('#QUERY input.shop_name').val();
+	if (shop_name.length > 0) {
+		c.push('shop_name');
+		o.push('LIKE');
+		v.push('%' + shop_name + '%');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2);
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_SHOP,
+			'action': action
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#FORM_SHOP_USER button.ok').button().click(function() {
+	var user_row_ids = [];
+	$('#TABLE_SHOP_USER input.user_row_id:checked').each(function(i, e) {
+		user_row_ids.push($(e).val());
+	});
+	$('#FORM_SHOP_USER input.user_row_ids').val($.join(user_row_ids));
+	$('#FORM_SHOP_USER').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_SHOP,
+			'action': 'set_shop_user'
+		}, success: function(data) {
+			$('#AREA3').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#FORM_SHOP_USER button.cancel').button().click(function() {
+	$('#AREA3').hide();
+	$('#AREA1').show();
+});
+
+$('#USER_ROW_ID_ALL').change(function() {
+	var is_checked = $(this).prop('checked');
+	$('#TABLE_SHOP_USER input.user_row_id').prop('checked', is_checked);
+});
+
+//# sourceURL=shop.js
+</script>

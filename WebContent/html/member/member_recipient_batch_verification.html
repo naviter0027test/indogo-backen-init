@@ -1,0 +1,111 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category">Time</td>
+			<td><input type="text" class="start_date"/> ~ <input type="text" class="end_date"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<style type="text/css">
+#TABLE tbody tr.has_error td {
+	color: white;
+	background-color: red;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_MEMBER_RECIPIENT_BATCH_VERIFICATION = 'member.recipient_batch_verification';
+var RELAY_ID_MEMBER_CONFIG = 'member.member_config';
+var VERIFY_LIST = [];
+
+$('#QUERY input.start_date, #QUERY input.end_date').createDatePicker();
+$('#QUERY input.start_date, #QUERY input.end_date').datepicker('setDate', new Date());
+
+function doVerify() {
+	if (VERIFY_LIST.length > 0) {
+		var v = VERIFY_LIST.shift();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_MEMBER_CONFIG,
+				'action': 'verify_recipient',
+				'member_id': v.member_id,
+				'recipient_id': v.recipient_id,
+				'auto_update_name': '0'
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				var count = parseInt(tokens.shift(), 10);
+				if (count == 0) {
+					v.row.addClass('has_error');
+				} else {
+					v.row.remove();
+				}
+				setTimeout(doVerify, 1);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown, code, errmsg, errstack) {
+				v.row.addClass('has_error');
+				setTimeout(doVerify, 1);
+			}
+		});
+	}
+}
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.member.MemberRecipientBatchVerification',
+	viewMode: true,
+	showCheckBox: true,
+	disablePaging: true,
+	afterSetTableColumnEvent: function() {
+		var button_verify = $('<button type="button">Verify</button>').button().click(function() {
+			VERIFY_LIST = [];
+			TABLE.funcGetTableBody().find('td.winbond-table-cell-control-box input.winbond-table-cell-control-box-check:checked').each(function(i, e) {
+				var row = $(e).parent().parent();
+				var member_id = row.find('td.member_id').text();
+				var recipient_id = row.find('td.recipient_id').text();
+				VERIFY_LIST.push({
+					'member_id': member_id,
+					'recipient_id': recipient_id,
+					'row': row
+				});
+			});
+			if (VERIFY_LIST.length == 0) {
+				return false;
+			}
+			
+			doVerify();
+		});
+		
+		$('#TABLE button.export-to-excel').after(button_verify);
+		
+		$('#QUERY button.ok').click();
+	},
+	afterSetTableDataEvent: function(rows) {
+		
+	}
+})[0];
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	var start_date = $('#QUERY input.start_date').val();
+	var end_date = $('#QUERY input.end_date').val();
+	
+	c.push('lm_time');
+	o.push('BETWEEN');
+	v.push(start_date + ' 00:00:00' + char_31 + end_date + ' 23:59:59');
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+});
+
+//# sourceURL=member_recipient_batch_verification.js
+</script>

@@ -1,0 +1,287 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category">Create Time</td>
+			<td><input type="text" class="start_time"/> ~ <input type="text" class="end_time"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE"></table>
+</div>
+
+<div id="AREA2" style="display: none;">
+	<form id="F">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Excel File</td>
+					<td><input type="file" name="upload"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Upload</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+	<form id="FORM_EXCHANGE_INSERT" style="margin-top: 20px;">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">USD to NTD Rate</td>
+					<td><input type="text" class="kurs_usd"/></td>
+				</tr>
+				<tr>
+					<td class="category">USD to IDR Rate</td>
+					<td><input type="text" class="kurs_idr"/></td>
+				</tr>
+				<tr>
+					<td class="category">Real Rate</td>
+					<td><input type="text" class="kurs_value"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Preview</button>
+						<button class="submit" type="button">Submit</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+	<table id="TABLE_REVIEW" class="winbond-table" style="margin-top: 20px;">
+		<thead>
+			<tr>
+				<td>廠商訂單編號</td>
+				<td>Status</td>
+				<td>Transfer NTD</td>
+				<td>Rate</td>
+				<td>Transfer Rupiah</td>
+				<td>New Rate</td>
+				<td>New Transfer Rupiah</td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+
+<div id="AREA3">
+	<table id="QUERY_EXCHANGE_ITEM" class="query">
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="close">Close</button></td>
+		</tr>
+	</table>
+	<table id="TABLE_EXCHANGE_ITEM"></table>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_EXCHANGE = 'member.exchange';
+
+$('#AREA2, #AREA3').hide();
+$('#FORM_EXCHANGE_INSERT input.kurs_usd, #FORM_EXCHANGE_INSERT input.kurs_idr, #FORM_EXCHANGE_INSERT input.kurs_value').autoNumeric('init');
+$('#QUERY input.start_time, #QUERY input.end_time').createDatePicker();
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.member.Exchange',
+	viewMode: true,
+	afterSetTableColumnEvent: function() {
+		var btnUpload = $('<button type="button" style="margin-left: 4px;">Upload New Data</button>').button().click(function() {
+			$('#AREA1').hide();
+			$('#AREA2').show();
+			$('#FORM_EXCHANGE_INSERT input').val('');
+			method.exchangeGet();
+		});
+		$('#TABLE button.export-to-excel').parent().append(btnUpload);
+		
+		$('#QUERY button.ok').click();
+	},
+	afterSetTableDataEvent: function(rows) {
+		rows.find('td.action').each(function(i, e) {
+			var cell = $(e);
+			
+			var btn_query_item = $('<button type="button">show list</button>').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+				var row = $(this).parent().parent();
+				var exchange_id = row.find('td.exchange_id').text();
+				
+				var c = [];
+				var o = [];
+				var v = [];
+				var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+				
+				c.push('exchange_id');
+				o.push('=');
+				v.push(exchange_id);
+				
+				TABLE_EXCHANGE_ITEM.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+				$('#AREA3').show();
+				$('#AREA1').hide();
+			});
+			
+			cell.append(btn_query_item);
+		});
+	}
+})[0];
+
+var TABLE_EXCHANGE_ITEM = $('#TABLE_EXCHANGE_ITEM').createTable({
+	className: 'com.indogo.relay.member.ExchangeItem',
+	viewMode: true,
+	afterSetTableColumnEvent: function() {
+	}
+})[0];
+
+var method = {
+	exchangeGet: function() {
+		var kurs_value = $('#FORM_EXCHANGE_INSERT input.kurs_value').autoNumeric('get');
+		
+		$('#TABLE_REVIEW tbody').empty();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_EXCHANGE,
+				'action': 'get',
+				'kurs_value': kurs_value
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				
+				var html = '';
+				var rows_size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < rows_size; i++) {
+					var txn_id = tokens.shift();
+					var status_id = tokens.shift();
+					var status_name = tokens.shift();
+					var amount_ntd = tokens.shift();
+					var kurs_value = tokens.shift();
+					var amount_idr = tokens.shift();
+					var new_kurs_value = tokens.shift();
+					var new_amount_idr = tokens.shift();
+					
+					html = html + '<tr class="even">' +
+					'<td><span class="txn_id">' + txn_id + '</span></td>' +
+					'<td><span class="status_name">' + status_name + '</span><input type="hidden" class="status_id" value="' + status_id + '"/></td>' +
+					'<td style="text-align: right;"><span class="amount_ntd">' + amount_ntd + '</span></td>' +
+					'<td style="text-align: right;"><span class="kurs_value">' + kurs_value + '</span></td>' +
+					'<td style="text-align: right;"><span class="amount_idr">' + amount_idr + '</span></td>' +
+					'<td style="text-align: right;"><span class="new_kurs_value">' + new_kurs_value + '</span></td>' +
+					'<td style="text-align: right;"><span class="new_amount_idr">' + new_amount_idr + '</span></td>' +
+					'</tr>\n';
+				}
+				
+				var total_ntd = tokens.shift();
+				var total_idr = tokens.shift();
+				var total_idr_new = tokens.shift();
+				
+				html = '<tr class="even"><td colspan="2" style="text-align: right; font-weight: bold;">Total</td><td style="text-align: right; font-weight: bold;">' + total_ntd + '</td><td></td><td style="text-align: right; font-weight: bold;">' + total_idr + '</td><td></td><td style="text-align: right; font-weight: bold;">' + total_idr_new + '</td></tr>\n' + html;
+				
+				$('#TABLE_REVIEW tbody').append(html);
+			}
+		});
+	},
+	upload: function() {
+		$('#F').formSubmit({
+			data: {
+				'F': 'Relay',
+				'RelayId': RELAY_ID_EXCHANGE,
+				'action': 'upload'
+			}, success: function(data) {
+				$('#F').clearForm().resetForm();
+				
+				var insert_count = parseInt(data, 10);
+				if (insert_count > 0) {
+					method.exchangeGet();
+				} else {
+					$('#TABLE_REVIEW tbody').empty();
+				}
+			}
+		});
+	},
+	submit: function() {
+		var kurs_usd = $('#FORM_EXCHANGE_INSERT input.kurs_usd').autoNumeric('get');
+		var kurs_idr = $('#FORM_EXCHANGE_INSERT input.kurs_idr').autoNumeric('get');
+		var kurs_value = $('#FORM_EXCHANGE_INSERT input.kurs_value').autoNumeric('get');
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_EXCHANGE,
+				'action': 'update',
+				'kurs_usd': kurs_usd,
+				'kurs_idr': kurs_idr,
+				'kurs_value': kurs_value
+			},
+			success: function(row) {
+				$('#AREA2').hide();
+				$('#AREA1').show();
+				
+				TABLE.funcInsertRow(row);
+			}
+		});
+	},
+	query: function() {
+		var c = [];
+		var o = [];
+		var v = [];
+		var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+		
+		var start_time = $('#QUERY input.start_time').val();
+		var end_time = $('#QUERY input.end_time').val();
+		if (start_time.length > 0 && end_time.length > 0) {
+			c.push('lm_time_created');
+			o.push('BETWEEN');
+			v.push(start_time + ' 00:00:00' + char_31 + end_time + ' 23:59:59');
+		} else if (start_time.length > 0) {
+			c.push('lm_time_created');
+			o.push('>=');
+			v.push(start_time + ' 00:00:00');
+		} else if (end_time.length > 0) {
+			c.push('lm_time_created');
+			o.push('<=');
+			v.push(end_time + ' 23:59:59');
+		}
+		
+		TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+	},
+	calculateRealKurs: function() {
+		var kurs_usd = $('#FORM_EXCHANGE_INSERT input.kurs_usd').autoNumeric('get');
+		var kurs_idr = $('#FORM_EXCHANGE_INSERT input.kurs_idr').autoNumeric('get');
+		
+		kurs_usd = parseFloat(kurs_usd);
+		kurs_idr = parseFloat(kurs_idr);
+		var kurs_value = kurs_idr / kurs_usd;
+		$('#FORM_EXCHANGE_INSERT input.kurs_value').autoNumeric('set', kurs_value);
+	}
+};
+
+$('#QUERY button.ok').button().click(method.query);
+
+$('#F button.ok').button().click(method.upload);
+$('#FORM_EXCHANGE_INSERT button.ok').button().click(method.exchangeGet);
+$('#FORM_EXCHANGE_INSERT button.submit').button({
+	classes: {
+		'ui-button': 'ui-state-error ui-corner-all'
+	}
+}).click(method.submit);
+$('#F button.cancel, #FORM_EXCHANGE_INSERT button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#QUERY_EXCHANGE_ITEM button.close').button().click(function() {
+	$('#AREA3').hide();
+	$('#AREA1').show();
+});
+
+$('#FORM_EXCHANGE_INSERT input.kurs_usd, #FORM_EXCHANGE_INSERT input.kurs_idr').change(method.calculateRealKurs);
+
+//# sourceURL=exchange.js
+</script>

@@ -1,0 +1,136 @@
+<div id="AREA0">
+	<button type="button" id="REFRESH">Refresh</button>
+</div>
+
+<div id="AREA1">
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_TABLEPAGE_CONFIG = 'admin.table_page_config';
+var ROLE = {};
+var ROLE_IDS = [];
+var TABLE_PAGE = {};
+var TABLE_PAGE_IDS = [];
+var ROLE_TABLE_PAGE = {};
+
+var method = {
+	init: function() {
+		$('#AREA1').empty();
+		ROLE = {};
+		ROLE_IDS = [];
+		TABLE_PAGE = {};
+		TABLE_PAGE_IDS = [];
+		ROLE_TABLE_PAGE = {};
+		
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_TABLEPAGE_CONFIG,
+				'action': 'init'
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				
+				var size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < size; i++) {
+					var role_id = parseInt(tokens.shift(), 10);
+					var role_name = tokens.shift();
+					var role_desc = tokens.shift();
+					ROLE[role_id] = { 'role_name': role_name, 'role_desc': role_desc };
+					ROLE_IDS.push(role_id);
+				}
+				
+				size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < size; i++) {
+					var table_page_id = parseInt(tokens.shift(), 10);
+					var table_name = tokens.shift();
+					TABLE_PAGE[table_page_id] = { 'table_name': table_name };
+					TABLE_PAGE_IDS.push(table_page_id);
+				}
+				
+				size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < size; i++) {
+					var role_id = parseInt(tokens.shift(), 10);
+					var table_page_id = parseInt(tokens.shift(), 10);
+					var allow_export = parseInt(tokens.shift(), 10);
+					
+					var x = ROLE_TABLE_PAGE[role_id];
+					if (x == undefined) {
+						ROLE_TABLE_PAGE[role_id] = {};
+					}
+					ROLE_TABLE_PAGE[role_id][table_page_id] = { 'allow_export': allow_export };
+				}
+				
+				var html = '<table style="margin-top: 20px;" class="winbond-table"><thead><tr><td>Table Page</td>';
+				for (var i = 0; i < ROLE_IDS.length; i++) {
+					var role_id = ROLE_IDS[i];
+					html += '<td>' + ROLE[role_id].role_name + '</td>';
+				}
+				html += '</tr></thead><tbody>';
+				
+				for (var i = 0; i < TABLE_PAGE_IDS.length; i++) {
+					var class_name;
+					if (i % 2 == 0) {
+						class_name = "even";
+					} else {
+						class_name = "odd";
+					}
+					
+					var table_page_id = TABLE_PAGE_IDS[i];
+					var table_name = TABLE_PAGE[table_page_id].table_name;
+					
+					html += '<tr class="' + class_name + '"><td>' + table_name + '</td>';
+					for (var j = 0; j < ROLE_IDS.length; j++) {
+						var role_id = ROLE_IDS[j];
+						var is_allowed = '';
+						
+						if (ROLE_TABLE_PAGE[role_id] != undefined) {
+							var x = ROLE_TABLE_PAGE[role_id];
+							if (x[table_page_id] != undefined) {
+								is_allowed = x[table_page_id].allow_export == 1;
+							}
+						}
+						
+						html += '<td style="text-align: center"><input type="checkbox" class="role_id" value="' + role_id + '"';
+						if (is_allowed) {
+							html += ' checked';
+						}
+						html += '/><input type="hidden" class="table_page_id" value="' + table_page_id + '"/></td>';
+					}
+					html += '</tr>';
+				}
+				
+				html += '</tbody></table>';
+				
+				$('#AREA1').append(html).find('input.role_id').change(method.role_id_checkbox_change);
+			}
+		});
+	},
+	role_id_checkbox_change: function() {
+		var cb = $(this);
+		var role_id = cb.val();
+		var table_page_id = cb.next().val();
+		var allow_export = cb.is(':checked') ? 1 : 0;
+		method.update_allow_export(role_id, table_page_id, allow_export);
+	},
+	update_allow_export: function(role_id, table_page_id, allow_export) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_TABLEPAGE_CONFIG,
+				'action': 'update_allow_export',
+				'role_id': role_id,
+				'table_page_id': table_page_id,
+				'allow_export': allow_export
+			},
+			success: function(data) {
+				
+			}
+		});
+	}
+};
+
+$('#REFRESH').button().click(method.init);
+
+method.init();
+
+//# sourceURL=role_config.js
+</script>

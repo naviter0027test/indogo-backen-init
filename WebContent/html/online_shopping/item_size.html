@@ -1,0 +1,112 @@
+<div id="AREA1">
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="size_id" name="size_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category"><label class="size_name">Size Name</label></td>
+					<td><input type="text" name="size_name" class="size_name"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_ITEM_SIZE = 'shop.item_size';
+$('#AREA2').hide();
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_ITEM_SIZE,
+		'action': 'init'
+	}, success: function(data) {
+		$('label.size_name').text(data);
+	}
+});
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.onlineshopping.ItemSize',
+	disablePaging: true,
+	executeInsert: function(callback) {
+		$('#F').clearForm().resetForm();
+		$('#F button.ok').data('action', 'insert');
+		$('#F button.ok').data('callback', callback);
+		$('#AREA1').hide();
+		$('#AREA2').show();
+	},
+	executeUpdate: function(row, callback) {
+		var size_id = row.filter('.size_id').text();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ITEM_SIZE,
+				'action': 'get',
+				'size_id': size_id
+			},
+			success: function(size_name) {
+				$('#F input.size_id').val(size_id);
+				$('#F input.size_name').val(size_name);
+				
+				$('#F button.ok').data('action', 'update');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA2').show();
+			}
+		});
+	},
+	executeDelete: function(row, callback) {
+		var size_id = row.filter('.size_id').text();
+		var size_name = row.filter('.size_name').text();
+		if (confirm('are you sure to delete ' + size_name + '?')) {
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_ITEM_SIZE,
+					'action': 'delete',
+					'size_id': size_id
+				},
+				success: function(data) {
+					callback(data);
+				}
+			});
+		}
+	}
+})[0];
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_ITEM_SIZE,
+			'action': action
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+//# sourceURL=item_size.js
+</script>

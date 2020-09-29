@@ -1,0 +1,121 @@
+<div id="AREA1">
+	<table class="winbond-table" id="TABLE" border="0" cellpadding="0" cellspacing="1">
+		<thead>
+			<tr>
+				<td>Group</td>
+				<td>Name</td>
+				<td>Value</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+
+<div id="DIALOG_PASSWORD" title="Password">
+	<table class="maintenance" id="TABLE_PASSWORD">
+		<tbody>
+			<tr>
+				<td class="category">Password</td>
+				<td><input type="password" class="password"/></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<script type="text/javascript">
+
+var RELAY_ID_GLOBAL_CONFIG = 'admin.global_config';
+var RELAY_ID_MONEY_TRANSFER_BRI = 'member.money_transfer_bri';
+var char_30 = String.fromCharCode(30);
+var char_31 = String.fromCharCode(31);
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_GLOBAL_CONFIG,
+		'action': 'init'
+	}, success: function(data) {
+		var rows = data.split(char_30);
+		var html = '';
+		var j = 1;
+		var previousGroupName = '';
+		for (var i = 0; i < rows.length; i++) {
+			var cells = rows[i].split(char_31);
+			var group_name = cells[0];
+			var config_name = cells[1];
+			var config_value = cells[2];
+			if (previousGroupName != group_name.toUpperCase()) {
+				j = j + 1;
+				previousGroupName = group_name.toUpperCase();
+			}
+			
+			var button_label = 'Update';
+			var input_element = '<input type="text" value="' + config_value + '"/>';
+			
+			if (group_name == 'bri_h2h' && config_name == 'password') {
+				button_label = 'Modify';
+				input_element = '<label>' + config_value + '</label>';
+			}
+			
+			html = html + '<tr class="' + (j % 2 == 0 ? 'even' : 'odd') + '"><td class="group_name">' + group_name + '</td><td class="config_name">' + config_name + '</td><td class="config_value">' + input_element + '</td><td><button class="update">' + button_label + '</button></td></tr>';
+		}
+		
+		$('#TABLE tbody').append(html).find('button.update').button().click(function() {
+			var row = $(this).parent().parent();
+			var group_name = row.find('td.group_name').text();
+			var config_name = row.find('td.config_name').text();
+			
+			if (group_name == 'bri_h2h' && config_name == 'password') {
+				var label = row.find('td.config_value label');
+				$('#TABLE_PASSWORD').data('label', label);
+				$('#TABLE_PASSWORD input.password').val('');
+				$('#DIALOG_PASSWORD').dialog('open');
+			} else {
+				var config_value = row.find('td.config_value input').val();
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID_GLOBAL_CONFIG,
+						'action': 'update',
+						'group_name': group_name,
+						'config_name': config_name,
+						'config_value': config_value
+					}, success: function(data) {
+						row.find('td.config_value input').val(data);
+					}
+				});
+			}
+		});
+	}
+});
+
+$('#DIALOG_PASSWORD').dialog({
+	modal: true,
+	autoOpen: false,
+	width: 300,
+	buttons: {
+		'Ok': function() {
+			var password = $('#TABLE_PASSWORD input.password').val();
+			if (password.length == 0)
+				return;
+			
+			$(this).dialog('close');
+			
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_MONEY_TRANSFER_BRI,
+					'action': 'change_password',
+					'password': password
+				}, success: function(data) {
+					var label = $('#TABLE_PASSWORD').data('label');
+					label.text(data);
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+</script>

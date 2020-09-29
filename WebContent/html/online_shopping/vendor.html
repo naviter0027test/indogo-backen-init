@@ -1,0 +1,206 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"><label class="vendor_name">vendor_name</label></td>
+			<td><input type="text" class="vendor_name"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="vendor_id" name="vendor_id"/>
+		<input type="hidden" class="lm_time" name="lm_time"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2"><label class="vendor_maintenance_title">Vendor Configuration</label></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category"><label class="vendor_name">vendor_name</label></td>
+					<td><input type="text" name="vendor_name" class="vendor_name"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="contact_person">contact_person</label></td>
+					<td><input type="text" name="contact_person" class="contact_person"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="phone_no">phone_no</label></td>
+					<td><input type="text" name="phone_no" class="phone_no"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="fax_no">fax_no</label></td>
+					<td><input type="text" name="fax_no" class="fax_no"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="address">address</label></td>
+					<td><input type="text" name="address" class="address"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="email">email</label></td>
+					<td><input type="text" name="email" class="email"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="vendor_desc">vendor_desc</label></td>
+					<td><input type="text" name="vendor_desc" class="vendor_desc"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_VENDOR = 'shop.vendor';
+$('#AREA2').hide();
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_VENDOR,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		var vendor_name = tokens.shift();
+		var contact_person = tokens.shift();
+		var phone_no = tokens.shift();
+		var fax_no = tokens.shift();
+		var address = tokens.shift();
+		var email = tokens.shift();
+		var vendor_maintenance_title = tokens.shift();
+		var vendor_desc = tokens.shift();
+		
+		$('label.vendor_name').text(vendor_name);
+		$('label.contact_person').text(contact_person);
+		$('label.phone_no').text(phone_no);
+		$('label.fax_no').text(fax_no);
+		$('label.address').text(address);
+		$('label.email').text(email);
+		$('label.vendor_maintenance_title').text(vendor_maintenance_title);
+		$('label.vendor_desc').text(vendor_desc);
+	}
+});
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.onlineshopping.Vendor',
+	afterSetTableColumnEvent: function() {
+		$('#QUERY button.ok').click();
+	},
+	executeInsert: function(callback) {
+		$('#F').clearForm().resetForm();
+		$('#F button.ok').data('action', 'insert');
+		$('#F button.ok').data('callback', callback);
+		$('#AREA1').hide();
+		$('#AREA2').show();
+	},
+	executeUpdate: function(row, callback) {
+		var vendor_id = row.filter('.vendor_id').text();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_VENDOR,
+				'action': 'get',
+				'vendor_id': vendor_id
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				var vendor_name = tokens.shift();
+				var contact_person = tokens.shift();
+				var phone_no = tokens.shift();
+				var fax_no = tokens.shift();
+				var address = tokens.shift();
+				var email = tokens.shift();
+				var lm_time = tokens.shift();
+				var vendor_desc = tokens.shift();
+				
+				$('#F input.vendor_name').val(vendor_name);
+				$('#F input.contact_person').val(contact_person);
+				$('#F input.phone_no').val(phone_no);
+				$('#F input.fax_no').val(fax_no);
+				$('#F input.address').val(address);
+				$('#F input.email').val(email);
+				$('#F input.lm_time').val(lm_time);
+				$('#F input.vendor_id').val(vendor_id);
+				$('#F input.vendor_desc').val(vendor_desc);
+				
+				$('#F button.ok').data('action', 'update');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA2').show();
+			}
+		});
+	},
+	executeDelete: function(row, callback) {
+		var vendor_id = row.filter('.vendor_id').text();
+		var lm_time = row.filter('.lm_time').text();
+		var vendor_name = row.filter('.vendor_name').text();
+		if (confirm('are you sure to delete ' + vendor_name + '?')) {
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_VENDOR,
+					'action': 'delete',
+					'vendor_id': vendor_id,
+					'lm_time': lm_time
+				},
+				success: function(data) {
+					callback(data);
+				}
+			});
+		}
+	}
+})[0];
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var vendor_name = $('#QUERY input.vendor_name').val();
+	if (vendor_name.length > 0) {
+		c.push('vendor_name');
+		o.push('LIKE');
+		v.push('%' + vendor_name + '%');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2);
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_VENDOR,
+			'action': action
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+//# sourceURL=vendor.js
+</script>

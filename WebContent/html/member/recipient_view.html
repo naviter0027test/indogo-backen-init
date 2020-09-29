@@ -1,0 +1,424 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr class="hide_when_popup">
+			<td class="category">Member Id</td>
+			<td><input type="text" class="member_id"/></td>
+		</tr>
+		<tr>
+			<td class="category">Recipient Name</td>
+			<td><input type="text" class="recipient_name"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button> <button type="button" class="choose show_when_popup">Select It</button></td>
+		</tr>
+	</table>
+	<table id="TABLE" style="margin-top: 10px;"></table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" name="member_id" class="member_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Account No</td>
+					<td><input type="text" class="bank_acc"/></td>
+				</tr>
+				<tr>
+					<td class="category">Bank Code</td>
+					<td><select class="bank_code" name="bank_code"></select></td>
+				</tr>
+				<tr>
+					<td class="category">Bank Name</td>
+					<td><input class="bank_name" style="width: 400px;"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_UPDATE_BIRTHDAY" title="Edit Birthday">
+	<form id="FORM_UPDATE_BIRTHDAY">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Birthday</td>
+					<td><input type="text" class="birthday" name="birthday"/></td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="hidden" name="member_id" class="member_id"/>
+		<input type="hidden" name="recipient_id" class="recipient_id"/>
+	</form>
+</div>
+
+<div id="DIALOG_UPDATE_PHOTO" title="Upload ID Photo">
+	<form id="FORM_UPDATE_PHOTO">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Picture</td>
+					<td><input type="file" class="id_image" name="id_image"/></td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="hidden" name="member_id" class="member_id"/>
+		<input type="hidden" name="recipient_id" class="recipient_id"/>
+	</form>
+</div>
+
+<div id="DIALOG_UPDATE_RECIPIENT_NAME_2" title="Edit Recipient Name 2">
+	<form id="FORM_UPDATE_RECIPIENT_NAME_2">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Recipient Name 2</td>
+					<td><input type="text" class="recipient_name_2" name="recipient_name_2"/></td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="hidden" name="member_id" class="member_id"/>
+		<input type="hidden" name="recipient_id" class="recipient_id"/>
+	</form>
+</div>
+
+<script type="text/javascript">
+var IS_POPUP_WINDOW = $.query.get('menu_row_id') == '53';
+var RELAY_ID_RECIPIENT_VIEW = 'member.recipient_view';
+var RELAY_ID_MEMBER_CONFIG = 'member.member_config';
+var BANK_NAME_TO_CODE = {};
+var BANK_CODE_TO_NAME = {};
+var BANK_NAMES = [];
+var TABLE;
+
+if (IS_POPUP_WINDOW) {
+	$('.hide_when_popup').hide();
+} else {
+	$('.show_when_popup').hide();
+}
+
+$('#AREA2').hide();
+
+$('#FORM_UPDATE_BIRTHDAY input.birthday').createDatePickerWritable();
+$('#F input.bank_acc').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: '', lZero: 'keep', strictDigitOnly: true});
+
+$('#DIALOG_UPDATE_BIRTHDAY').dialog({
+	modal: true,
+	width: 350,
+	autoOpen: false,
+	buttons: {
+		'Ok': function() {
+			$('#FORM_UPDATE_BIRTHDAY').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_RECIPIENT_VIEW,
+					'action': 'update',
+					'type_name': 'birthday'
+				},
+				success: function(data) {
+					var row = $('#FORM_UPDATE_BIRTHDAY').data('row');
+					row.find('td.birthday span.birthday_value').text(data);
+					$('#DIALOG_UPDATE_BIRTHDAY').dialog('close');
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+$('#DIALOG_UPDATE_PHOTO').dialog({
+	modal: true,
+	width: 350,
+	autoOpen: false,
+	buttons: {
+		'Ok': function() {
+			$('#FORM_UPDATE_PHOTO').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_RECIPIENT_VIEW,
+					'action': 'update',
+					'type_name': 'id_image'
+				},
+				success: function(data) {
+					var row = $('#FORM_UPDATE_PHOTO').data('row');
+					row.find('td.id_image img').attr('src', data);
+					$('#DIALOG_UPDATE_PHOTO').dialog('close');
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+$('#DIALOG_UPDATE_RECIPIENT_NAME_2').dialog({
+	modal: true,
+	width: 350,
+	autoOpen: false,
+	buttons: {
+		'Ok': function() {
+			$('#FORM_UPDATE_RECIPIENT_NAME_2').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_RECIPIENT_VIEW,
+					'action': 'update',
+					'type_name': 'recipient_name_2'
+				},
+				success: function(data) {
+					var row = $('#FORM_UPDATE_RECIPIENT_NAME_2').data('row');
+					row.find('td.recipient_name_2 span.recipient_name_2_value').text(data);
+					$('#DIALOG_UPDATE_RECIPIENT_NAME_2').dialog('close');
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_RECIPIENT_VIEW,
+		'action': 'init'
+	},
+	success: function(data) {
+		var tokens = data.split(String.fromCharCode(31));
+		
+		var size = parseInt(tokens.shift(), 10);
+		var htmlBankCode = '<option value=""></option>';
+		for (var i = 0; i < size; i++) {
+			var bankCode = tokens.shift();
+			var bankName = tokens.shift();
+			htmlBankCode = htmlBankCode + '<option value="' + bankCode + '">' + bankCode  + '</option>';
+			BANK_CODE_TO_NAME[bankCode] = bankName;
+		}
+		
+		size = parseInt(tokens.shift(), 10);
+		for (var i = 0; i < size; i++) {
+			var bankCode = tokens.shift();
+			var bankName = tokens.shift();
+			BANK_NAME_TO_CODE[bankName] = bankCode;
+			BANK_NAMES.push(bankName);
+		}
+		
+		$('#F select.bank_code').append(htmlBankCode).change(function() {
+			var bankCode = $(this).children('option:selected').text();
+			$('#F input.bank_name').val(BANK_CODE_TO_NAME[bankCode]);
+		});
+		
+		$('#F input.bank_name').keydown(function(e) {
+			if (e.which == 13) {
+				$(this).data('ui-autocomplete')._trigger('change');
+			}
+		}).autocomplete({
+			source: BANK_NAMES,
+			change: function(event, ui) {
+				var elem = $(this);
+				var elemBankCode = $('#F select.bank_code');
+				
+				if (ui.item == null) {
+					var bank_name = elem.val().toUpperCase();
+					var bank_code = BANK_NAME_TO_CODE[bank_name];
+					if (bank_code) {
+						elemBankCode.val(bank_code);
+						elem.val(bank_name);
+					} else {
+						for (var i = 0; i < BANK_NAMES.length; i++) {
+							if (BANK_NAMES[i].indexOf(bank_name) > -1) {
+								bank_name = BANK_NAMES[i];
+								bank_code = BANK_NAME_TO_CODE[bank_name];
+								break;
+							}
+						}
+						
+						if (bank_code) {
+							elemBankCode.val(bank_code);
+							elem.val(bank_name);
+						} else {
+							elemBankCode.val('');
+							elem.val('');
+						}
+					}
+				} else {
+					var bank_code = BANK_NAME_TO_CODE[ui.item.value];
+					elemBankCode.val(bank_code);
+				}
+			},
+			select: function(event, ui) {
+				var elem = $(this);
+				var elemBankCode = $('#F select.bank_code');
+				var bank_code = BANK_NAME_TO_CODE[ui.item.value];
+				elemBankCode.val(bank_code);
+			}
+		});
+		
+		TABLE = $('#TABLE').createTable({
+			className: 'com.indogo.relay.member.RecipientView',
+			singleSelectMode: IS_POPUP_WINDOW,
+			showCheckBox: IS_POPUP_WINDOW,
+			disableUpdate: true,
+			disableDelete: true,
+			singleSelectModeDblClick: function() {
+				$('#QUERY button.choose').click();
+			},
+			afterSetTableColumnEvent: function() {
+				if (IS_POPUP_WINDOW) {
+					var member_id = $.query.get('member_id');
+					
+					$('#QUERY input.member_id').val(member_id);
+					$('#QUERY button.ok').click();
+				}
+			},
+			afterSetTableDataEvent: function(rows) {
+				rows.find('td.birthday').each(function(i, e) {
+					var btn = $('<button type="button">edit</button>').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+						var row = $(this).parent().parent();
+						var member_id = row.find('td.member_id').text();
+						var recipient_id = row.find('td.recipient_id').text();
+						var birthday = row.find('td.birthday span.birthday_value').text();
+						
+						$('#FORM_UPDATE_BIRTHDAY input.member_id').val(member_id);
+						$('#FORM_UPDATE_BIRTHDAY input.recipient_id').val(recipient_id);
+						$('#FORM_UPDATE_BIRTHDAY input.birthday').val(birthday);
+						
+						$('#FORM_UPDATE_BIRTHDAY').data('row', row);
+						$('#DIALOG_UPDATE_BIRTHDAY').dialog('open');
+					});
+					
+					var cell = $(e);
+					var birthday = cell.text();
+					cell.empty().append(btn).append('<span class="birthday_value" style="margin-left: 4px;">' + birthday + '</span>');
+				});
+				
+				rows.find('td.id_image').each(function(i, e) {
+					var btn = $('<button type="button">edit</button>').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+						var row = $(this).parent().parent();
+						var member_id = row.find('td.member_id').text();
+						var recipient_id = row.find('td.recipient_id').text();
+						
+						$('#FORM_UPDATE_PHOTO input.member_id').val(member_id);
+						$('#FORM_UPDATE_PHOTO input.recipient_id').val(recipient_id);
+						
+						$('#FORM_UPDATE_PHOTO').data('row', row);
+						$('#DIALOG_UPDATE_PHOTO').dialog('open');
+					});
+					
+					var cell = $(e);
+					var url = cell.text();
+					cell.empty().append(btn);
+					if (url.length > 0) {
+						cell.append('<img style="margin-left: 4px; width: 100px; height: 50px;" src="' + url + '"/>');
+					}
+				});
+				
+				rows.find('td.recipient_name_2').each(function(i, e) {
+					var btn = $('<button type="button">edit</button>').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+						var row = $(this).parent().parent();
+						var member_id = row.find('td.member_id').text();
+						var recipient_id = row.find('td.recipient_id').text();
+						var recipient_name_2 = row.find('td.recipient_name_2 span.recipient_name_2_value').text();
+						
+						$('#FORM_UPDATE_RECIPIENT_NAME_2 input.member_id').val(member_id);
+						$('#FORM_UPDATE_RECIPIENT_NAME_2 input.recipient_id').val(recipient_id);
+						$('#FORM_UPDATE_RECIPIENT_NAME_2 input.recipient_name_2').val(recipient_name_2);
+						
+						$('#FORM_UPDATE_RECIPIENT_NAME_2').data('row', row);
+						$('#DIALOG_UPDATE_RECIPIENT_NAME_2').dialog('open');
+					});
+					
+					var cell = $(e);
+					var recipient_name_2 = cell.text();
+					cell.empty().append(btn).append('<span class="recipient_name_2_value" style="margin-left: 4px;">' + recipient_name_2 + '</span>');
+				});
+			},
+			executeInsert: function(callback) {
+				var member_id = $('#QUERY input.member_id').val();
+				if (member_id.length > 0) {
+					$('#F').clearForm().resetForm();
+					$('#F input.member_id').val(member_id);
+					$('#F button.ok').data('action', 'insert');
+					$('#F button.ok').data('callback', callback);
+					$('#AREA1').hide();
+					$('#AREA2').show();
+				}
+			}
+		})[0];
+	}
+});
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	var member_id = $('#QUERY input.member_id').val();
+	if (member_id.length > 0) {
+		c.push('member_id');
+		o.push('=');
+		v.push(member_id);
+	} else {
+		return false;
+	}
+	
+	var recipient_name = $('#QUERY input.recipient_name').val();
+	if (recipient_name.length > 0) {
+		c.push('recipient_name');
+		o.push('LIKE');
+		v.push('%' + recipient_name + '%');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	var callback = $(this).data('callback');
+	
+	if (action == 'insert') {
+		var bank_acc = $('#F input.bank_acc').autoNumeric('get');
+		$('#F').formSubmit({
+			data: {
+				'F': 'Relay',
+				'RelayId': RELAY_ID_MEMBER,
+				'action': 'insertRecipient',
+				'bank_acc': bank_acc
+			}, success: function(data) {
+				callback(data);
+				$('#AREA2').hide();
+				$('#AREA1').show();
+			}
+		});
+	}
+});
+
+$('#QUERY button.choose').button().click(function() {
+	var rows = TABLE.funcGetCheckedRows();
+	if (rows.length > 0) {
+		var row = rows[0];
+		window.opener.onRecipientSelected(row);
+		window.close();
+	}
+});
+
+//# sourceURL=recipient_view.js
+</script>

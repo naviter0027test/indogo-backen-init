@@ -1,0 +1,279 @@
+<div id="dialogExport" title="Export">
+	<p><input type="radio" name="exportItem" value="Excel" checked />Excel</p>
+	<p><input type="radio" name="exportItem" value="CSV" />CSV</p>
+</div>
+
+<style type="text/css">
+	#tableSelection {
+		border-collapse: collapse;
+		width: 100%;
+	}
+	#tableSelection tr td {
+		padding: 4px;
+		border: 0px solid #eee;
+	}
+</style>
+
+<script type="text/javascript">
+	var PAGE_ID = $('#tableSelection').attr('pageid');
+	var ENABLE_QUERY = true;
+
+	var AutoPageQueryFunction = function(options) {
+		options.data.F = 'AutoPage';
+		options.data.PageId = PAGE_ID;
+		sendRequest.basic(options);
+	};
+	
+	var tableFunctionList = $('#result').createTable({
+		ajaxFunction: AutoPageQueryFunction,
+		tableName: 'SESSION_TABLE',
+		rowCanBeHighlighted: true
+	});
+
+	$('#dialogExport').dialog({
+		autoOpen: false,
+		modal: true,
+		width: 200,
+		height: 160,
+		buttons: {
+			'Cancel': function() {
+				$(this).dialog('close');
+			},
+			'Ok': function() {
+				var v = $('#dialogExport input:checked').val();
+				var isFilterOn = '0';
+				if (tableFunctionList[0].funcGetTableFilter() != '')
+					isFilterOn = '1';
+				sendRequest.basic({
+					showLoadingDialog: true,
+					data: {
+						'F': 'AutoPage',
+						'Action': 'Export',
+						'Type': v,
+						'PageId': PAGE_ID,
+						'UseFilter': isFilterOn
+					},
+					success: function(data) {
+						sendRequest.downloadFile(data);
+					}
+				});
+				$(this).dialog('close');
+			}
+		}
+	});
+	$('#tableSelection tbody tr.mustbe td.auto-page-label').each(function(entryIndex, entry) {
+		$(entry).prepend('<span style=\"color:red\">*</span>');
+	});
+	var autoPageInput = $('#tableSelection tr td.auto-page-input');
+	autoPageInput.find('.input-type-datetime').createDateTimePicker();
+	autoPageInput.find('.input-type-date').createDatePicker();
+	autoPageInput.find('.input-type-list').each(function(entryIndex, entry) {
+		var div = $(entry);
+		var id = div.attr('id');
+		var sourceId = div.attr('listsource');
+
+		div.append('<input type="button" value="select"/><div><table class="ui-widget ui-widget-content" style="border-collapse: collapse"><tr>' +
+				'<td><select class="source" multiple size=8 style="width: 15em"></select></td>' +
+				'<td><input type="button" class="move-r" style="width: 3.5em; margin:0" value="&gt;"/><br/>' +
+				'<input type="button" class="move-rr" style="width: 3.5em; margin:0" value="&gt;&gt;"/><br/>' +
+				'<input type="button" class="move-l" style="width: 3.5em; margin:0" value="&lt;"/><br/>' +
+				'<input type="button" class="move-ll" style="width: 3.5em; margin:0" value="&lt;&lt;"/><br/>' +
+				'<td><select class="target" multiple size=8 style="width: 15em"></select></td>' +
+				'<tr><td colspan=3><input type="button" class="ok" style="width: 5em" value="Ok"/><input type="button" class="cancel" style="width: 5em" value="Cancel"/></td></tr></table></div>');
+
+		$.data(div, 'query-count', 0);
+		div.children('div').hide();
+		var source = div.find('select.source');
+		var target = div.find('select.target');
+		div.children('input').click(function() {
+			$(this).attr('disabled', true);
+			source.find('option').removeAttr('selected');
+			target.find('option').removeAttr('selected');
+			if (Number($.data(div, 'query-count')) == 0) {
+				sendRequest.basic({
+					data: {
+						'F': 'AutoPage',
+						'Action': 'SelectionList',
+						'PageId': PAGE_ID,
+						'InputName': id
+					},
+					success: function(data) {
+						$.data(div, 'query-count', 1);
+						source.append(data);
+						$.data(div, 'source', source.find('option'));
+						div.children('div').show();
+					},
+					error: function() {
+						div.children('input').removeAttr('disabled');
+					}
+				});
+			}
+			else {
+				div.children('div').show();
+			}
+			return false;
+		});
+		source.dblclick(function() {
+			div.find('input.move-r').click();
+		});
+		target.dblclick(function() {
+			div.find('input.move-l').click();
+		});
+		div.find('input.move-r').click(function() {
+			source.find('option:selected').remove().clone().appendTo(target);
+		});
+		div.find('input.move-l').click(function() {
+			target.find('option:selected').remove().clone().appendTo(source);
+		});
+		div.find('input.move-rr').click(function() {
+			source.find('option').remove().clone().appendTo(target);
+		});
+		div.find('input.move-ll').click(function() {
+			target.find('option').remove().clone().appendTo(source);
+		});
+		div.find('input.ok').click(function() {
+			var v = target.find('option');
+
+			var text = '';
+			var value = '';
+			v.each(function(entryIndex, entry) {
+				if (entryIndex == 0) {
+					text = $(entry).text();
+				}
+				else if (entryIndex < 3) {
+					text += ',' + $(entry).text();
+				}
+				else if (entryIndex == 3) {
+					text += ',...';
+				}
+				value += $(entry).text() + String.fromCharCode(31);
+			});
+			if (text.length == 0) {
+				text = 'select';
+			}
+			
+			$.data(div, 'source', source.find('option'));
+			$.data(div, 'target', v);
+			div.attr('value', value);
+			div.children('div').hide();
+			div.children('input').removeAttr('disabled').val(text);
+		});
+		div.find('input.cancel').click(function() {
+			target.empty().append($.data(div, 'target'));
+			source.empty().append($.data(div, 'source'));
+			div.children('div').hide();
+			div.children('input').removeAttr('disabled');
+		});
+	});
+	//$('#tableSelection tr td.auto-page-input .input-type-datetime').createDateTimePicker();
+	//$('#tableSelection tr td.auto-page-input .input-type-date').createDatePicker();
+	$('#btnToggleView').click(function() {
+		if ($(this).val() == 'Hide') {
+			$('#tableSelection tbody').hide();
+			$(this).val('Show');
+		}
+		else {
+			$('#tableSelection tbody').show();
+			$(this).val('Hide');
+		}
+	});
+	$('#btnQuery').click(function() {
+		var form = $('<form enctype="multipart/form-data"></form>');
+		var alertObject = undefined;
+		$('#tableSelection tr td.auto-page-input .input').each(function(i, e) {
+			var id = $(e).attr('id');
+			if (id != 'F' && id != 'Action' && id != 'PageId') {
+				var isMustBe = $(e).parent().parent().hasClass('mustbe');
+				var valueExist = false;
+				var v = $(e).val();
+				if (v == undefined)
+					v = $(e).val();
+				else if (v.length == 0)
+					v = $(e).attr('value');
+				
+				if (v != undefined) {
+					if (v.length > 0) {
+						valueExist = true;
+						var input = $('<input type="hidden" name="' + id + '"/>');
+						input.val(v);
+						form.append(input);
+					}
+				}
+				
+				if (!valueExist && isMustBe) {
+					if (alertObject == undefined)
+						alertObject = $(e);
+					$(e).parent().parent().animate({backgroundColor: '#FF0000'}, "slow", "linear", function() {
+						$(this).animate({backgroundColor: '#FFFFFF'}, "slow");
+					});
+					isContinueProcess = false;
+				}
+			}
+		});
+		if (alertObject != undefined) {
+			alertObject.focus();
+			return;
+		}
+		form.formSubmit({
+			showLoadingDialog: true,
+			data: {
+				'F': 'AutoPage',
+				'Action': 'Query',
+				'PageId': PAGE_ID
+			},
+			success: function(data) {
+				var rowCount = Number(data);
+				for (var i = 0; i < tableFunctionList.length; i++) {
+					tableFunctionList[i].funcSetMaxRow(rowCount);
+					tableFunctionList[i].funcReload();
+				}
+			},
+			beforeSend: function() {
+				$('#btnQuery').attr('disabled', true);
+			},
+			complete: function() {
+				if (ENABLE_QUERY)
+					$('#btnQuery').removeAttr('disabled');
+			}
+		});
+	});
+	$('#btnExport').click(function() {
+		$('#dialogExport').dialog('open');
+	});
+
+	$('#tableSelection tr td.auto-page-input .input').each(function(i, e) {
+		var input = $(e);
+		var id = input.attr('id');
+		if (id != 'F' && id != 'Action' && id != 'PageId') {
+			var inputValue = $.query.get(id);
+			if (inputValue != undefined) {
+				inputValue = inputValue.toString();
+				if (inputValue.length > 0) {
+					input.attr('value', inputValue);
+					if (input.hasClass('input-type-datetime'))
+						input.createDateTimePicker();
+					else if (input.hasClass('input-type-date'))
+						input.createDatePicker();
+				}
+			}
+		}
+	});
+
+	var ExecuteQuery = $.query.get('ExecuteQuery');
+	if (ExecuteQuery != undefined) {
+		ExecuteQuery = ExecuteQuery.toString();
+		if (ExecuteQuery == '1') {
+			$('#btnQuery').click();
+		}
+	}
+	
+	var DisableQuery = $.query.get('DisableQuery');
+	if (DisableQuery != undefined) {
+		DisableQuery = DisableQuery.toString();
+		if (DisableQuery == '1') {
+			ENABLE_QUERY = false;
+			$('#btnQuery').attr('disabled', true);
+			$('#btnToggleView').click();
+		}
+	}
+</script>

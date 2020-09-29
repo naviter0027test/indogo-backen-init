@@ -1,0 +1,1133 @@
+<div id="AREA1">
+	<form id="F">
+		<input type="hidden" name="member_id" class="member_id"/>
+		<input type="hidden" name="point_used" class="hidden_point_used"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2"><label class="sales_create_title">Sales Create</label></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Shop</td>
+					<td><select class="shop_name" name="shop_id"><option value=""></option></select></td>
+				</tr>
+				<tr>
+					<td class="category">Phone No</td>
+					<td><input type="text" class="input_phone_no" value="" style="width: 160px"/> <button type="button" id="SEARCH_MEMBER">search member</button> <button type="button" id="NEW_MEMBER">New Member</button> <button type="button" id="CANCEL_MEMBER">Cancel</button></td>
+				</tr>
+				<tr>
+					<td class="category">App Login Id</td>
+					<td><input type="text" class="member_login_id uppercase" name="member_login_id" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Member Name</td>
+					<td><input type="text" class="member_name uppercase" name="member_name" value="" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Phone No</td>
+					<td>
+						<input type="text" class="phone_no_1" value=""/><br/>
+						<input type="text" class="phone_no_2" value=""/><br/>
+						<input type="text" class="phone_no_3" value=""/>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Member Point</td>
+					<td><input type="text" class="remit_point" value="" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Member Wallet</td>
+					<td><input type="text" class="wallet" value="" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Shipping Address</td>
+					<td>
+						<table id="ADDRESS" class="winbond-table" style="margin-top: 4px;">
+							<thead>
+								<tr>
+									<td align="center">縣市</td>
+									<td align="center">鄉鎮市區</td>
+									<td align="center">道路或街名</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="even">
+									<td align="center"><select class="city reset"></select></td>
+									<td align="center"><select class="area empty"></select></td>
+									<td align="center"><select class="road empty"></select></td>
+								</tr>
+								<tr class="even">
+									<td align="center" colspan="3">
+										<input style="width: 25px" type="text" class="neighbor data reset"/> 鄰 <input style="width: 25px" type="text" class="lane data reset"/> 巷 <input style="width: 25px" type="text" class="alley data reset"/> 弄 <input style="width: 25px" type="text" class="no1 data reset"/> 號之 <input style="width: 25px" type="text" class="no2 data reset"/> <input style="width: 25px" type="text" class="floor1 data reset"/> 樓之 <input style="width: 25px" type="text" class="floor2 data reset"/> <input style="width: 25px" type="text" class="room data reset"/> 室
+									</td>
+								</tr>
+								<tr class="even">
+									<td colspan="3">
+										<button type="button" id="SET_ADDRESS">Set</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div style="margin-bottom: 4px; margin-top: 8px;"><input type="text" class="ship_address" name="ship_address" value=""/> <button type="button" id="OPEN_MEMBER_ADDRESS">Pick From Address Book</button></div>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Member Purchase History</td>
+					<td>
+						<table id="MEMBER_PURCHASE_HISTORY" class="winbond-table" style="margin-bottom: 10px; margin-top: 10px;">
+							<thead>
+								<tr>
+									<td>Create Time</td>
+									<td>Status</td>
+									<td>Shop</td>
+									<td>Sales Id</td>
+									<td>Total Amount</td>
+									<td></td>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Items</td>
+					<td>
+						<table id="ITEM_LIST_ADD" class="query" style="margin-bottom: 10px; margin-top: 10px;">
+							<tr>
+								<td class="category">Product Name</td>
+								<td><input type="text" class="item_desc"/></td>
+							</tr>
+							<tr>
+								<td class="category">Barcode</td>
+								<td><textarea class="item_name"></textarea></td>
+							</tr>
+							<tr>
+								<td class="category"></td>
+								<td><button id="ADD_INVENTORY" type="button">add item</button> <button id="BROWSE_INVENTORY" type="button">browse item</button></td>
+							</tr>
+						</table>
+						<table id="ITEM_LIST" class="winbond-table" style="margin-bottom: 10px;">
+							<thead>
+								<tr>
+									<td><input type="checkbox" id="ITEM_LIST_CHECK_ALL"/></td>
+									<td><button type="button" id="ITEM_LIST_DELETE_CHECKED">delete_checked</button></td>
+									<td>Sales Qty</td>
+									<td>Current Qty</td>
+									<td>Price</td>
+									<td>Subtotal</td>
+									<td>Comment</td>
+									<td>Picture</td>
+									<td>Barcode</td>
+									<td>Product Name</td>
+									<td>Category</td>
+									<td>Color</td>
+									<td>Size</td>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Freight Type</td>
+					<td colspan="3">
+						<div>
+							<span class="image-radio">
+								<input type="radio" value="1" name="freight_id" class="freight_id"/>
+								<img src="ui/heimao.png" id="FREIGHT_ID_1_IMAGE"></img>
+							</span>
+							<span class="image-radio">
+								<input type="radio" value="2" name="freight_id" class="freight_id"/>
+								<img src="ui/cash.png"></img>
+							</span>
+							<span class="image-radio">
+								<input type="radio" value="3" name="freight_id" class="freight_id"/>
+								<img src="ui/post.png" id="FREIGHT_ID_3_IMAGE"></img>
+							</span>
+							<!--
+							<span class="image-radio">
+								<input type="radio" value="2" name="freight_id" class="freight_id"/>
+								<img src="ui/mini_mart.jpg"></img>
+							</span>
+							-->
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Shipping Fee</td>
+					<td><input type="text" class="ship_fee" name="ship_fee" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Total</td>
+					<td><input type="text" class="total" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Point Used</td>
+					<td><input type="text" class="point_used"/></td>
+				</tr>
+				<tr>
+					<td class="category">Wallet Used</td>
+					<td><input type="text" class="wallet_used"/></td>
+				</tr>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea class="comment" name="comment"></textarea></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="create" type="button">Create</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="AREA2">
+	<table id="QUERY_INVENTORY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category">Barcode</td>
+			<td><input type="text" class="item_name"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button> <button type="button" class="add_checked_item">Add Checked Item to List</button> <button type="button" class="close">Close</button></td>
+		</tr>
+	</table>
+	<table id="TABLE_INVENTORY">
+	</table>
+</div>
+
+<div id="AREA3">
+	<table id="QUERY_MEMBER" class="query">
+		<tr>
+			<td class="category">Phone No</td>
+			<td><input type="text" class="phone_no" style="width: 150px"/></td>
+			<td class="category">ARC</td>
+			<td><input type="text" class="arc_no uppercase" style="width: 150px"/></td>
+		</tr>
+		<tr>
+			<td class="category">Name</td>
+			<td colspan="3"><input type="text" class="member_name"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td colspan="3"><button type="button" class="ok">Search</button> <button type="button" class="select">Select Member</button> <button type="button" class="cancel">Cancel</button></td>
+		</tr>
+	</table>
+	<table id="MEMBER"></table>
+</div>
+
+<style type="text/css">
+span.image-radio {
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+input.freight_id + img {
+	cursor: pointer;
+}
+input.freight_id:checked + img {
+    border: 5px solid red;
+}
+input.freight_id {
+	display: none
+}
+#MEMBER_PURCHASE_HISTORY tbody td.total_amount {
+	text-align: right;
+}
+#ADDRESS {
+	border-collapse: separate; border-spacing: 1px;
+}
+#ADDRESS td {
+	padding: 4px;
+}
+#ITEM_LIST tbody tr.is_gift td {
+	background-color: #FFEFD5;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_SALES_CREATE = 'shop.sales_create';
+var RELAY_ID_INVENTORY = 'shop.inventory';
+var RELAY_ID_SALES = 'shop.sales';
+var RELAY_ID_MEMBER_CONFIG = 'member.member_config';
+var RELAY_ID_ITEM_GIFT = 'shop.item_gift';
+var SHIP_FEE_HEIMAO = '150';
+var SHIP_FEE_POST = '0';
+var SHOP_LIST_SIZE = 0;
+var SHOP_LIST_SHOP_ID = '';
+var COPIED_ITEMS = {};
+var ITEM_GIFTS = {};
+
+$('#AREA2, #AREA3, #CANCEL_MEMBER').hide();
+$('#F input.total, #F input.point_used, #F input.wallet_used, #F input.wallet').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true});
+$('#F input.phone_no_1, #F input.phone_no_2, #F input.phone_no_3').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: '', lZero: 'keep', strictDigitOnly: true});
+
+$("#F .image-radio img").click(function() {
+	var radioButton = $(this).prev();
+	radioButton.prop('checked', true);
+	
+	var freight_id = radioButton.val();
+	if (freight_id == 1) {
+		// heimao
+		$('#F input.ship_fee').val(SHIP_FEE_HEIMAO);
+	} else if (freight_id == 2) {
+		// cash
+		$('#F input.ship_fee').val('0');
+	} else if (freight_id == 3) {
+		// post
+		$('#F input.ship_fee').val(SHIP_FEE_POST);
+	}
+	
+	onCalculateTotal();
+});
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_SALES_CREATE,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		
+		var shop_list_size = parseInt(tokens.shift(), 10);
+		var html = '';
+		var shop_id;
+		for (var i = 0; i < shop_list_size; i++) {
+			shop_id = tokens.shift();
+			var shop_name = tokens.shift();
+			html = html + '<option value="' + shop_id + '">' + shop_name + '</option>';
+		}
+		$('#F select.shop_name').append(html);
+		
+		SHIP_FEE_HEIMAO = tokens.shift();
+		SHIP_FEE_POST = tokens.shift();
+		SHOP_LIST_SIZE = shop_list_size;
+		SHOP_LIST_SHOP_ID = shop_id;
+		
+		if (shop_list_size == 1) {
+			$('#F select.shop_name').val(shop_id);
+		}
+		
+		var city = tokens.shift();
+		$('#ADDRESS select.city').empty().append('<option value="" selected="selected">請選擇縣市</option>').append(city);
+	}
+});
+
+function onCalculateTotal() {
+	var total = $('#F input.ship_fee').val();
+	if (total.length == 0) {
+		total = 0;
+	} else {
+		total = parseInt(total, 10);
+	}
+	
+	$('#ITEM_LIST input.gift_sales_qty').autoNumeric('set', 0);
+	
+	$('#ITEM_LIST tbody tr').each(function(i, e) {
+		var row = $(e);
+		
+		var qty = row.find('input.sales_qty').autoNumeric('get');
+		if (qty.length == 0) {
+			qty = 0;
+		} else {
+			qty = parseInt(qty, 10);
+		}
+		
+		var price = row.find('input.sales_price').autoNumeric('get');
+		if (price.length == 0) {
+			price = 0;
+		} else {
+			price = parseInt(price, 10);
+		}
+		
+		var discount = row.find('input.sales_discount').autoNumeric('get');
+		if (discount.length == 0) {
+			discount = 0;
+		} else {
+			discount = parseInt(discount, 10);
+		}
+		
+		var subtotal = (qty * price) - discount;
+		
+		row.find('span.total').text(toCurrency(subtotal));
+		
+		total = total + subtotal;
+		
+		var input = row.find('input.item_id');
+		if (!input.hasClass('is_gift')) {
+			var item_id = input.val();
+			if (item_id in ITEM_GIFTS) {
+				var gifts = ITEM_GIFTS[item_id];
+				for (var i = 0; i < gifts.length; i++) {
+					var gift = gifts[i];
+					var sales_qty = $('#ITEM_LIST tbody').find('input.item_id_' + gift.gift_id).parent().parent().find('input.sales_qty');
+					var v = parseInt(sales_qty.autoNumeric('get'), 10);
+					v = v + (qty * gift.gift_qty);
+					sales_qty.autoNumeric('set', v);
+				}
+			}
+		}
+	});
+	
+	var wallet = $('#F input.wallet_used').autoNumeric('get');
+	if (wallet.length == 0) {
+		wallet = 0;
+	} else {
+		wallet = parseInt(wallet, 10);
+	}
+	
+	total = total - wallet;
+	
+	$('#F input.total').autoNumeric('set', total);
+}
+
+$('#F input.wallet_used').change(onCalculateTotal);
+
+function onItemSelected(row) {
+	var item_id = row.find('td.item_id').text();
+	if ($('#ITEM_LIST tbody').find('input.item_id_' + item_id).length == 0) {
+		var item_image_url = row.find('td.item_image img').attr('src');
+		var item_name = row.find('td.item_name').text();
+		var item_desc = row.find('td.item_desc').text();
+		var category_name = row.find('td.category_name').text();
+		var color_name = row.find('td.color_name').text();
+		var size_name = row.find('td.size_name').text();
+		var price_sale = row.find('td.price_sale').text();
+		
+		var current_qty;
+		if (row.find('td.item_qty label').length > 0) {
+			current_qty = row.find('td.item_qty label').text();
+		} else {
+			current_qty = row.find('td.item_qty').text();
+		}
+		
+		var html = '<tr class="even"><td><input type="checkbox" class="item_check"/></td><td><button type="button" class="item_delete">item_delete</button></td>';
+		html = html + '<td><input type="text" class="sales_qty" style="width: 100px;" value="1"/></td>';
+		html = html + '<td style="text-align: right">' + current_qty + '</td>';
+		html = html + '<td><input type="text" class="sales_price" style="width: 100px; display: none;"/><div><span class="sales_price" style="margin-right: 4px;"></span><button type="button" class="edit_sales_price">edit</button></div></td>';
+		html = html + '<td style="text-align: right"><span class="total">' + price_sale + '</span><input type="hidden" class="sales_discount" style="width: 100px;"/></td>';
+		html = html + '<td><input type="text" class="comment" style="width: 100px;"/></td>';
+		html = html + '<td><img src="' + item_image_url + '"/><input type="hidden" class="item_id item_id_' + item_id + '" value="' + item_id + '"/></td>';
+		html = html + '<td>' + item_name + '</td>';
+		html = html + '<td>' + item_desc + '</td>';
+		html = html + '<td>' + category_name + '</td>';
+		html = html + '<td>' + color_name + '</td>';
+		html = html + '<td>' + size_name + '</td>';
+		html = html + '</tr>';
+		
+		var newRow = $(html);
+		newRow.find('button.item_delete').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+			$(this).parent().parent().remove();
+			onCalculateTotal();
+		});
+		
+		newRow.find('input.sales_qty, input.sales_discount').change(onCalculateTotal).autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true});
+		newRow.find('input.sales_qty').incrementOnEnter();
+		
+		newRow.find('input.sales_price').change(onCalculateTotal).autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true}).autoNumeric('set', price_sale.replace(/,/g, ''));
+		newRow.find('span.sales_price').text(price_sale);
+		newRow.find('button.edit_sales_price').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+			var cell = $(this).parent().parent();
+			cell.children('div').hide();
+			cell.children('input.sales_price').show();
+		});
+		
+		if (COPIED_ITEMS[item_id] !== undefined) {
+			var copied_item = COPIED_ITEMS[item_id];
+			newRow.find('input.sales_qty').autoNumeric('set', copied_item.sales_qty);
+			newRow.find('input.sales_discount').autoNumeric('set', copied_item.sales_discount);
+			newRow.find('input.comment').val(copied_item.comment);
+		}
+		
+		$('#ITEM_LIST tbody').append(newRow);
+		
+		// check for gifts
+		var shop_id = $('#F select.shop_name').val();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ITEM_GIFT,
+				'action': 'get_gifts',
+				'shop_id': shop_id,
+				'item_id': item_id
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				var size = parseInt(tokens.shift(), 10);
+				var gifts = [];
+				for (var i = 0; i < size; i++) {
+					var gift_id = tokens.shift();
+					var gift_qty = parseInt(tokens.shift(), 10);
+					var gift_current_qty = parseInt(tokens.shift(), 10);
+					var gift_image = tokens.shift();
+					var gift_name = tokens.shift();
+					var gift_desc = tokens.shift();
+					var gift_category = tokens.shift();
+					var gift_color = tokens.shift();
+					var gift_size = tokens.shift();
+					
+					gifts.push({
+						'gift_id': gift_id,
+						'gift_qty': gift_qty
+					});
+					
+					if ($('#ITEM_LIST tbody').find('input.item_id_' + gift_id).length == 0) {
+						var html = '<tr class="even is_gift"><td><input type="checkbox" class="item_check"/></td><td><button type="button" class="item_delete">item_delete</button></td>';
+						html = html + '<td><input type="text" class="sales_qty gift_sales_qty" style="width: 100px;" value="' + gift_qty + '" readonly/><input type="hidden" class="gift_qty" value="' + gift_qty + '"/></td>';
+						html = html + '<td style="text-align: right">' + gift_current_qty + '</td>';
+						html = html + '<td><input type="text" class="sales_price" value="0" style="width: 100px; display: none;"/></td>';
+						html = html + '<td style="text-align: right"><span class="total"></span><input type="hidden" class="sales_discount" style="width: 100px;"/></td>';
+						html = html + '<td><input type="text" class="comment" style="width: 100px;"/></td>';
+						html = html + '<td>' + gift_image + '<input type="hidden" class="item_id item_id_' + gift_id + ' is_gift" value="' + gift_id + '"/><input type="hidden" class="gift_parent_id gift_parent_id_' + item_id + '" value="' + item_id + '"/></td>';
+						html = html + '<td>' + gift_name + '</td>';
+						html = html + '<td>' + gift_desc + '</td>';
+						html = html + '<td>' + gift_category + '</td>';
+						html = html + '<td>' + gift_color + '</td>';
+						html = html + '<td>' + gift_size + '</td>';
+						html = html + '</tr>';
+						
+						var giftRow = $(html);
+						giftRow.find('input.sales_qty, input.sales_discount, input.sales_price').change(onCalculateTotal).autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true});
+						
+						giftRow.find('button.item_delete').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+							$(this).parent().parent().remove();
+							onCalculateTotal();
+						});
+						
+						$('#ITEM_LIST tbody').append(giftRow);
+					} else {
+						var sales_qty = $('#ITEM_LIST tbody').find('input.item_id_' + gift_id).parent().parent().find('input.sales_qty');
+						var v = parseInt(sales_qty.autoNumeric('get'), 10);
+						v = v + gift_qty;
+						sales_qty.autoNumeric('set', v);
+					}
+				}
+				
+				ITEM_GIFTS[item_id] = gifts;
+			}
+		});
+		
+		onCalculateTotal();
+	}
+};
+
+function onShipAddressChanged() {
+	var address = $('#F input.ship_address').val();
+	if (address.includes('金門') || address.includes('澎湖') || address.includes('連江')) {
+		$('#FREIGHT_ID_3_IMAGE').click();
+	}
+};
+
+$('#F input.ship_address').change(onShipAddressChanged);
+
+var TABLE_INVENTORY = $('#TABLE_INVENTORY').createTable({
+	className: 'com.indogo.relay.onlineshopping.Inventory',
+	viewMode: true,
+	showCheckBox: true,
+	afterSetTableColumnEvent: function() {
+		
+	},
+	afterSetTableDataEvent: function(rows) {
+		if ($('#AREA2').is(':hidden')) {
+			rows.each(function(i, e) {
+				onItemSelected($(e));
+			});
+		}
+	}
+})[0];
+
+$('#ADD_INVENTORY').button().click(function() {
+	var shop_id = $('#F select.shop_name').val();
+	if (shop_id.length <= 0) {
+		page.showWarningDialog('shop cannot empty');
+		return false;
+	}
+	
+	var item_name = $.trim($('#ITEM_LIST_ADD textarea.item_name').val());
+	var item_desc = $('#ITEM_LIST_ADD input.item_desc').val();
+	
+	if (item_name.length > 0 || item_desc.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INVENTORY,
+				'action': 'sql_temp_table',
+				'item_name': item_name,
+				'item_desc': item_desc
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					var c = [];
+					var o = [];
+					var v = [];
+					var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+					
+					c.push('shop_id');
+					o.push('=');
+					v.push(shop_id);
+					
+					sessionId = GLOBAL_SID;
+					pageId = 'inventory';
+					joinSql = 'a.item_id = b.long1';
+					
+					TABLE_INVENTORY.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+				}
+				
+				$('#ITEM_LIST_ADD textarea.item_name').val('');
+			}
+		});
+	}
+});
+
+$('#BROWSE_INVENTORY').button().click(function() {
+	var shop_id = $('#F select.shop_name').val();
+	if (shop_id.length <= 0) {
+		page.showWarningDialog('Please select a Shop');
+		return false;
+	}
+	
+	window.open('page.html?menu_row_id=26&shop_id=' + shop_id + '&item_hide=0', 'browse_current_stock', 'width=800,height=600');
+});
+
+var queryInventory = function(joinSql) {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '';
+	
+	var shop_id = $('#F select.shop_name').val();
+	if (shop_id.length <= 0) {
+		return false;
+	}
+	
+	c.push('shop_id');
+	o.push('=');
+	v.push(shop_id);
+	
+	if (joinSql.length > 0) {
+		sessionId = GLOBAL_SID;
+		pageId = 'inventory';
+	}
+	
+	TABLE_INVENTORY.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+};
+
+$('#QUERY_INVENTORY button.ok').button().click(function() {
+	var item_name = $('#QUERY_INVENTORY input.item_name').val();
+	if (item_name.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INVENTORY,
+				'action': 'sql_temp_table',
+				'item_name': item_name
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					queryInventory('a.item_id = b.long1');
+				} else {
+					TABLE_INVENTORY.funcEmptyTableBody();
+				}
+			}
+		});
+	} else
+		queryInventory('');
+});
+
+$('#QUERY_INVENTORY button.close').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#QUERY_INVENTORY button.add_checked_item').button().click(function() {
+	var rows = TABLE_INVENTORY.funcGetCheckedRows();
+	for (var i = 0; i < rows.length; i++) {
+		onItemSelected(rows[i]);
+	}
+});
+
+$('#ITEM_LIST_DELETE_CHECKED').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+	$('#ITEM_LIST tbody input.item_check:checked').each(function(i, e) {
+		$(e).parent().parent().remove();
+	});
+	$('#ITEM_LIST_CHECK_ALL').prop('checked', false);
+	onCalculateTotal();
+});
+
+$('#ITEM_LIST_CHECK_ALL').change(function() {
+	var value = $(this).prop('checked');
+	$('#ITEM_LIST tbody input.item_check').prop('checked', value);
+});
+
+var TABLE_MEMBER = $('#MEMBER').createTable({
+	className: 'com.indogo.relay.member.MemberView',
+	singleSelectMode: true,
+	showCheckBox: true,
+	viewMode: true,
+	afterSetTableColumnEvent: function() {
+		
+	},
+	afterSetTableDataEvent: function() {
+		var tableBody = TABLE_MEMBER.funcGetTableBody();
+		if (tableBody.children('tr').length == 1) {
+			TABLE_MEMBER.funcGetTableBody().find('input.winbond-table-cell-control-box-check').prop('checked', true);
+			$('#QUERY_MEMBER button.select').click();
+		} else {
+			$('#AREA3').show();
+			$('#AREA1').hide();
+		}
+		
+		tableBody.find('td.phone_no').each(function(i, e) {
+			var ee = $(e);
+			var tokens = ee.text().substring(1).split('.');
+			var html = '';
+			for (var i = 0; i < tokens.length; i++) {
+				if (tokens[i].length > 0) {
+					html += tokens[i] + '<br/>';
+				}
+			}
+			if (html.length > 0) {
+				ee.text('').append(html.substring(0, html.length - 5));
+			}
+		});
+	},
+	singleSelectModeDblClick: function() {
+		$('#QUERY_MEMBER button.select').click();
+	}
+})[0];
+
+$('#F input.input_phone_no').keydown(function(e) {
+	if (e.which == $.ui.keyCode.ENTER) {
+		var phone_no = $(this).val();
+		$('#SEARCH_MEMBER').click();
+	}
+});
+
+$('#SEARCH_MEMBER').button({icon: 'ui-icon-search', showLabel: false}).click(function() {
+	var phone_no = $('#F input.input_phone_no').val();
+	$('#QUERY_MEMBER input').val('');
+	$('#QUERY_MEMBER input.phone_no').val(phone_no);
+	$('#QUERY_MEMBER button.ok').click();
+});
+
+$('#QUERY_MEMBER button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var member_name = $('#QUERY_MEMBER .member_name').val();
+	var arc_no = $('#QUERY_MEMBER .arc_no').val();
+	var phone_no = $('#QUERY_MEMBER .phone_no').val();
+	
+	if (member_name.length > 0) {
+		c.push('member_name');
+		o.push('LIKE');
+		v.push('%' + member_name + '%');
+	}
+	
+	if (phone_no.length > 0) {
+		c.push('phone_no');
+		o.push('LIKE');
+		v.push('%.' + phone_no + '%');
+	}
+	
+	if (arc_no.length > 0) {
+		c.push('arc_no');
+		o.push('=');
+		v.push(arc_no);
+	}
+	
+	TABLE_MEMBER.searchFor(c, o, v, f1, f2);
+});
+
+$('#QUERY_MEMBER button.select').button().click(function() {
+	var rows = TABLE_MEMBER.funcGetCheckedRows();
+	if (rows.length <= 0)
+		return false;
+	
+	var row = rows[0];
+	
+	var member_id = row.find('.member_id').text();
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_SALES_CREATE,
+			'action': 'member_data',
+			'member_id': member_id
+		},
+		success: function(row) {
+			var o = row.split(char_31);
+			
+			var member_name = o.shift();
+			var address = o.shift();
+			var phone_no = o.shift();
+			var remit_point = o.shift();
+			var member_login_id = o.shift();
+			var is_wait_confirm = parseInt(o.shift(), 10);
+			var wallet = o.shift();
+
+			$('#F input.member_id').val(member_id);
+			$('#F input.member_name').val(member_name);
+			$('#F input.ship_address').val(address);
+			$('#F input.remit_point').val(remit_point);
+			$('#F input.member_login_id').val(member_login_id);
+			$('#F input.wallet').autoNumeric('set', wallet);
+			
+			// a new member created from sales_create
+			if (is_wait_confirm == -1) {
+				$('#F input.member_login_id, #F input.member_name').attr('readonly', false);
+			} else {
+				$('#F input.member_login_id, #F input.member_name').attr('readonly', true);
+			}
+			
+			var phone_tokens = phone_no.split('.');
+			phone_tokens.shift();
+			var phone_no_1 = phone_tokens.shift();
+			if (phone_no_1 == undefined) {
+				phone_no_1 = '';
+			}
+			var phone_no_2 = phone_tokens.shift();
+			if (phone_no_2 == undefined) {
+				phone_no_2 = '';
+			}
+			var phone_no_3 = phone_tokens.shift();
+			if (phone_no_3 == undefined) {
+				phone_no_3 = '';
+			}
+			$('#F input.phone_no_1').autoNumeric('set', phone_no_1);
+			$('#F input.phone_no_2').autoNumeric('set', phone_no_2);
+			$('#F input.phone_no_3').autoNumeric('set', phone_no_3);
+
+			$('#AREA3').hide();
+			$('#AREA1').show();
+			
+			$('#MEMBER_PURCHASE_HISTORY tbody').empty();
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_SALES_CREATE,
+					'action': 'member_sales_history',
+					'member_id': member_id
+				}, success: function(data) {
+					if (data.length > 0) {
+						var tokens = data.split(char_31);
+						var html = '';
+						for (var i = 0; i < tokens.length; i++) {
+							var cells = tokens[i].split(char_30);
+							
+							var lm_time_created = cells.shift();
+							var status = cells.shift();
+							var shop_name = cells.shift();
+							var sales_id = cells.shift();
+							var total_amount = cells.shift();
+							
+							html = html + '<tr class="even"><td>' + lm_time_created + '</td><td>' + status + '</td><td>' + shop_name + '</td><td class="sales_id">' + sales_id + '</td><td class="total_amount">' + total_amount + '</td><td><button type="button" class="show_item_receipt">show item receipt</button><button type="button" class="copy" style="margin-left: 4px;">copy products</button></td></tr>';
+						}
+						
+						var t = $('#MEMBER_PURCHASE_HISTORY tbody').append(html);
+						
+						t.find('button.show_item_receipt').button({icon: 'ui-icon-newwin', showLabel: false}).click(function() {
+							var row = $(this).parent().parent();
+							var sales_id = row.find('td.sales_id').text();
+							window.open('page.html?menu_row_id=35&sales_id=' + sales_id, 'Customer Receipt', 'width=1100,height=600');
+						});
+						
+						t.find('button.copy').button({icon: 'ui-icon-copy', showLabel: false}).click(function() {
+							var shop_id = $('#F select.shop_name').val();
+							if (shop_id.length <= 0) {
+								page.showWarningDialog('shop cannot empty');
+								return false;
+							}
+							
+							var row = $(this).parent().parent();
+							var sales_id = row.find('td.sales_id').text();
+							sendRequest.relay({
+								data: {
+									'RelayId': RELAY_ID_SALES_CREATE,
+									'action': 'sales_item',
+									'sales_id': sales_id
+								}, success: function(data) {
+									var tokens = data.split(char_31);
+									COPIED_ITEMS = {};
+									var item_ids = [];
+									for (var i = 0; i < tokens.length; i++) {
+										var cells = tokens[i].split(char_30);
+										var item_name = cells.shift();
+										var sales_qty = cells.shift();
+										var sales_discount = cells.shift();
+										var comment = cells.shift();
+										var item_id = cells.shift();
+										
+										COPIED_ITEMS[item_id] = {
+											'sales_qty': sales_qty,
+											'sales_discount': sales_discount,
+											'comment': comment
+										};
+										
+										item_ids.push(item_id);
+									}
+									
+									var c = [];
+									var o = [];
+									var v = [];
+									var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+									
+									c.push('shop_id');
+									o.push('=');
+									v.push(shop_id);
+									
+									c.push('item_id');
+									o.push('IN');
+									v.push($.join(item_ids, ','));
+									
+									TABLE_INVENTORY.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+								}
+							});
+						});
+					}
+				}
+			});
+		}
+	});
+});
+
+$('#QUERY_MEMBER button.cancel').button().click(function() {
+	$('#AREA3').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.create').button().click(function() {
+	var items = [];
+	$('#ITEM_LIST tbody tr').each(function(i, e) {
+		var row = $(e);
+		var item_id = row.find('input.item_id').val();
+		var sales_qty = row.find('input.sales_qty').autoNumeric('get');
+		if (sales_qty.length == 0) {
+			sales_qty = '0';
+		}
+		var sales_price = row.find('input.sales_price').autoNumeric('get');
+		if (sales_price.length == 0) {
+			sales_price = '0';
+		}
+		var sales_discount = row.find('input.sales_discount').autoNumeric('get');
+		if (sales_discount.length == 0) {
+			sales_discount = '0';
+		}
+		var comment = row.find('input.comment').val();
+		items.push(item_id + char_30 + sales_qty + char_30 + sales_price + char_30 + sales_discount + char_30 + comment);
+	});
+	
+	var point_used = $('#F input.point_used').autoNumeric('get');
+	$('#F input.hidden_point_used').val(point_used);
+	
+	var wallet_used = $('#F input.wallet_used').autoNumeric('get');
+	
+	var phone_no1 = $('#F input.phone_no_1').autoNumeric('get');
+	var phone_no2 = $('#F input.phone_no_2').autoNumeric('get');
+	var phone_no3 = $('#F input.phone_no_3').autoNumeric('get');
+	var phone_no = '.' + phone_no1 + '.' + phone_no2 + '.' + phone_no3;
+	
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_SALES_CREATE,
+			'action': 'insert',
+			'items': $.join(items),
+			'phone_no': phone_no,
+			'wallet_used': wallet_used
+		}, success: function(sales_id) {
+			window.open('page.html?menu_row_id=35&sales_id=' + sales_id, 'Customer Receipt', 'width=1100,height=600');
+			
+			$('#CANCEL_MEMBER').click();
+			
+			$('#F').clearForm().resetForm();
+			$('#ITEM_LIST tbody, #MEMBER_PURCHASE_HISTORY tbody').empty();
+			
+			if (SHOP_LIST_SIZE == 1) {
+				$('#F select.shop_name').val(SHOP_LIST_SHOP_ID);
+			}
+			
+			$('#FREIGHT_ID_1_IMAGE').click();
+		}
+	});
+});
+
+$('#ITEM_LIST_ADD input.item_name').keydown(function(e) {
+	if (e.which == 13) {
+		$('#ADD_INVENTORY').click();
+	}
+});
+
+$('#OPEN_MEMBER_ADDRESS').button().click(function() {
+	var member_id = $('#F input.member_id').val();
+	if (member_id.length > 0) {
+		window.open('page.html?menu_row_id=50&member_id=' + member_id, 'member_address', 'width=800,height=600');
+	}
+});
+
+function onAddressSelected(row) {
+	var address_value = row.find('td.address_value').text();
+	$('#F input.ship_address').val(address_value);
+}
+
+funcAreaChange = function() {
+	var v = $('#ADDRESS select.city option:selected').val();
+	if (v.length == 0)
+		return;
+	
+	var tokens = v.split(String.fromCharCode(30));
+	var city = tokens[0];
+	
+	v = $('#ADDRESS select.area option:selected').val();
+	if (v.length == 0)
+		return;
+	
+	tokens = v.split(String.fromCharCode(31));
+	var area = tokens[0];
+	
+	sendRequest.relay({
+		data:
+		{
+			'RelayId': RELAY_ID_MEMBER_CONFIG,
+			'action': 'getAddressRoad',
+			'city': city,
+			'area': area
+		},
+		success: function(data) {
+			$('#ADDRESS select.road').empty().append(data);
+		}
+	});
+};
+
+funcClearAddress = function() {
+	$('#ADDRESS .reset').val('');
+	$('#ADDRESS .empty').empty();
+};
+
+$('#ADDRESS select.city').change(function() {
+	var v = $(this).val();
+	if (v.length == 0)
+		return;
+	
+	var tokens = v.split(String.fromCharCode(30));
+	var city = tokens[0];
+	
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER_CONFIG,
+			'action': 'getAddressArea',
+			'city': city
+		},
+		success: function(data) {
+			$('#ADDRESS select.area').empty().append(data);
+			funcAreaChange();
+		}
+	});
+});
+
+$('#ADDRESS select.area').change(funcAreaChange);
+$('#ADDRESS input.data').createNumericTextInput();
+$('#SET_ADDRESS').button().click(function() {
+	var v = $('#ADDRESS select.city option:selected').val();
+	if (v.length == 0)
+		return;
+	var tokens = v.split(String.fromCharCode(30));
+	var city_cname = tokens[0];
+	var city_ename = tokens[1];
+	
+	v = $('#ADDRESS select.area option:selected').val();
+	if (v.length == 0)
+		return;
+	tokens = v.split(String.fromCharCode(31));
+	var area_cname = tokens[0];
+	var area_ename = tokens[1];
+	
+	v = $('#ADDRESS select.road option:selected').val();
+	if (v.length == 0)
+		return;
+	tokens = v.split(String.fromCharCode(31));
+	var road_cname = tokens[0];
+	var road_ename = tokens[1];
+	var zipcode = tokens[2];
+	
+	var neighbor = $('#ADDRESS input.neighbor').val();
+	var lane = $('#ADDRESS input.lane').val();
+	var alley = $('#ADDRESS input.alley').val();
+	var no1 = $('#ADDRESS input.no1').val();
+	var no2 = $('#ADDRESS input.no2').val();
+	var floor1 = $('#ADDRESS input.floor1').val();
+	var floor2 = $('#ADDRESS input.floor2').val();
+	var room = $('#ADDRESS input.room').val();
+
+	var chinese = city_cname + area_cname + road_cname;
+	var english = road_ename + ', ' + area_ename + ', ' + city_ename + ' ' + zipcode + ', Taiwan (R.O.C.)';
+	
+	if (neighbor.length > 0) {
+		chinese += neighbor + '鄰';
+		english = 'Neighbor ' + neighbor + ', ' + english;
+	}
+	
+	if (lane.length > 0) {
+		chinese += lane + '巷';
+		english = 'Ln. ' + lane + ', ' + english;
+	}
+	
+	if (alley.length > 0) {
+		chinese += alley + '弄';
+		english = 'Aly. ' + alley + ', ' + english;
+	}
+	
+	if (no1.length > 0 && no2.length > 0) {
+		chinese += no1 + '號之' + no2;
+		english = 'No. ' + no1 + '-' + no2 + ', ' + english;
+	}
+	else if (no1.length > 0) {
+		chinese += no1 + '號';
+		english = 'No. ' + no1 + ', ' + english;
+	}
+	
+	if (floor1.length > 0 && floor2.length > 0) {
+		chinese += floor1 + '樓之' + floor2;
+		english = floor1 + 'F.-' + floor2 + ', ' + english;
+	}
+	else if (floor1.length > 0) {
+		chinese += floor1 + '樓';
+		english = floor1 + 'F., ' + english;
+	}
+	
+	if (room.length > 0) {
+		chinese += room + '室';
+		english = 'Rm. ' + room + ', ' + english;
+	}
+	
+	$('#F input.ship_address').val(chinese);
+	onShipAddressChanged();
+});
+
+$('#FREIGHT_ID_1_IMAGE').click();
+
+$('#F select.shop_name').change(function() {
+	$('#ITEM_LIST tbody').empty();
+});
+
+$('#NEW_MEMBER').button().click(function() {
+	$('#F input.input_phone_no').prop('disabled', true);
+	$('#SEARCH_MEMBER, #NEW_MEMBER').button('disable');
+	$('#F input.member_login_id, #F input.member_name').attr('readonly', false);
+	$('#F input.member_id').val('0');
+	$('#CANCEL_MEMBER').show();
+});
+
+$('#CANCEL_MEMBER').button().click(function() {
+	$('#F input.input_phone_no').prop('disabled', false);
+	$('#SEARCH_MEMBER, #NEW_MEMBER').button('enable');
+	$('#F input.member_login_id, #F input.member_name').attr('readonly', true);
+	$('#F input.member_id').val('');
+	$('#CANCEL_MEMBER').hide();
+});
+
+//# sourceURL=sales_create.js
+</script>

@@ -1,0 +1,1271 @@
+<div id="AREA1">
+	<table id="QUERY_HIDDEN" class="query">
+		<tr>
+			<td class="category"><button type="button" class="show">Show</button></td>
+		</tr>
+	</table>
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category" style="line-height: 27px;"><button type="button" style="float: left;" class="hide">Hide</button>Create Time</td>
+			<td colspan="3"><input type="text" class="start_time"/> ~ <input type="text" class="end_time"/></td>
+		</tr>
+		<tr>
+			<td class="category">Status</td>
+			<td colspan="3"><div id="STATUS"></div></td>
+		</tr>
+		<tr>
+			<td class="category">Payment Info</td>
+			<td colspan="3"><textarea class="payment_info" style="width: 380px; height: 90px;"></textarea></td>
+		</tr>
+		<tr>
+			<td class="category">Recipient Name</td>
+			<td><input type="text" class="recipient_name"/></td>
+			<td class="category">Bank Account</td>
+			<td><input type="text" class="bank_acc"/></td>
+		</tr>
+		<tr>
+			<td class="category">Phone No</td>
+			<td><input type="text" class="phone_no" style="width: 150px"/></td>
+			<td class="category">Member Name</td>
+			<td><input type="text" class="member_name uppercase"/></td>
+		</tr>
+		<tr>
+			<td class="category">ARC</td>
+			<td><input type="text" class="arc_no" style="width: 150px"/></td>
+			<td class="category">Payment Type</td>
+			<td>
+				<!--<input type="checkbox" id="PAYMENT_ID_1" value="1" name="payment_id" class="payment_id"/><label for="PAYMENT_ID_1">Family Mart</label>-->
+				<input type="checkbox" id="PAYMENT_ID_2" value="2" name="payment_id" class="payment_id" style="cursor: pointer"/><label for="PAYMENT_ID_2" style="cursor: pointer">Mini Mart</label>
+				<input type="checkbox" id="PAYMENT_ID_99" value="99" name="payment_id" class="payment_id" style="cursor: pointer"/><label for="PAYMENT_ID_99" style="cursor: pointer">黑貓</label>
+				<input type="checkbox" id="PAYMENT_ID_3" value="3" name="payment_id" class="payment_id" style="cursor: pointer"/><label for="PAYMENT_ID_3" style="cursor: pointer">Cash</label>
+				<input type="checkbox" id="IS_APP_1" value="1" name="is_app" class="is_app" style="cursor: pointer"/><label for="IS_APP_1" style="cursor: pointer">From APP</label>
+				<input type="checkbox" id="IS_APP_0" value="0" name="is_app" class="is_app" style="cursor: pointer"/><label for="IS_APP_0" style="cursor: pointer">From Console</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Print Status</td>
+			<td><select class="is_print"><option selected="selected" value="">&nbsp;</option><option value="0">not yet</option><option value="1">printed</option></select></td>
+			<td class="category">Print As</td>
+			<td>
+				<input type="radio" id="PRINT_ALL_PDF" name="print_all" class="print_all" value="print_checked_as_pdf" checked="checked" style="cursor: pointer"/><label for="PRINT_ALL_PDF" style="cursor: pointer">PDF</label>
+				<input type="radio" id="PRINT_ALL_ZIP" name="print_all" class="print_all" value="print_checked_as_zip" style="cursor: pointer"/><label for="PRINT_ALL_ZIP" style="cursor: pointer">ZIP</label>
+				<input type="radio" id="PRINT_ALL_IMAGE" name="print_all" class="print_all" value="print_checked_as_image" style="cursor: pointer"/><label for="PRINT_ALL_IMAGE" style="cursor: pointer">JPEG</label>
+				<input type="checkbox" value="1" id="USE_STAMP" style="cursor: pointer"/><label for="USE_STAMP" style="cursor: pointer">加蓋公司大小印章</label>
+				<input type="checkbox" value="1" id="USE_STAMP_FOR_BANK" style="cursor: pointer"/><label for="USE_STAMP_FOR_BANK" style="cursor: pointer">加蓋銀行印章</label>
+				<select id="CHECKBOX_SELECTION">
+					<option value="0">無</option>
+					<option value="1" selected>匯至國外帳戶</option>
+					<option value="2">匯至受款人</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td colspan="3"><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="DIALOG_CHANGE_STATUS" title="Change Status">
+	<form id="F">
+		<input type="hidden" name="lm_time" class="lm_time"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Transaction Id</td>
+					<td><input type="text" readonly="readonly" class="txn_id" name="txn_id"/></td>
+				</tr>
+				<tr>
+					<td class="category">Current Status</td>
+					<td><label class="current_status"></label></td>
+				</tr>
+				<tr>
+					<td class="category">New Status</td>
+					<td><select class="transfer_status_id" name="transfer_status_id"><option value="">-- select one --</option></select>  <select class="transfer_through_bank_name" name="transfer_through_bank_name"><option value=""></option><option value="BRI">BRI</option><option value="BNI">BNI</option><option value="BOT">BOT</option></select></td>
+				</tr>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea class="comment" name="comment"></textarea></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_VIEW_RECIPIENT_HISTORY" title="Recipient Change History">
+	<table id="TABLE_VIEW_RECIPIENT_HISTORY" class="winbond-table">
+		<thead>
+			<tr>
+				<td>lm_time</td>
+				<td>lm_user</td>
+				<td>old_recipient_name</td>
+				<td>old_bank_name</td>
+				<td>old_bank_acc</td>
+				<td>new_recipient_name</td>
+				<td>new_bank_name</td>
+				<td>new_bank_acc</td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+
+<div id="DIALOG_VIEW_HISTORY" title="Status Change History">
+	<table id="TABLE_VIEW_HISTORY" class="winbond-table">
+		<thead>
+			<tr>
+				<td>lm_time</td>
+				<td>lm_user</td>
+				<td>old_status</td>
+				<td>new_status</td>
+				<td>comment</td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+
+<div id="DIALOG_UPDATE_PAYMENT_INFO" title="Update Payment Info">
+	<form id="FORM_UPDATE_PAYMENT_INFO">
+		<input type="hidden" name="lm_time" class="lm_time"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Transaction Id</td>
+					<td><input type="text" readonly="readonly" class="txn_id" name="txn_id"/></td>
+				</tr>
+				<tr>
+					<td class="category">Payment Info</td>
+					<td><input type="text" class="payment_info" name="payment_info"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_UPDATE_RECIPIENT" title="Update Recipient">
+	<form id="FORM_UPDATE_RECIPIENT">
+		<input type="hidden" name="txn_id" class="txn_id"/>
+		<input type="hidden" name="lm_time" class="lm_time"/>
+		<input type="hidden" name="member_id" class="member_id"/>
+		<input type="hidden" name="recipient_id" class="recipient_id"/>
+		<input type="hidden" name="recipient_lm_time" class="recipient_lm_time"/>
+		<input type="hidden" name="is_verified" class="is_verified"/>
+		<input type="hidden" class="old_recipient_name"/>
+		<input type="hidden" class="old_bank_code"/>
+		<input type="hidden" class="old_bank_acc"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Update Recipient</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Recipient Name</td>
+					<td><input type="text" class="recipient_name uppercase" name="recipient_name"/> <button type="button" id="BROWSE_RECIPIENT">browse</button></td>
+				</tr>
+				<tr>
+					<td class="category">Account No</td>
+					<td><input type="text" class="bank_acc"/></td>
+				</tr>
+				<tr>
+					<td class="category">Bank Code</td>
+					<td><select class="bank_code" name="bank_code"></select></td>
+				</tr>
+				<tr>
+					<td class="category">Bank Name</td>
+					<td><input class="bank_name update_recipient" style="width: 400px;"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Update</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_EDIT_COMMENT" title="Edit Comment">
+	<form id="FORM_EDIT_COMMENT">
+		<input type="hidden" name="txn_id" class="txn_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea name="comment" class="comment"></textarea></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_VERIFY_RECIPIENT" title="Recipient Name Verification">
+	<table class="maintenance" id="TABLE_VERIFY_RECIPIENT">
+		<tbody>
+			<tr>
+				<td class="category">Current Name</td>
+				<td><input type="text" class="recipient_name" readonly="readonly" style="background-color: white"/></td>
+			</tr>
+			<tr>
+				<td class="category">Registered Name</td>
+				<td><input type="text" class="bni_recipient_name" readonly="readonly" style="background-color: white"/></td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td class="category">
+					<input type="hidden" class="member_id"/>
+					<input type="hidden" class="recipient_id"/>
+				</td>
+				<td><button type="button" class="ok">Update</button> <button type="button" class="cancel">Cancel</button></td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+<div id="DIALOG_BNI_PAYMENT_INFO" title="BNI Transfer Status">
+	<table class="maintenance" id="TABLE_BNI_PAYMENT_INFO">
+		<tbody>
+			<tr>
+				<td class="category">Status</td>
+				<td><input type="text" class="status"/></td>
+			</tr>
+			<tr>
+				<td class="category">Status Description</td>
+				<td><input type="text" class="status_description"/></td>
+			</tr>
+			<tr>
+				<td class="category">BNI Reference</td>
+				<td><input type="text" class="bni_reference"/></td>
+			</tr>
+			<tr>
+				<td class="category">Paid Date</td>
+				<td><input type="text" class="paid_date"/></td>
+			</tr>
+			<tr>
+				<td class="category">Paid Currency</td>
+				<td><input type="text" class="paid_currency"/></td>
+			</tr>
+			<tr>
+				<td class="category">Paid Amount</td>
+				<td><input type="text" class="paid_amount"/></td>
+			</tr>
+			<tr>
+				<td class="category">Charges Amount</td>
+				<td><input type="text" class="charges_amount"/></td>
+			</tr>
+			<tr>
+				<td class="category">Beneficiary Account</td>
+				<td><input type="text" class="beneficiary_account"/></td>
+			</tr>
+			<tr>
+				<td class="category">Beneficiary Name</td>
+				<td><input type="text" class="beneficiary_name"/></td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td class="category"></td>
+				<td><button type="button" class="ok">Close</button></td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+<div id="DIALOG_BRI_PAYMENT_INFO" title="BRI Transfer Status">
+	<table class="maintenance" id="TABLE_BRI_PAYMENT_INFO" style="margin: auto 15px auto 15px;">
+		<tbody>
+			<tr>
+				<td class="category">Status</td>
+				<td><input type="text" class="status"/></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<style type="text/css">
+#F textarea.comment, #FORM_EDIT_COMMENT textarea.comment {
+	width: 250px;
+	height: 100px;
+}
+#F input.txn_id {
+	width: 250px
+}
+#TABLE td.recipient_name label.verified {
+	color: red;
+	font-weight: bold;
+}
+#TABLE td.is_print {
+	text-align: center;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID = 'member.money_transfer';
+var RELAY_ID_MEMBER = 'member.member_config';
+var RELAY_ID_MONEY_TRANSFER_BNI = 'member.money_transfer_bni';
+var RELAY_ID_MONEY_TRANSFER_BRI = 'member.money_transfer_bri';
+var char_31 = String.fromCharCode(31);
+var char_30 = String.fromCharCode(30);
+var BANK_NAME_TO_CODE = {};
+var BANK_CODE_TO_NAME = {};
+var BANK_NAMES = [];
+
+$('#DIALOG_VERIFY_RECIPIENT, #DIALOG_BNI_PAYMENT_INFO, #DIALOG_UPDATE_PAYMENT_INFO, #DIALOG_VIEW_HISTORY, #DIALOG_VIEW_RECIPIENT_HISTORY').dialog({
+	modal: true,
+	width: 600,
+	autoOpen: false
+});
+
+$('#DIALOG_CHANGE_STATUS, #DIALOG_EDIT_COMMENT').dialog({
+	modal: true,
+	width: 450,
+	autoOpen: false
+});
+
+$('#DIALOG_BRI_PAYMENT_INFO').dialog({
+	modal: true,
+	width: 600,
+	autoOpen: false,
+	buttons: {
+		'Close': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+$('#QUERY input.start_time, #QUERY input.end_time').createDatePickerWritable();
+$('#QUERY input.start_time').datepicker('setDate', moment().add(-7, 'day').toDate());
+$('#DIALOG_UPDATE_RECIPIENT, #AREA3, #QUERY_HIDDEN').hide();
+$('#FORM_UPDATE_RECIPIENT input.bank_acc, #QUERY input.bank_acc').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: '', lZero: 'keep', strictDigitOnly: true});
+$('#QUERY button.hide').button({icon: 'ui-icon-minus', showLabel: false}).click(function() {
+	$('#QUERY').hide();
+	$('#QUERY_HIDDEN').show();
+});
+$('#QUERY_HIDDEN button.show').button({icon: 'ui-icon-plus', showLabel: false}).click(function() {
+	$('#QUERY_HIDDEN').hide();
+	$('#QUERY').show();
+});
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID,
+		'action': 'init'
+	},
+	success: function(data) {
+		var tokens = data.split(String.fromCharCode(31));
+		var transferStatusSize = parseInt(tokens.shift(), 10);
+		var html = '';
+		var select = '';
+		for (var i = 0; i < transferStatusSize; i++) {
+			var transfer_status_id = tokens.shift();
+			var transfer_status_name = tokens.shift();
+			html = html + '<input type="checkbox" class="transfer_status_id" value="' + transfer_status_id + '" id="TS' + i + '" style="cursor: pointer"/><label for="TS' + i + '" style="cursor: pointer">' + transfer_status_name + '</label>\n';
+			select = select + '<option value="' + transfer_status_id + '">' + transfer_status_name + '</option>';
+		}
+		$('#STATUS').append(html);
+		$('#F select.transfer_status_id').append(select).change(function() {
+			var value = parseInt($(this).val(), 10);
+			if (value == 4) {
+				$('#F select.transfer_through_bank_name').show();
+			} else {
+				$('#F select.transfer_through_bank_name').val('');
+				$('#F select.transfer_through_bank_name').hide();
+			}
+		});
+		
+		var bankCodeListSize = parseInt(tokens.shift(), 10);
+		var htmlBankCode = '<option value=""></option>';
+		for (var i = 0; i < bankCodeListSize; i++) {
+			var bankCode = tokens.shift();
+			var bankName = tokens.shift();
+			htmlBankCode = htmlBankCode + '<option value="' + bankCode + '">' + bankCode  + '</option>';
+			BANK_CODE_TO_NAME[bankCode] = bankName;
+		}
+		
+		bankCodeListSize = parseInt(tokens.shift(), 10);
+		for (var i = 0; i < bankCodeListSize; i++) {
+			var bankCode = tokens.shift();
+			var bankName = tokens.shift();
+			BANK_NAME_TO_CODE[bankName] = bankCode;
+			BANK_NAMES.push(bankName);
+		}
+		
+		$('#FORM_UPDATE_RECIPIENT select.bank_code').append(htmlBankCode).change(function() {
+			var bankCode = $(this).children('option:selected').text();
+			$('#FORM_UPDATE_RECIPIENT input.bank_name').val(BANK_CODE_TO_NAME[bankCode]);
+		});
+		
+		$('#FORM_UPDATE_RECIPIENT input.bank_name').keydown(function(e) {
+			if (e.which == 13) {
+				$(this).data('ui-autocomplete')._trigger('change');
+			}
+		}).autocomplete({
+			source: BANK_NAMES,
+			change: function(event, ui) {
+				var elem = $(this);
+				var elemBankCode = $('#FORM_UPDATE_RECIPIENT select.bank_code');
+				
+				if (ui.item == null) {
+					var bank_name = elem.val().toUpperCase();
+					var bank_code = BANK_NAME_TO_CODE[bank_name];
+					if (bank_code) {
+						elemBankCode.val(bank_code);
+						elem.val(bank_name);
+					} else {
+						for (var i = 0; i < BANK_NAMES.length; i++) {
+							if (BANK_NAMES[i].indexOf(bank_name) > -1) {
+								bank_name = BANK_NAMES[i];
+								bank_code = BANK_NAME_TO_CODE[bank_name];
+								break;
+							}
+						}
+						
+						if (bank_code) {
+							elemBankCode.val(bank_code);
+							elem.val(bank_name);
+						} else {
+							elemBankCode.val('');
+							elem.val('');
+						}
+					}
+				} else {
+					var bank_code = BANK_NAME_TO_CODE[ui.item.value];
+					elemBankCode.val(bank_code);
+				}
+			},
+			select: function(event, ui) {
+				var elem = $(this);
+				var elemBankCode = $('#FORM_UPDATE_RECIPIENT select.bank_code');
+				var bank_code = BANK_NAME_TO_CODE[ui.item.value];
+				elemBankCode.val(bank_code);
+			}
+		});
+		
+		var print_label_default = tokens.shift();
+		
+		var roleIdsSize = parseInt(tokens.shift(), 10);
+		var roleIds = [];
+		for (var i = 0; i < roleIdsSize; i++) {
+			var roleId = parseInt(tokens.shift(), 10);
+			roleIds.push(roleId);
+		}
+		
+		createTable(roleIds);
+	}
+});
+
+var TABLE;
+
+var createTable = function(roleIds) {
+	var disableExport = true;
+	
+	if ($.inArray(1, roleIds) > -1 || $.inArray(2, roleIds) > -1 || $.inArray(3, roleIds) > -1 || $.inArray(5, roleIds) > -1) {
+		disableExport = false;
+	}
+	
+	TABLE = $('#TABLE').createTable({
+		className: 'com.indogo.relay.member.MoneyTransfer',
+		showCheckBox: true,
+		disableExport: disableExport,
+		viewMode: true,
+		afterSetTableColumnEvent: function() {
+			var buttonPrintAll = $('<button id="BUTTON_PRINT_ALL">print checked declarations</button>').button({icon: 'ui-icon-print', showLabel: false}).click(function() {
+				var txn_ids = [];
+				TABLE.funcGetTableBody().find('td.winbond-table-cell-control-box input.winbond-table-cell-control-box-check:checked').each(function(i, e) {
+					var row = $(e).parent().parent();
+					var txn_id = row.find('td.txn_id').text();
+					txn_ids.push(txn_id);
+				});
+				if (txn_ids.length == 0)
+					return false;
+				
+				var print_checked = $('#QUERY input.print_all:checked').val();
+				var use_stamp = 0;
+				if ($('#USE_STAMP').is(':checked')) {
+					use_stamp = 1;
+				}
+				var use_stamp_for_bank = 0;
+				if ($('#USE_STAMP_FOR_BANK').is(':checked')) {
+					use_stamp_for_bank = 1;
+				}
+				
+				var checkbox_selection = $('#CHECKBOX_SELECTION').val();
+				
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID,
+						'action': print_checked,
+						'txn_ids': $.join(txn_ids),
+						'print_label': 'print_yoho',
+						'use_stamp': use_stamp,
+						'use_stamp_for_bank': use_stamp_for_bank,
+						'checkbox_selection': checkbox_selection
+					}, success: function(data) {
+						if (print_checked == 'print_checked_as_zip' || print_checked == 'print_checked_as_image')
+							sendRequest.downloadFile(data, 'N');
+						else
+							sendRequest.downloadPdf(data, 'Y');
+					}
+				});
+			});
+			
+			//$('#TABLE button.export-to-excel').parent().append(buttonPrintAll);
+			TABLE.funcGetTableHeader().find('td[column_name=action]').append(buttonPrintAll);
+			
+			$('#QUERY button.ok').click();
+		},
+		afterSetTableDataEvent: function(rows) {
+			rows.find('td.transfer_status_name').each(function(i, e) {
+				var btn = $('<button type="button">change status</button>').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+					var row = $(this).parent().parent();
+					var txn_id = row.find('.txn_id').text();
+					var current_status = row.find('.transfer_status_name label').text();
+					var lm_time = row.find('.lm_time').text();
+					
+					$('#F').clearForm().resetForm();
+					$('#F select.transfer_through_bank_name').val('').hide();
+					$('#F input.txn_id').val(txn_id);
+					$('#F label.current_status').text(current_status);
+					$('#F input.lm_time').val(lm_time);
+					$('#F button.ok').data('row', row);
+					
+					$('#DIALOG_CHANGE_STATUS').dialog('open');
+				});
+				
+				var cell = $(e);
+				var text = cell.text();
+				cell.empty().append(btn).append('<label style="margin-left: 4px;">' + text + '</label>');
+			});
+			
+			rows.find('button.view_history').css('margin-left', '4px').button({
+				showLabel: false,
+				icons: {primary: 'ui-icon-script'}
+			}).click(function() {
+				var row = $(this).parent().parent();
+				var txn_id = row.find('.txn_id').text();
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID,
+						'action': 'money_transfer_status',
+						'txn_id': txn_id
+					}, success: function(data) {
+						$('#TABLE_VIEW_HISTORY tbody').empty();
+						if (data.length > 0) {
+							var rows = data.split(char_30);
+							var html = '';
+							for (var i = 0; i < rows.length; i++) {
+								var cells = rows[i].split(char_31);
+								var lm_time = cells[0];
+								var lm_user = cells[1];
+								var old_status_name = cells[2];
+								var new_status_name = cells[3];
+								var comment = cells[4];
+								var tag;
+								if (i % 2 == 0)
+									tag = "even";
+								else
+									tag = "odd";
+								html += '<tr class="' + tag + '"><td>' + lm_time + '</td><td>' + lm_user + '</td><td>' + old_status_name + '</td><td>' + new_status_name + '</td><td>' + comment.replace(/\n/g, "<br />") + '</td></tr>\n';
+							}
+							$('#TABLE_VIEW_HISTORY tbody').append(html);
+						}
+						$('#DIALOG_VIEW_HISTORY').dialog('open');
+					}
+				});
+			});
+			
+			rows.find('td.phone_no').each(function(i, e) {
+				var ee = $(e);
+				var tokens = ee.text().substring(1).split('.');
+				var html = '';
+				for (var i = 0; i < tokens.length; i++) {
+					if (tokens[i].length > 0) {
+						html += tokens[i] + '<br/>';
+					}
+				}
+				if (html.length > 0)
+					ee.text('').append(html.substring(0, html.length - 5));
+			});
+			
+			rows.find('td.payment_info').each(function(i, e) {
+				var cell = $(e);
+				
+				var payment_info = cell.text();
+				var payment_id = cell.parent().find('td.payment_id').text();
+				var transfer_status_id = cell.parent().find('td.transfer_status_id').text();
+				var transfer_through_bank_name = cell.parent().find('td.transfer_through_bank_name').text();
+				var bni_trx_date = cell.parent().find('td.bni_trx_date').text();
+				
+				cell.empty();
+				
+				if (payment_id == '99') {
+					var btn = $('<button type="button">edit payment info</button>').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+						var row = $(this).parent().parent();
+						var txn_id = row.find('td.txn_id').text();
+						var lm_time = row.find('td.lm_time').text();
+						var payment_info = row.find('td.payment_info label').text();
+						$('#FORM_UPDATE_PAYMENT_INFO input.txn_id').val(txn_id);
+						$('#FORM_UPDATE_PAYMENT_INFO input.lm_time').val(lm_time);
+						$('#FORM_UPDATE_PAYMENT_INFO input.payment_info').val(payment_info);
+						$('#FORM_UPDATE_PAYMENT_INFO button.ok').data('row', row);
+						$('#DIALOG_UPDATE_PAYMENT_INFO').dialog('open');
+					});
+					cell.append(btn);
+				} else if (payment_id == '3' && transfer_status_id == '1') {
+					var btn = $('<button type="button">Paid</button>').button().click(function() {
+						var row = $(this).parent().parent();
+						var txn_id = row.find('td.txn_id').text();
+						var lm_time = row.find('td.lm_time').text();
+						sendRequest.relay({
+							data: {
+								'RelayId': RELAY_ID,
+								'action': 'change_status',
+								'txn_id': txn_id,
+								'lm_time': lm_time,
+								'transfer_status_id': '2'
+							}, success: function(new_lm_time) {
+								row.find('td.lm_time').text(new_lm_time);
+								row.find('td.transfer_status_id').text('2');
+								row.find('td.transfer_status_name label').text('paid');
+								row.find('td.payment_info button').button('destroy').remove();
+							}
+						});
+					});
+					cell.append(btn);
+				}
+				
+				if (transfer_through_bank_name == 'BNI') {
+					var button_bni_status = $('<button type="button">BNI payment order inquiry</button>').button({icon: 'ui-icon-contact', showLabel: false}).click(function() {
+						var payment_info = $(this).parent().parent().find('td.payment_info label').text();
+						sendRequest.relay({
+							data: {
+								'RelayId': RELAY_ID_MONEY_TRANSFER_BNI,
+								'action': 'payment_order_inquiry',
+								'payment_info': payment_info
+							}, success: function(data) {
+								var tokens = data.split(String.fromCharCode(31));
+								var status = tokens.shift();
+								var statusDescription = tokens.shift();
+								var bniReference = tokens.shift();
+								var paidDate = tokens.shift();
+								var paidCurrency = tokens.shift();
+								var paidAmount = tokens.shift();
+								var chargesAmount = tokens.shift();
+								var beneficiaryAccount = tokens.shift();
+								var beneficiaryName = tokens.shift();
+								
+								$('#TABLE_BNI_PAYMENT_INFO input.status').val(status);
+								$('#TABLE_BNI_PAYMENT_INFO input.status_description').val(statusDescription);
+								$('#TABLE_BNI_PAYMENT_INFO input.bni_reference').val(bniReference);
+								$('#TABLE_BNI_PAYMENT_INFO input.paid_date').val(paidDate);
+								$('#TABLE_BNI_PAYMENT_INFO input.paid_currency').val(paidCurrency);
+								$('#TABLE_BNI_PAYMENT_INFO input.paid_amount').val(paidAmount);
+								$('#TABLE_BNI_PAYMENT_INFO input.charges_amount').val(chargesAmount);
+								$('#TABLE_BNI_PAYMENT_INFO input.beneficiary_account').val(beneficiaryAccount);
+								$('#TABLE_BNI_PAYMENT_INFO input.beneficiary_name').val(beneficiaryName);
+								
+								$('#DIALOG_BNI_PAYMENT_INFO').dialog('open');
+							}
+						});
+					});
+					cell.append(button_bni_status);
+				} else if (transfer_through_bank_name == 'BRI') {
+					if (bni_trx_date.length > 0) {
+						var button_bri_status = $('<button type="button">BRI payment inquiry</button>').button({icon: 'ui-icon-contact', showLabel: false}).click(function() {
+							var payment_info = $(this).parent().parent().find('td.payment_info label').text();
+							sendRequest.relay({
+								data: {
+									'RelayId': RELAY_ID_MONEY_TRANSFER_BRI,
+									'action': 'payment_order_inquiry',
+									'payment_info': payment_info
+								}, success: function(status) {
+									$('#TABLE_BRI_PAYMENT_INFO input.status').val(status);
+									$('#DIALOG_BRI_PAYMENT_INFO').dialog('open');
+								}
+							});
+						});
+						cell.append(button_bri_status);
+					}
+				}
+				
+				cell.append('<label style="margin-left: 4px;">' + payment_info + '</label>');
+			});
+			
+			rows.find('button.print').button({icon: 'ui-icon-print', showLabel: false}).click(function() {
+				var row = $(this).parent().parent();
+				var txn_id = row.find('td.txn_id').text();
+				var print_checked = $('#QUERY input.print_all:checked').val();
+				var use_stamp = 0;
+				if ($('#USE_STAMP').is(':checked')) {
+					use_stamp = 1;
+				}
+				var use_stamp_for_bank = 0;
+				if ($('#USE_STAMP_FOR_BANK').is(':checked')) {
+					use_stamp_for_bank = 1;
+				}
+				
+				var checkbox_selection = $('#CHECKBOX_SELECTION').val();
+				
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID,
+						'action': 'print',
+						'txn_id': txn_id,
+						'print_mode': print_checked,
+						'print_label': 'print_yoho',
+						'use_stamp': use_stamp,
+						'use_stamp_for_bank': use_stamp_for_bank,
+						'checkbox_selection': checkbox_selection
+					}, success: function(data) {
+						if (print_checked == 'print_checked_as_image') {
+							sendRequest.downloadFile(data, 'N');
+						} else {
+							sendRequest.downloadPdf(data, 'Y');
+						}
+					}
+				});
+			});
+			
+			//var buttonPrintFamiBarcode = $('<button type="button">print fami barcode</button>').button({icon: 'ui-icon-newwin', showLabel: false}).click(function() {
+			//	var row = $(this).parent().parent();
+			//	var txn_id = row.find('td.txn_id').text();
+			//	var payment_info = row.find('td.payment_info').text();
+			//	var famiForm = $('<form method="post" name="form1" id="form1" action="https://60.251.136.136/familyec/barcode_guide2.aspx" target="_blank">' +
+			//			'<input type="hidden" name="VD_ACCOUNT" value="indogotest" />' +
+			//			'<input type="hidden" name="VD_ORDERNO" value="' + txn_id + '" />' +
+			//			'<input type="hidden" name="VD_PINCODE" value="' + payment_info + '" />' +
+			//			'<button type="submit">submit</button>' +
+			//			'</form>');
+			//	famiForm.find('button').click();
+			//});
+			//rows.find('button.print').parent().append(buttonPrintFamiBarcode);
+			
+			rows.find('td.recipient_name').each(function(i, e) {
+				var btnEdit = $('<button type="button">edit recipient</button>').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+					var row = $(this).parent().parent();
+					var txn_id = row.find('td.txn_id').text();
+					var lm_time = row.find('td.lm_time').text();
+					var member_id = row.find('td.member_id').text();
+					var recipient_id = row.find('td.recipient_id').text();
+					sendRequest.relay({
+						data: {
+							'RelayId': RELAY_ID_MEMBER,
+							'action': 'getRecipient',
+							'member_id': member_id,
+							'recipient_id': recipient_id
+						}, success: function(data) {
+							var tokens = data.split(char_31);
+							var member_id = tokens.shift();
+							var recipient_id = tokens.shift();
+							var recipient_name = tokens.shift();
+							var bank_code = tokens.shift();
+							var bank_name = tokens.shift();
+							var bank_acc = tokens.shift();
+							var recipient_lm_time = tokens.shift();
+							var recipient_lm_user = tokens.shift();
+							var is_verified = tokens.shift();
+							$('#FORM_UPDATE_RECIPIENT input.txn_id').val(txn_id);
+							$('#FORM_UPDATE_RECIPIENT input.lm_time').val(lm_time);
+							$('#FORM_UPDATE_RECIPIENT input.member_id').val(member_id);
+							$('#FORM_UPDATE_RECIPIENT input.recipient_id').val(recipient_id);
+							$('#FORM_UPDATE_RECIPIENT input.recipient_name, #FORM_UPDATE_RECIPIENT input.old_recipient_name').val(recipient_name);
+							$('#FORM_UPDATE_RECIPIENT select.bank_code, #FORM_UPDATE_RECIPIENT input.old_bank_code').val(bank_code);
+							$('#FORM_UPDATE_RECIPIENT input.bank_name').val(bank_name);
+							$('#FORM_UPDATE_RECIPIENT input.bank_acc, #FORM_UPDATE_RECIPIENT input.old_bank_acc').val(bank_acc);
+							$('#FORM_UPDATE_RECIPIENT input.recipient_lm_time').val(recipient_lm_time);
+							$('#FORM_UPDATE_RECIPIENT input.is_verified').val(is_verified);
+							$('#DIALOG_UPDATE_RECIPIENT').show();
+							$('#AREA1').hide();
+						}
+					});
+				});
+				
+				var btnLock = $('<button type="button" class="lock_recipient" style="margin-left: 4px;">lock recipient</button>').button({icon: 'ui-icon-locked', showLabel: false}).click(function() {
+					var thisButton = $(this);
+					var row = thisButton.parent().parent();
+					var member_id = row.find('td.member_id').text();
+					var recipient_id = row.find('td.recipient_id').text();
+					sendRequest.relay({
+						data: {
+							'RelayId': RELAY_ID_MEMBER,
+							'action': 'verify_recipient',
+							'member_id': member_id,
+							'recipient_id': recipient_id
+						}, success: function(data) {
+							var tokens = data.split(char_31);
+							var status = tokens.shift();
+							if (status == "0") {
+								var recipient_name = tokens.shift();
+								var bni_recipient_name = tokens.shift();
+								$('#TABLE_VERIFY_RECIPIENT input.member_id').val(member_id);
+								$('#TABLE_VERIFY_RECIPIENT input.recipient_id').val(recipient_id);
+								$('#TABLE_VERIFY_RECIPIENT input.recipient_name').val(recipient_name);
+								$('#TABLE_VERIFY_RECIPIENT input.bni_recipient_name').val(bni_recipient_name);
+								$('#DIALOG_VERIFY_RECIPIENT').dialog('open');
+							} else if (status == "1") {
+								var recipient_name = tokens.shift();
+								TABLE.funcGetTableBody().find('tr').each(function(i2, e2) {
+									var row = $(e2);
+									var this_member_id = row.find('td.member_id').text();
+									var this_recipient_id = row.find('td.recipient_id').text();
+									if (this_member_id == member_id && this_recipient_id == recipient_id) {
+										row.find('button.lock_recipient').button({disabled: true});
+										row.find('td.recipient_name label').addClass('verified').text(recipient_name);
+									}
+								});
+							}
+						}
+					});
+				});
+				
+				var btnViewHistory = $('<button type="button" class="view_recipient_history" style="margin-left: 4px;">view recipient history</button>').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+					var row = $(this).parent().parent();
+					var txn_id = row.find('td.txn_id').text();
+					sendRequest.relay({
+						data: {
+							'RelayId': RELAY_ID,
+							'action': 'recipient_history',
+							'txn_id': txn_id
+						}, success: function(data) {
+							$('#TABLE_VIEW_RECIPIENT_HISTORY tbody').empty();
+							if (data.length > 0) {
+								var rows = data.split(char_31);
+								var html = '';
+								for (var i = 0; i < rows.length; i++) {
+									var cells = rows[i].split(char_30);
+									var lm_time = cells[0];
+									var lm_user = cells[1];
+									var old_recipient_name = cells[2];
+									var old_bank_name = cells[3];
+									var old_bank_acc = cells[4];
+									var new_recipient_name = cells[5];
+									var new_bank_name = cells[6];
+									var new_bank_acc = cells[7];
+									var tag;
+									if (i % 2 == 0)
+										tag = "even";
+									else
+										tag = "odd";
+									html += '<tr class="' + tag + '"><td>' + lm_time + '</td><td>' + lm_user + '</td><td>' + old_recipient_name + '</td><td>' + old_bank_name + '</td><td>' + old_bank_acc + '</td><td>' + new_recipient_name + '</td><td>' + new_bank_name + '</td><td>' + new_bank_acc + '</td></tr>\n';
+								}
+								$('#TABLE_VIEW_RECIPIENT_HISTORY tbody').append(html);
+							}
+							$('#DIALOG_VIEW_RECIPIENT_HISTORY').dialog('open');
+						}
+					});
+				});
+				
+				var cell = $(e);
+				var is_verified = cell.parent().find('td.is_verified').text();
+				var text = cell.text();
+				cell.empty().append(btnEdit).append(btnLock).append(btnViewHistory);
+				if (is_verified == "1") {
+					cell.append('<label style="margin-left: 4px;" class="verified">' + text + '</label>');
+					btnLock.button('disable');
+				} else {
+					cell.append('<label style="margin-left: 4px;">' + text + '</label>');
+				}
+			});
+			
+			rows.find('td.recipient_name label').each(function(i, e) {
+				var thisLabel = $(e);
+				if (thisLabel.hasClass('verified')) {
+					thisLabel.parent().find('button.lock_recipient').button({disabled: true});
+				}
+			});
+			
+			rows.find('td.comment').each(function(i, e) {
+				var btn = $('<button type="button">edit comment</button>').button({icon: 'ui-icon-comment', showLabel: false}).click(function() {
+					var row = $(this).parent().parent();
+					var txn_id = row.find('td.txn_id').text();
+					var comment = row.find('td.comment label').text();
+					$('#FORM_EDIT_COMMENT input.txn_id').val(txn_id);
+					$('#FORM_EDIT_COMMENT textarea.comment').val(comment);
+					$('#DIALOG_EDIT_COMMENT').dialog('open');
+				});
+				var cell = $(e);
+				var text = cell.text();
+				cell.empty().append(btn).append('<label style="margin-left: 4px;">' + text + '</label>');
+			})
+			
+			rows.find('td.is_print').each(function(i, e) {
+				var cell = $(e);
+				var is_print = cell.text();
+				if (is_print == "1")
+					cell.html('&#10003;');
+				else
+					cell.empty();
+			});
+		}
+	})[0];
+};
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	var start_time = $('#QUERY input.start_time').val().replace(/\//g, '');
+	var end_time = $('#QUERY input.end_time').val().replace(/\//g, '');
+	if (start_time.length > 0 && end_time.length > 0) {
+		c.push('txn_id');
+		o.push('BETWEEN');
+		v.push(start_time + '000000' + char_31 + end_time + '999999');
+	} else if (start_time.length > 0) {
+		c.push('txn_id');
+		o.push('>=');
+		v.push(start_time + '000000');
+	} else if (end_time.length > 0) {
+		c.push('txn_id');
+		o.push('<=');
+		v.push(end_time + '999999');
+	}
+	
+	var transfer_status_ids = [];
+	$('#STATUS input:checked').each(function(i, e) {
+		transfer_status_ids.push($(e).val());
+	});
+	if (transfer_status_ids.length > 0) {
+		c.push('transfer_status_id');
+		o.push('IN');
+		v.push($.join(transfer_status_ids, ','));
+	}
+	
+	var payment_info = $('#QUERY textarea.payment_info').val();
+	if (payment_info.length > 0) {
+		var lines = payment_info.split('\n');
+		var ary = [];
+		for (var i = 0; i < lines.length; i++) {
+			lines[i] = $.trim(lines[i]);
+			if (lines[i].length > 0) {
+				ary.push(lines[i]);
+			}
+		}
+		
+		c.push('payment_info');
+		o.push('IN');
+		v.push($.join(ary, ','));
+	}
+	
+	var phone_no = $('#QUERY input.phone_no').val();
+	if (phone_no.length > 0) {
+		c.push('phone_no');
+		o.push('LIKE');
+		v.push('%.' + phone_no + '%');
+	}
+	
+	var arc_no = $('#QUERY input.arc_no').val();
+	if (arc_no.length > 0) {
+		c.push('arc_no');
+		o.push('=');
+		v.push(arc_no);
+	}
+	
+	var member_name = $('#QUERY input.member_name').val();
+	if (member_name.length > 0) {
+		c.push('member_name');
+		o.push('LIKE');
+		v.push('%' + member_name + '%');
+	}
+	
+	var is_print = $('#QUERY select.is_print').val();
+	if (is_print.length > 0) {
+		c.push('is_print');
+		o.push('=');
+		v.push(is_print);
+	}
+	
+	var payment_ids = [];
+	$('#QUERY input.payment_id:checked').each(function(i, e) {
+		payment_ids.push($(e).val());
+	});
+	if (payment_ids.length > 0) {
+		c.push('payment_id');
+		o.push('IN');
+		v.push($.join(payment_ids, ','));
+	}
+	
+	var is_apps = [];
+	if ($('#IS_APP_0').prop('checked')) {
+		is_apps.push('0');
+	}
+	if ($('#IS_APP_1').prop('checked')) {
+		is_apps.push('1');
+	}
+	if (is_apps.length > 0) {
+		c.push('is_app');
+		o.push('IN');
+		v.push($.join(is_apps, ','));
+	}
+	
+	var bank_acc = $('#QUERY input.bank_acc').autoNumeric('get');
+	if (bank_acc.length > 0) {
+		c.push('bank_acc');
+		o.push('=');
+		v.push(bank_acc);
+	}
+	
+	var recipient_name = $('#QUERY input.recipient_name').val();
+	if (recipient_name.length > 0) {
+		c.push('recipient_name');
+		o.push('LIKE');
+		v.push('%' + recipient_name + '%');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#DIALOG_CHANGE_STATUS').dialog('close');
+});
+
+$('#F button.ok').button().click(function() {
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': 'change_status'
+		}, success: function(new_lm_time) {
+			var transfer_status = $('#F select.transfer_status_id option:selected');
+			var transfer_status_id = transfer_status.val();
+			var transfer_status_name = transfer_status.text();
+			
+			var row = $('#F button.ok').data('row');
+			row.find('.lm_time').text(new_lm_time);
+			row.find('.transfer_status_id').text(transfer_status_id);
+			row.find('.transfer_status_name label').text(transfer_status_name);
+			$('#DIALOG_CHANGE_STATUS').dialog('close');
+		}
+	});
+});
+
+$('#FORM_UPDATE_PAYMENT_INFO button.cancel').button().click(function() {
+	$('#DIALOG_UPDATE_PAYMENT_INFO').dialog('close');
+});
+
+$('#FORM_UPDATE_PAYMENT_INFO button.ok').button().click(function() {
+	$('#FORM_UPDATE_PAYMENT_INFO').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': 'update_payment_info'
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			var lm_time = tokens.shift();
+			var payment_info = tokens.shift();
+			var row = $('#FORM_UPDATE_PAYMENT_INFO button.ok').data('row');
+			row.find('td.lm_time').text(lm_time);
+			row.find('td.payment_info label').text(payment_info);
+			$('#DIALOG_UPDATE_PAYMENT_INFO').dialog('close');
+		}
+	});
+});
+
+$('#FORM_UPDATE_RECIPIENT button.cancel').button().click(function() {
+	$('#DIALOG_UPDATE_RECIPIENT').hide();
+	$('#AREA1').show();
+});
+
+$('#FORM_UPDATE_RECIPIENT button.ok').button().click(function() {
+	var is_verified = $('#FORM_UPDATE_RECIPIENT input.is_verified').val();
+	if (is_verified == '1') {
+		var old_recipient_name = $('#FORM_UPDATE_RECIPIENT input.old_recipient_name').val().toUpperCase();
+		var old_bank_code = $('#FORM_UPDATE_RECIPIENT input.old_bank_code').val();
+		var old_bank_acc = $('#FORM_UPDATE_RECIPIENT input.old_bank_acc').val();
+		
+		var recipient_name = $('#FORM_UPDATE_RECIPIENT input.recipient_name').val().toUpperCase();
+		var bank_code = $('#FORM_UPDATE_RECIPIENT select.bank_code').val();
+		var bank_acc = $('#FORM_UPDATE_RECIPIENT input.bank_acc').autoNumeric('get');
+		if ((recipient_name != old_recipient_name && !recipient_name.startsWith(old_recipient_name)) || bank_code != old_bank_code || bank_acc != old_bank_acc) {
+			is_verified = '0';
+			$('#FORM_UPDATE_RECIPIENT input.is_verified').val(is_verified);
+		}
+	}
+	
+	var bank_acc = $('#FORM_UPDATE_RECIPIENT input.bank_acc').autoNumeric('get');
+	$('#FORM_UPDATE_RECIPIENT').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': 'updateRecipient',
+			'bank_acc': bank_acc
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			var lm_time = tokens.shift();
+			var lm_user = tokens.shift();
+			var member_id = tokens.shift();
+			var recipient_id = tokens.shift();
+			var recipient_name = tokens.shift();
+			var bank_code = tokens.shift();
+			var bank_name = tokens.shift();
+			var bank_acc = tokens.shift();
+			var recipient_lm_time = tokens.shift();
+			var recipient_lm_user = tokens.shift();
+			var is_verified = tokens.shift();
+			
+			bank_name = BANK_CODE_TO_NAME[bank_code];
+			
+			var tableBody = TABLE.funcGetTableBody();
+			
+			var txn_id = $('#FORM_UPDATE_RECIPIENT input.txn_id').val();
+			tableBody.find('tr').each(function(i, e) {
+				var row = $(e);
+				var cell_txn_id = row.find('td.txn_id').first().text();
+				if (cell_txn_id == txn_id) {
+					row.find('td.recipient_id').text(recipient_id);
+					row.find('td.lm_time').text(lm_time);
+					row.find('td.lm_user').text(lm_user);
+					return false;
+				}
+			});
+			
+			tableBody.find('tr').each(function(i, e) {
+				var row = $(e);
+				var cell_member_id = row.find('td.member_id').first().text();
+				var cell_recipient_id = row.find('td.recipient_id').first().text();
+				if (cell_member_id == member_id && cell_recipient_id == recipient_id) {
+					if (is_verified == '1') {
+						row.find('td.recipient_name label').addClass('verified').text(recipient_name);
+						row.find('button.lock_recipient').button({disabled: true});
+					} else {
+						row.find('td.recipient_name label').removeClass('verified').text(recipient_name);
+						row.find('button.lock_recipient').button({disabled: false});
+					}
+					row.find('td.bank_code').text(bank_code);
+					row.find('td.bank_acc').text(bank_acc);
+					row.find('td.bank_name').text(bank_name);
+					row.find('td.is_verified').text(is_verified);
+				}
+			});
+			
+			$('#DIALOG_UPDATE_RECIPIENT').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#BROWSE_RECIPIENT').button({icons: {primary: 'ui-icon-folder-open'}, text: false}).click(function() {
+	var member_id = $('#FORM_UPDATE_RECIPIENT input.member_id').val();
+	window.open('page.html?menu_row_id=53&member_id=' + member_id, 'browse_recipients', 'width=1024,height=768');
+});
+
+function onRecipientSelected(row) {
+	var recipient_id = row.find('.recipient_id').text();
+	var recipient_name = row.find('.recipient_name').text();
+	var bank_code = row.find('.bank_code').text();
+	var bank_acc = row.find('.bank_acc').text();
+	var bank_name = row.find('.bank_name').text();
+	var recipient_lm_time = row.find('.lm_time').text();
+	var is_verified = row.find('.is_verified').text();
+	
+	$('#FORM_UPDATE_RECIPIENT input.recipient_id').val(recipient_id);
+	$('#FORM_UPDATE_RECIPIENT input.recipient_name, #FORM_UPDATE_RECIPIENT input.old_recipient_name').val(recipient_name);
+	$('#FORM_UPDATE_RECIPIENT select.bank_code, #FORM_UPDATE_RECIPIENT input.old_bank_code').val(bank_code);
+	$('#FORM_UPDATE_RECIPIENT input.bank_name').val(bank_name);
+	$('#FORM_UPDATE_RECIPIENT input.bank_acc, #FORM_UPDATE_RECIPIENT input.old_bank_acc').val(bank_acc);
+	$('#FORM_UPDATE_RECIPIENT input.recipient_lm_time').val(recipient_lm_time);
+	$('#FORM_UPDATE_RECIPIENT input.is_verified').val(is_verified);
+}
+
+$('#FORM_EDIT_COMMENT button.ok').button().click(function() {
+	$('#FORM_EDIT_COMMENT').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': 'update_comment'
+		}, success: function(data) {
+			var txn_id = $('#FORM_EDIT_COMMENT input.txn_id').val();
+			TABLE.funcGetTableBody().find('tr td.txn_id').each(function(i, e) {
+				var cell = $(e);
+				if (cell.text() == txn_id) {
+					cell.parent().find('td.comment label').text(data);
+					return false;
+				}
+			});
+			$('#DIALOG_EDIT_COMMENT').dialog('close');
+		}
+	});
+});
+
+$('#FORM_EDIT_COMMENT button.cancel').button().click(function() {
+	$('#DIALOG_EDIT_COMMENT').dialog('close');
+});
+
+$('#TABLE_VERIFY_RECIPIENT button.ok').button().click(function() {
+	var member_id = $('#TABLE_VERIFY_RECIPIENT input.member_id').val();
+	var recipient_id = $('#TABLE_VERIFY_RECIPIENT input.recipient_id').val();
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER,
+			'action': 'verify_recipient',
+			'member_id': member_id,
+			'recipient_id': recipient_id,
+			'auto_update_name': '1'
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			var status = tokens.shift();
+			var recipient_name = tokens.shift();
+			
+			TABLE.funcGetTableBody().find('tr').each(function(i, e) {
+				var row = $(e);
+				if (row.find('td.member_id').text() == member_id && row.find('td.recipient_id').text() == recipient_id) {
+					row.find('td.recipient_name label').addClass('verified').text(recipient_name);
+					row.find('td.recipient_name button.lock_recipient').button({disabled: true});
+				}
+			});
+			
+			$('#DIALOG_VERIFY_RECIPIENT').dialog('close');
+		}
+	});
+});
+
+$('#TABLE_VERIFY_RECIPIENT button.cancel').button().click(function() {
+	$('#DIALOG_VERIFY_RECIPIENT').dialog('close');
+});
+
+$('#TABLE_BNI_PAYMENT_INFO button.ok').button().click(function() {
+	$('#DIALOG_BNI_PAYMENT_INFO').dialog('close');
+});
+
+//# sourceURL=money_transfer.js
+
+</script>

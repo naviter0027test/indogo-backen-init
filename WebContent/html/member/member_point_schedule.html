@@ -1,0 +1,207 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category"></td>
+			<td colspan="3"><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE"></table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="schedule_id" name="schedule_id"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Point Schedule</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Date</td>
+					<td>
+						<select name="date_of_month" class="date_of_month">
+							<option value=""></option>
+							<option value="1">01</option>
+							<option value="2">02</option>
+							<option value="3">03</option>
+							<option value="4">04</option>
+							<option value="5">05</option>
+							<option value="6">06</option>
+							<option value="7">07</option>
+							<option value="8">08</option>
+							<option value="9">09</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+							<option value="31">31</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Month</td>
+					<td>
+						<select class="month_id" name="month_id">
+							<option value=""></option>
+							<option value="1">01</option>
+							<option value="2">02</option>
+							<option value="3">03</option>
+							<option value="4">04</option>
+							<option value="5">05</option>
+							<option value="6">06</option>
+							<option value="7">07</option>
+							<option value="8">08</option>
+							<option value="9">09</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Year</td>
+					<td><input type="text" class="year_id" name="year_id"/></td>
+				</tr>
+				<tr>
+					<td class="category">Point</td>
+					<td><input type="text" class="remit_point" name="remit_point"/></td>
+				</tr>
+				<tr>
+					<td class="category">Description</td>
+					<td><input type="text" class="schedule_desc" name="schedule_desc"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_MEMBER_POINT_SCHEDULE = 'member.member_point_schedule';
+var char_31 = String.fromCharCode(31);
+var char_30 = String.fromCharCode(30);
+
+$('#AREA2').hide();
+$('#F input.remit_point, #F input.year_id').autoNumeric('init', {vMin: '-99999999999999999999999999999', vMax: '99999999999999999999999999999'});
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.member.MemberPointSchedule',
+	afterSetTableColumnEvent: function() {
+		$('#QUERY button.ok').click();
+	},
+	executeInsert: function(callback) {
+		$('#F').clearForm().resetForm();
+		$('#F button.ok').data('action', 'insert');
+		$('#F button.ok').data('callback', callback);
+		$('#AREA1').hide();
+		$('#AREA2').show();
+	},
+	executeUpdate: function(row, callback) {
+		var schedule_id = row.filter('.schedule_id').text();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_MEMBER_POINT_SCHEDULE,
+				'action': 'getDataForUpdate',
+				'schedule_id': schedule_id
+			},
+			success: function(data) {
+				var o = data.split(char_31);
+				var date_of_month = o[0];
+				var month_id = o[1];
+				var year_id = o[2];
+				var remit_point = o[3];
+				var schedule_desc = o[4];
+				
+				$('#F').clearForm().resetForm();
+				$('#F input.schedule_id').val(schedule_id);
+				$('#F select.date_of_month').val(date_of_month);
+				$('#F select.month_id').val(month_id);
+				$('#F select.year_id').val(year_id);
+				$('#F input.remit_point').val(remit_point);
+				$('#F input.schedule_desc').val(schedule_desc);
+
+				$('#F button.ok').data('action', 'update');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA2').show();
+			}
+		});
+	},
+	executeDelete: function(row, callback) {
+		var schedule_id = row.filter('.schedule_id').text();
+
+		if (confirm('are you sure to delete?')) {
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_MEMBER_POINT_SCHEDULE,
+					'action': 'delete',
+					'schedule_id': schedule_id
+				},
+				success: function(data) {
+					callback(data);
+				}
+			});
+		}
+	}
+})[0];
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	TABLE.searchFor(c, o, v, f1, f2);
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_MEMBER_POINT_SCHEDULE,
+			'action': action
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+//# sourceURL=member_point_schedule.js
+</script>

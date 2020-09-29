@@ -1,0 +1,401 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category">From Outlet</td>
+			<td><select class="shop_name"><option value=""></option></select></td>
+		</tr>
+		<tr>
+			<td class="category">To Outlet</td>
+			<td><select class="shop_id_to"><option value=""></option></select></td>
+		</tr>
+		<tr>
+			<td class="category"><label class="create_time">create_time</label></td>
+			<td><input type="text" class="start_time"/> ~ <input type="text" class="end_time"/></td>
+		</tr>
+		<tr>
+			<td class="category"><label class="status_name">status_name</label></td>
+			<td>
+				<input type="checkbox" class="status_id" value="1" id="STATUS_ID_1" checked="checked"/><label for="STATUS_ID_1" id="STATUS_NAME_1">pending</label>
+				<input type="checkbox" class="status_id" value="2" id="STATUS_ID_2"/><label for="STATUS_ID_2" id="STATUS_NAME_2">complete</label>
+				<input type="checkbox" class="status_id" value="3" id="STATUS_ID_3"/><label for="STATUS_ID_3" id="STATUS_NAME_3">cancel</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Product Name</td>
+			<td><input type="text" class="item_desc"/></td>
+		</tr>
+		<tr>
+			<td class="category">Comment</td>
+			<td><input type="text" class="comment"/></td>
+		</tr>
+		<tr>
+			<td class="category">Created By</td>
+			<td><input type="text" class="lm_user_1"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<table class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="close">Close</button> <button type="button" class="print">Print</button></td>
+		</tr>
+	</table>
+	<div id="AREA_PRINT">
+		<table class="maintenance" id="PRINT_HEADER">
+			<tbody>
+				<tr>
+					<td class="category"><label class="shop_name_from">shop_name_from</label></td>
+					<td><input type="text" class="shop_name_from" readonly="readonly" style="width: 150px;"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="shop_name_to">shop_name_to</label></td>
+					<td><input type="text" class="shop_name_to" readonly="readonly" style="width: 150px;"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="transfer_id">transfer_id</label></td>
+					<td><input type="text" class="transfer_id" readonly="readonly" style="width: 150px;"/></td>
+				</tr>
+			</tbody>
+		</table>
+		<table class="winbond-table" id="PRINT_ITEM" style="margin-top: 10px;">
+			<thead>
+				<tr>
+					<td><label class="transfer_qty">transfer_qty</label></td>
+					<td><label class="item_desc">item_desc</label></td>
+					<td><label class="color_name">color_name</label></td>
+					<td><label class="size_name">size_name</label></td>
+					<td><label class="item_name">item_name</label></td>
+					<td><label class="category_name">category_name</label></td>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<style type="text/css">
+#PRINT_ITEM.printing {
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+#PRINT_ITEM.printing tr td {
+	border: 1px solid black;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_STOCK_TRANSFER = 'shop.stock_transfer';
+var RELAY_ID_STOCK_TRANSFER_CREATE = 'shop.stock_transfer_create';
+var TABLE;
+var USER_SHOP = {};
+
+$('#AREA2').hide();
+$('#QUERY input.start_time, #QUERY input.end_time').createDatePicker();
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_STOCK_TRANSFER,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		
+		var label_create_time = tokens.shift();
+		var label_status_name = tokens.shift();
+		var label_status_name_pending = tokens.shift();
+		var label_status_name_complete = tokens.shift();
+		var label_status_name_cancel = tokens.shift();
+		var label_button_search = tokens.shift();
+		var label_button_cancel = tokens.shift();
+		var label_button_accept = tokens.shift();
+		var label_shop_name = tokens.shift();
+		var label_button_print = tokens.shift();
+		var label_shop_name_from = tokens.shift();
+		var label_shop_name_to = tokens.shift();
+		var label_transfer_id = tokens.shift();
+		var label_transfer_qty = tokens.shift();
+		var label_item_name = tokens.shift();
+		var label_item_desc = tokens.shift();
+		var label_category_name = tokens.shift();
+		var label_color_name = tokens.shift();
+		var label_size_name = tokens.shift();
+		
+		$('label.create_time').text(label_create_time);
+		$('label.status_name').text(label_status_name);
+		$('#STATUS_NAME_1').text(label_status_name_pending);
+		$('#STATUS_NAME_2').text(label_status_name_complete);
+		$('#STATUS_NAME_3').text(label_status_name_cancel);
+		$('#QUERY button.ok').button({label: label_button_search});
+		$('label.shop_name').text(label_shop_name);
+		$('label.shop_name_from').text(label_shop_name_from);
+		$('label.shop_name_to').text(label_shop_name_to);
+		$('label.transfer_id').text(label_transfer_id);
+		$('label.transfer_qty').text(label_transfer_qty);
+		$('label.item_name').text(label_item_name);
+		$('label.item_desc').text(label_item_desc);
+		$('label.category_name').text(label_category_name);
+		$('label.color_name').text(label_color_name);
+		$('label.size_name').text(label_size_name);
+		
+		var html_user_shop = '';
+		shop_list_size = parseInt(tokens.shift(), 10);
+		for (var i = 0; i < shop_list_size; i++) {
+			var shop_id = tokens.shift();
+			var shop_name = tokens.shift();
+			html_user_shop = html_user_shop + '<option value="' + shop_id + '">' + shop_name + '</option>';
+			USER_SHOP[shop_id] = true;
+		}
+		
+		var html = '';
+		var size = parseInt(tokens.shift(), 10);
+		for (var i = 0; i < size; i++) {
+			var shop_id = tokens.shift();
+			var shop_name = tokens.shift();
+			html = html + '<option value="' + shop_id + '">' + shop_name + '</option>';
+		}
+		$('#QUERY select.shop_id_to').append(html);
+		$('select.shop_name').append(html);
+		
+		TABLE = $('#TABLE').createTable({
+			className: 'com.indogo.relay.onlineshopping.StockTransfer',
+			viewMode: true,
+			afterSetTableColumnEvent: function() {
+				$('#QUERY button.ok').click();
+			},
+			afterSetTableDataEvent: function(rows) {
+				rows.find('td.comment').each(function(i, e) {
+					var cell = $(e);
+					var comment = cell.text();
+					cell.empty().append(nl2br(comment));
+				});
+				
+				rows.find('td.action').each(function(i, e) {
+					var cell = $(e);
+					var row = cell.parent();
+					var status_id = parseInt(row.find('td.status_id').text(), 10);
+					var shop_id_to = row.find('td.shop_id_to').text();
+					var shop_id_from = row.find('td.shop_id_from').text();
+					
+					var button_print = $('<button type="button">' + label_button_print + '</button>').button({icon: 'ui-icon-print', showLabel: false}).click(function() {
+						var row = $(this).parent().parent();
+						var transfer_id = row.find('td.transfer_id').text();
+						sendRequest.relay({
+							data: {
+								'RelayId': RELAY_ID_STOCK_TRANSFER_CREATE,
+								'action': 'print',
+								'transfer_id': transfer_id
+							}, success: function(data) {
+								var tokens = data.split(char_31);
+								
+								var shop_name_from = tokens.shift();
+								var shop_name_to = tokens.shift();
+								
+								$('#PRINT_HEADER input.shop_name_from').val(shop_name_from);
+								$('#PRINT_HEADER input.shop_name_to').val(shop_name_to);
+								$('#PRINT_HEADER input.transfer_id').val(transfer_id);
+								
+								var html = '';
+								
+								var item_size = parseInt(tokens.shift(), 10);
+								for (var i = 0; i < item_size; i++) {
+									var cells = tokens.shift().split(char_30);
+									var transfer_qty = cells.shift();
+									var item_name = cells.shift();
+									var item_desc = cells.shift();
+									var category_name = cells.shift();
+									var color_name = cells.shift();
+									var size_name = cells.shift();
+									html = html + '<tr class="even"><td>' + transfer_qty + '</td><td>' + item_desc + '</td><td>' + color_name + '</td><td>' + size_name + '</td><td>' + item_name + '</td><td>' + category_name + '</td></tr>';
+								}
+								
+								$('#PRINT_ITEM tbody').empty().append(html);
+								
+								$('#AREA1').hide();
+								$('#AREA2').show();
+							}
+						});
+					});
+					cell.append(button_print);
+					
+					if (status_id == 1) {
+						if (USER_SHOP[shop_id_to] === true) {
+							var button_accept = $('<button type="button">' + label_button_accept + '</button>').button({icon: 'ui-icon-check', showLabel: false}).click(function() {
+								var row = $(this).parent().parent();
+								var transfer_id = row.find('td.transfer_id').text();
+								var lm_time = row.find('td.lm_time').text();
+								var lm_user = row.find('td.lm_user').text();
+								sendRequest.relay({
+									data: {
+										'RelayId': RELAY_ID_STOCK_TRANSFER,
+										'action': 'change_status',
+										'transfer_id': transfer_id,
+										'lm_time': lm_time,
+										'lm_user': lm_user,
+										'status_id': '2'
+									}, success: function(data) {
+										var tokens = data.split(char_31);
+										var new_lm_time = tokens.shift();
+										var new_lm_user = tokens.shift();
+										row.find('td.lm_time').text(new_lm_time);
+										row.find('td.lm_user').text(new_lm_user);
+										row.find('td.status_id').text('2');
+										row.find('td.status_name').text($('#STATUS_NAME_2').text());
+										row.find('td.action').empty();
+									}
+								});
+							});
+							
+							cell.append(button_accept)
+						}
+						
+						if (USER_SHOP[shop_id_to] === true || USER_SHOP[shop_id_from] === true) {
+							var button_cancel = $('<button type="button">' + label_button_cancel + '</button>').button({icon: 'ui-icon-close', showLabel: false}).click(function() {
+								var row = $(this).parent().parent();
+								var transfer_id = row.find('td.transfer_id').text();
+								var lm_time = row.find('td.lm_time').text();
+								var lm_user = row.find('td.lm_user').text();
+								sendRequest.relay({
+									data: {
+										'RelayId': RELAY_ID_STOCK_TRANSFER,
+										'action': 'change_status',
+										'transfer_id': transfer_id,
+										'lm_time': lm_time,
+										'lm_user': lm_user,
+										'status_id': '3'
+									}, success: function(data) {
+										var tokens = data.split(char_31);
+										var new_lm_time = tokens.shift();
+										var new_lm_user = tokens.shift();
+										row.find('td.lm_time').text(new_lm_time);
+										row.find('td.lm_user').text(new_lm_user);
+										row.find('td.status_id').text('3');
+										row.find('td.status_name').text($('#STATUS_NAME_3').text());
+										row.find('td.action').empty();
+									}
+								});
+							});
+							
+							cell.append(button_cancel);
+						}
+					}
+				});
+			}
+		})[0];
+	}
+});
+
+function onQuery(is_using_temp_table, status_ids) {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	if (is_using_temp_table) {
+		sessionId = GLOBAL_SID;
+		pageId = 'stock_transfer';
+		joinSql = 'a.transfer_id = b.long1';
+	}
+	
+	var shop_id = $('#QUERY select.shop_name').val();
+	if (shop_id.length > 0) {
+		c.push('shop_id_from');
+		o.push('=');
+		v.push(shop_id);
+	}
+	
+	var start_time = $('#QUERY input.start_time').val();
+	var end_time = $('#QUERY input.end_time').val();
+	if (start_time.length > 0 && end_time.length > 0) {
+		c.push('create_time');
+		o.push('BETWEEN');
+		v.push(start_time + ' 00:00:00' + char_31 + end_time + ' 23:59:59');
+	} else if (start_time.length > 0) {
+		c.push('create_time');
+		o.push('>=');
+		v.push(start_time + ' 00:00:00');
+	} else if (end_time.length > 0) {
+		c.push('create_time');
+		o.push('<=');
+		v.push(end_time + ' 23:59:59');
+	}
+	
+	if (status_ids.length > 0) {
+		c.push('status_id');
+		o.push('IN');
+		v.push($.join(status_ids, ','));
+	}
+	
+	var comment = $('#QUERY input.comment').val();
+	if (comment.length > 0) {
+		c.push('comment');
+		o.push('LIKE');
+		v.push('%' + comment + '%');
+	}
+	
+	var lm_user_1 = $('#QUERY input.lm_user_1').val();
+	if (lm_user_1.length > 0) {
+		c.push('lm_user_1');
+		o.push('=');
+		v.push(lm_user_1);
+	}
+	
+	var shop_id_to = $('#QUERY select.shop_id_to').val();
+	if (shop_id_to.length > 0) {
+		c.push('shop_id_to');
+		o.push('=');
+		v.push(shop_id_to);
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+}
+
+$('#QUERY button.ok').button().click(function() {
+	var status_ids = [];
+	$('#QUERY input.status_id:checked').each(function(i, e) {
+		status_ids.push($(e).val());
+	});
+	
+	var item_desc = $('#QUERY input.item_desc').val();
+	
+	if (item_desc.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_STOCK_TRANSFER,
+				'action': 'sql_temp_table',
+				'status_ids': $.join(status_ids),
+				'item_desc': item_desc
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					onQuery(true, status_ids);
+				} else {
+					TABLE.funcEmptyTableBody();
+				}
+			}
+		});
+	} else {
+		onQuery(false, status_ids);
+	}
+});
+
+$('#AREA2 button.close').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#AREA2 button.print').button().click(function() {
+	$('#PRINT_ITEM').addClass('printing');
+	$('#AREA_PRINT').print();
+	$('#PRINT_ITEM').removeClass('printing');
+});
+
+//# sourceURL=stock_transfer_view.js
+</script>

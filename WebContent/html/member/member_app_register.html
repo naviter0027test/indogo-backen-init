@@ -1,0 +1,1028 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category">Register Time:</td>
+			<td colspan="3"><input type="text" class="register_time_start time"/> ~ <input type="text" class="register_time_end time"/></td>
+		</tr>
+		<tr>
+			<td class="category">Status:</td>
+			<td>
+				<input type="checkbox" class="is_wait_confirm" id="STATUS_NEW" style="cursor: pointer" value="2"/><label for="STATUS_NEW" style="cursor: pointer">New</label>
+				<input type="checkbox" class="is_wait_confirm" id="STATUS_UPDATE" style="cursor: pointer" value="4"/><label for="STATUS_UPDATE" style="cursor: pointer">Update</label>
+				<input type="checkbox" class="status_id" id="STATUS_BANNED" style="cursor: pointer" value="1"/><label for="STATUS_BANNED" style="cursor: pointer">Banned</label>
+				<input type="checkbox" class="signature_need_fix" id="STATUS_SIGNATURE_NEED_FIX" style="cursor: pointer" value="1"/><label for="STATUS_SIGNATURE_NEED_FIX" style="cursor: pointer">Signature Need Fix</label>
+			</td>
+			<td class="category">Follow Up</td>
+			<td>
+				<input type="checkbox" id="WITH_FOLLOW_UP" style="cursor: pointer"/><label for="WITH_FOLLOW_UP" style="cursor: pointer">With</label>
+				<input type="checkbox" id="WITHOUT_FOLLOW_UP" style="cursor: pointer"/><label for="WITHOUT_FOLLOW_UP" style="cursor: pointer">Without</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Phone No:</td>
+			<td><input type="text" class="phone_no"/></td>
+			<td class="category">ARC No:</td>
+			<td><input type="text" class="arc_no uppercase" style="width: 150px;"/></td>
+		</tr>
+		<tr>
+			<td class="category">Name:</td>
+			<td colspan="3"><input type="text" class="member_name uppercase"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td colspan="3"><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<input type="hidden" class="phone_no" name="phone_no"/>
+		<input type="hidden" class="lm_time" name="lm_time"/>
+		<input type="hidden" class="member_login_id"/>
+		<input type="hidden" class="arc_photo_action" name="arc_photo_action"/>
+		<input type="hidden" class="arc_photo_basename" name="arc_photo_basename"/>
+		<input type="hidden" class="signature_photo_action" name="signature_photo_action"/>
+		<input type="hidden" class="signature_photo_basename" name="signature_photo_basename"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td></td>
+					<td class="category">Current Data</td>
+					<td class="category">New Data from APP</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Phone No</td>
+					<td>
+						<input type="text" class="phone_no1" value=""/><br/>
+						<input type="text" class="phone_no2" value=""/><br/>
+						<input type="text" class="phone_no3" value=""/>
+					</td>
+					<td><label class="app_phone_no"></label></td>
+				</tr>
+				<tr>
+					<td class="category" rowspan="2">ARC Picture</td>
+					<td><div style="margin-top: 4px; margin-bottom: 4px;"><button type="button" id="USE_APP_IMAGE_ARC">Use APP Image</button> <button type="button" id="UPLOAD_NEW_IMAGE_ARC">Upload New Image</button> <button type="button" id="USE_CURRENT_IMAGE_ARC">Keep Current Image</button></div></td>
+					<td><div style="margin-top: 4px; margin-bottom: 4px;"><button type="button" id="DOWNLOAD_APP_IMAGE_ARC">Download</button></div></td>
+				</tr>
+				<tr>
+					<td><img alt="" src="" class="arc_photo" style="width: 800px;"/></td>
+					<td><img alt="" src="" class="app_arc_photo" style="width: 800px;"/></td>
+				</tr>
+				<tr>
+					<td class="category">ARC No</td>
+					<td><input type="text" name="arc_no" class="arc_no uppercase" value=""/></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="category">Name</td>
+					<td><input type="text" name="member_name" class="member_name uppercase" value=""/></td>
+					<td><label class="app_member_name"></label></td>
+				</tr>
+				<tr>
+					<td class="category">Birthday</td>
+					<td><input type="text" name="birthday" class="birthday" value=""/></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="category">ARC Expire</td>
+					<td><input type="text" name="arc_expire_date" class="arc_expire_date" value=""/></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="category">Address</td>
+					<td>
+						<table id="ADDRESS" class="winbond-table" style="margin-top: 4px;">
+							<thead>
+								<tr>
+									<td align="center">縣市</td>
+									<td align="center">鄉鎮市區</td>
+									<td align="center">道路或街名</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="even">
+									<td align="center"><select class="city reset"></select></td>
+									<td align="center"><select class="area empty"></select></td>
+									<td align="center"><select class="road empty"></select></td>
+								</tr>
+								<tr class="even">
+									<td align="center" colspan="3">
+										<input style="width: 25px" type="text" class="neighbor data reset"/> 鄰 <input style="width: 25px" type="text" class="lane data reset"/> 巷 <input style="width: 25px" type="text" class="alley data reset"/> 弄 <input style="width: 25px" type="text" class="no1 data reset"/> 號之 <input style="width: 25px" type="text" class="no2 data reset"/> <input style="width: 25px" type="text" class="floor1 data reset"/> 樓之 <input style="width: 25px" type="text" class="floor2 data reset"/> <input style="width: 25px" type="text" class="room data reset"/> 室
+									</td>
+								</tr>
+								<tr class="even">
+									<td colspan="3">
+										<button type="button" id="SET_ADDRESS">Set</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div style="margin-bottom: 4px; margin-top: 8px;"><input type="text" name="address" class="address" value=""/></div>
+					</td>
+					<td>
+						<div style="margin-bottom: 4px;"><button type="button" id="DOWNLOAD_APP_IMAGE_ADDRESS">Download</button></div>
+						<img alt="" src="" class="address_photo"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="category" rowspan="2">Signature</td>
+					<td><div style="margin-top: 4px; margin-bottom: 4px;"><button type="button" id="USE_APP_IMAGE_SIGNATURE">Use APP Image</button> <button type="button" id="UPLOAD_NEW_IMAGE_SIGNATURE">Upload New Image</button> <button type="button" id="USE_CURRENT_IMAGE_SIGNATURE">Keep Current Image</button></div></td>
+					<td><div style="margin-top: 4px; margin-bottom: 4px;"><button type="button" id="DOWNLOAD_APP_IMAGE_SIGNATURE">Download</button> <label for="FIX_ME">Mark as "Fix Me" <input type="checkbox" id="FIX_ME"/></label></div></td>
+				</tr>
+				<tr>
+					<td><img alt="" src="" class="signature_photo" style="width: 300px;"/></td>
+					<td><img alt="" src="" class="app_signature_photo" style="width: 300px;"/></td>
+				</tr>
+				<tr>
+					<td class="category">Email</td>
+					<td><input type="text" name="email" class="email" value=""/></td>
+					<td><label class="app_email"></label></td>
+				</tr>
+				<tr>
+					<td class="category">Follow Up</td>
+					<td>
+						<div style="margin-bottom: 4px;"><button type="button" id="CLEAR_FOLLOWUP">Clear Followup</button></div>
+						<textarea class="app_register_followup" readonly="readonly" style="width: 500px; height: 200px; background-color: white;"></textarea>
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="category">Sex</td>
+					<td><select name="sex_id" class="sex_id"></select></td>
+					<td></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Accept Member</button>
+						<button class="cancel" type="button">Cancel</button>
+						<button class="followup" type="button">Ask for Follow Up</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_UPLOAD_ARC" title="Upload ARC Photo">
+	<form id="FORM_UPLOAD_ARC">
+		<input type="hidden" class="arc_photo_basename" name="arc_photo_basename"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">File</td>
+					<td><input type="file" class="arc_photo_upload" name="arc_photo_upload"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_UPLOAD_SIGNATURE" title="Upload Signature Photo">
+	<form id="FORM_UPLOAD_SIGNATURE">
+		<input type="hidden" class="signature_photo_basename" name="signature_photo_basename"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">File</td>
+					<td><input type="file" class="signature_photo_upload" name="signature_photo_upload"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_FOLLOWUP" title="Problem Description">
+	<form id="FORM_FOLLOWUP">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<input type="hidden" class="lm_time" name="lm_time"/>
+		<table class="maintenance">
+			<tr>
+				<td class="category">Follow Up</td>
+				<td><textarea class="app_register_followup" name="app_register_followup" style="width: 500px; height: 200px;"></textarea></td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_SMS" title="Send SMS">
+	<form id="FORM_SMS">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<table class="maintenance">
+			<tr>
+				<td class="category">Message</td>
+				<td><textarea class="sms_message" name="sms_message" style="width: 500px; height: 200px;"></textarea></td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_HISTORY" title="History">
+	<table id="TABLE_HISTORY" class="winbond-table">
+		<thead>
+			<tr>
+				<td>Timestamp</td>
+				<td>User</td>
+				<td>Description</td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>
+
+<style type="text/css">
+#ADDRESS {
+	border-collapse: separate; border-spacing: 1px;
+}
+#ADDRESS td {
+	padding: 4px;
+}
+input.phone_no, input.phone_no1, input.phone_no2, input.phone_no3 {
+	width: 150px;
+}
+#TABLE tr.banned td {
+	background-color: gray;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_MEMBER_APP_REGISTER = 'member.member_app_register';
+var RELAY_ID_MEMBER_CONFIG = 'member.member_config';
+var RELAY_ID_MEMBER_POINT = 'member.member_point';
+var char_31 = String.fromCharCode(31);
+var MSG_FOOTNOTE = '';
+$('#AREA2').hide();
+$('#F input.phone_no1, #F input.phone_no2, #F input.phone_no3').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: '', lZero: 'keep', strictDigitOnly: true});
+
+$('#DIALOG_UPLOAD_ARC, #DIALOG_UPLOAD_SIGNATURE').dialog({
+	modal: true,
+	width: 450,
+	autoOpen: false
+});
+
+$('#DIALOG_HISTORY').dialog({
+	modal: true,
+	width: 600,
+	autoOpen: false
+});
+
+$('#DIALOG_FOLLOWUP').dialog({
+	modal: true,
+	width: 650,
+	autoOpen: false,
+	buttons: {
+		'Ok': function() {
+			$('#FORM_FOLLOWUP').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+					'action': 'ask_for_followup'
+				},
+				success: function(data) {
+					var app_register_followup = $('#FORM_FOLLOWUP textarea.app_register_followup').val();
+					var form_member_id = $('#FORM_FOLLOWUP input.member_id').val();
+					TABLE.funcGetTableBody().find('td.member_id').each(function(i, e) {
+						var cell = $(e);
+						var member_id = cell.text();
+						if (member_id == form_member_id) {
+							cell.parent().find('td.app_register_followup').empty().append(app_register_followup.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+						}
+					});
+					
+					$('#DIALOG_FOLLOWUP').dialog('close');
+					$('#AREA2').hide();
+					$('#AREA1').show();
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+$('#DIALOG_SMS').dialog({
+	modal: true,
+	width: 650,
+	autoOpen: false,
+	buttons: {
+		'Ok': function() {
+			$('#FORM_SMS').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+					'action': 'send_sms'
+				},
+				success: function(data) {
+					$('#DIALOG_SMS').dialog('close');
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.member.MemberAppRegister',
+	disableInsert: true,
+	disableDelete: true,
+	afterSetTableColumnEvent: function() {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+				'action': 'init'
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				var address = tokens.shift();
+				MSG_FOOTNOTE = tokens.shift();
+				
+				var sexSize = parseInt(tokens.shift(), 10);
+				var htmlSex = '';
+				for (var i = 0; i < sexSize; i++) {
+					var sexId = tokens.shift();
+					var sexName = tokens.shift();
+					htmlSex = htmlSex + '<option value="' + sexId + '">' + sexName + '</option>';
+				}
+
+				$('#ADDRESS select.city').empty().append('<option value="" selected="selected">請選擇縣市</option>').append(address);
+				$('#F select.sex_id').append(htmlSex);
+				$('#QUERY button.ok').click();
+			}
+		});
+	},
+	afterSetTableDataEvent: function(rows) {
+		rows.find('td.app_register_followup').each(function(i, e) {
+			var cell = $(e);
+			var app_register_followup = cell.text().replace(/(?:\r\n|\r|\n)/g, '<br />');
+			if (app_register_followup.length > 0) {
+				var button_clear = $('<button type="button">clear</button>').button({icon: 'ui-icon-close', showLabel: false}).click(function() {
+					var row = $(this).parent().parent();
+					var member_id = row.find('td.member_id').text();
+					var lm_time = row.find('td.lm_time').text();
+					sendRequest.relay({
+						data: {
+							'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+							'action': 'clear_followup',
+							'member_id': member_id,
+							'lm_time': lm_time
+						},
+						success: function(new_lm_time) {
+							row.find('td.app_register_followup').empty();
+							row.find('td.lm_time').text(new_lm_time);
+						}
+					});
+				});
+				
+				var btn_history = $('<button type="button" style="margin-left: 4px;">history</button>').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+					var row = $(this).parent().parent();
+					var member_id = row.find('td.member_id').text();
+					
+					sendRequest.relay({
+						data: {
+							'RelayId': RELAY_ID_MEMBER_POINT,
+							'action': 'get_history',
+							'member_id': member_id,
+							'hst_id': '5'
+						},
+						success: function(data) {
+							var tokens = data.split(char_31);
+							var size = parseInt(tokens.shift(), 10);
+							var html = '';
+							for (var i = 0; i < size; i++) {
+								var lm_time = tokens.shift();
+								var lm_user = tokens.shift();
+								var hst_desc = tokens.shift();
+								
+								html += '<tr class="even">';
+								html += '<td>' + lm_time + '</td>';
+								html += '<td>' + lm_user + '</td>';
+								html += '<td>' + hst_desc + '</td>';
+								html += '</tr>\n';
+							}
+							$('#TABLE_HISTORY tbody').empty().append(html);
+							$('#DIALOG_HISTORY').dialog('open');
+						}
+					});
+				});
+				
+				cell.empty().append(button_clear).append(btn_history).append('<label style="margin-left: 4px;">' + app_register_followup + '<label>');
+			}
+		});
+		
+		rows.find('td.action').each(function(i, e) {
+			var cell = $(e);
+			var status_id = cell.parent().find('td.status_id').text();
+			var button_label, button_icon;
+			if (status_id == '1') {
+				button_icon = 'ui-icon-unlocked';
+				button_label = 'release this member';
+				cell.parent().addClass('banned');
+			} else {
+				button_icon = 'ui-icon-locked';
+				button_label = 'ban this member';
+			}
+			var button_ban_or_release_member = $('<button type="button">' + button_label + '</button>').button({icon: button_icon, showLabel: false}).click(function() {
+				var button = $(this);
+				var row = button.parent().parent();
+				var old_status_id = row.find('td.status_id').text();
+				var status_id;
+				if (old_status_id == '0')
+					status_id = '1';
+				else
+					status_id = '0';
+				
+				var member_id = row.find('td.member_id').text();
+				var lm_time = row.find('td.lm_time').text();
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID_MEMBER_CONFIG,
+						'action': 'update_member_status',
+						'member_id': member_id,
+						'lm_time': lm_time,
+						'status_id': status_id
+					},
+					success: function(data) {
+						row.find('td.lm_time').text(data);
+						row.find('td.status_id').text(status_id);
+						
+						if (status_id == '1') {
+							row.addClass('banned');
+							
+							button.button('destroy');
+							button.text('release this member');
+							button.button({icon: 'ui-icon-unlocked', showLabel: false});
+						} else {
+							row.removeClass('banned');
+							
+							button.button('destroy');
+							button.text('ban this member');
+							button.button({icon: 'ui-icon-locked', showLabel: false});
+						}
+					}
+				});
+			});
+			cell.append(button_ban_or_release_member);
+		});
+		
+		rows.find('td.app_phone_no').each(function(i, e) {
+			var cell = $(e);
+			var button_sms = $('<button type="button">Send SMS</button>').button({icon: 'ui-icon-mail-closed', showLabel: false}).click(function() {
+				var button = $(this);
+				var row = button.parent().parent();
+				var member_id = row.find('td.member_id').text();
+				$('#FORM_SMS').resetForm().clearForm();
+				$('#FORM_SMS input.member_id').val(member_id);
+				$('#FORM_SMS textarea.sms_message').val(MSG_FOOTNOTE);
+				$('#DIALOG_SMS').dialog('open');
+			});
+			
+			var app_phone_no = cell.text();
+			cell.empty().append(button_sms).append('<label style="margin-left: 4px;">' + app_phone_no + '</label>');
+		});
+	},
+	executeUpdate: function(row, callback) {
+		var member_id = row.filter('.member_id').text();
+		
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+				'action': 'getDataForUpdate',
+				'member_id': member_id
+			},
+			success: function(data) {
+				var o = data.split(char_31);
+				var member_name = o.shift();
+				var phone_no = o.shift();
+				var arc_no = o.shift();
+				var arc_photo_url = o.shift();
+				var arc_expire_date = o.shift();
+				var sign_photo_url = o.shift();
+				var address = o.shift();
+				var birthday = o.shift();
+				var email = o.shift();
+				var app_member_name = o.shift();
+				var app_phone_no = o.shift();
+				var app_email = o.shift();
+				var lm_time = o.shift();
+				var member_login_id = o.shift();
+				var app_register_followup = o.shift();
+				var signature_need_fix = o.shift();
+				var sex_id = o.shift();
+				var address_photo_url = o.shift();
+				var app_arc_photo_url = o.shift();
+				var app_sign_photo_url = o.shift();
+				
+				$('#F').clearForm().resetForm();
+				$('#F .member_id').val(member_id);
+				$('#F label.app_member_name').text(app_member_name);
+				$('#F .member_name').val(member_name);
+				$('#F label.app_phone_no').text(app_phone_no);
+				$('#F .phone_no').val(phone_no);
+				$('#F .arc_no').val(arc_no);
+				$('#F img.app_arc_photo').attr('src', app_arc_photo_url);
+				$('#F img.arc_photo').attr('src', arc_photo_url).data('original_url', arc_photo_url);
+				$('#F .arc_expire_date').datepicker('setDate', arc_expire_date);
+				$('#F img.app_signature_photo').attr('src', app_sign_photo_url);
+				$('#F img.signature_photo').attr('src', sign_photo_url).data('original_url', sign_photo_url);
+				$('#F .address_photo').attr('src', address_photo_url);
+				$('#F .address').val(address);
+				$('#F .birthday').val(birthday);
+				$('#F label.app_email').text(app_email);
+				$('#F .email').val(email);
+				$('#F .lm_time').val(lm_time);
+				$('#F input.member_login_id').val(member_login_id);
+				$('#F textarea.app_register_followup').val(app_register_followup);
+				$('#F select.sex_id').val(sex_id);
+				
+				var phone_tokens = phone_no.split('.');
+				for (var i = phone_tokens.length; i < 4; i++) {
+					phone_tokens.push('');
+				}
+				
+				if (phone_tokens[1].length == 0) {
+					phone_tokens[1] = app_phone_no;
+				} else if (phone_tokens[2].length == 0) {
+					phone_tokens[2] = app_phone_no;
+				} else if (phone_tokens[3].length == 0) {
+					phone_tokens[3] = app_phone_no;
+				}
+				
+				$('#F input.phone_no1').autoNumeric('set', phone_tokens[1]);
+				$('#F input.phone_no2').autoNumeric('set', phone_tokens[2]);
+				$('#F input.phone_no3').autoNumeric('set', phone_tokens[3]);
+				
+				$('#FIX_ME').prop('checked', signature_need_fix == '1');
+				
+				$('#ADDRESS .area, #ADDRESS .road').empty();
+				$('#F button.ok').data('action', 'update');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA2').show();
+			}
+		});
+	}
+})[0];
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	var phone_no1 = $('#F input.phone_no1').autoNumeric('get');
+	var phone_no2 = $('#F input.phone_no2').autoNumeric('get');
+	var phone_no3 = $('#F input.phone_no3').autoNumeric('get');
+	var phone_no = '.' + phone_no1 + '.' + phone_no2 + '.' + phone_no3;
+	$('#F input.phone_no').val(phone_no);
+	
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+			'action': action
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			callback(data, true);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#QUERY input.time, #F .birthday, #F .arc_expire_date').createDatePickerWritable();
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var register_time_start = $('#QUERY input.register_time_start').val();
+	var register_time_end = $('#QUERY input.register_time_end').val();
+	
+	if (register_time_start.length > 0 && register_time_end.length > 0) {
+		c.push('app_register_time');
+		o.push('BETWEEN');
+		v.push(register_time_start + ' 00:00:00' + char_31 + register_time_end + ' 23:59:59');
+	} else if (register_time_start.length > 0) {
+		c.push('app_register_time');
+		o.push('>=');
+		v.push(register_time_start + ' 00:00:00');
+	} else if (register_time_end.length > 0) {
+		c.push('app_register_time');
+		o.push('<=');
+		v.push(register_time_end + ' 23:59:59');
+	}
+	
+	var is_wait_confirms = [];
+	$('#QUERY input.is_wait_confirm:checked').each(function(i, e) {
+		is_wait_confirms.push($(e).val());
+	});
+	if (is_wait_confirms.length > 0) {
+		c.push('is_wait_confirm');
+		o.push('IN');
+		v.push($.join(is_wait_confirms, ','));
+	}
+	
+	var is_with_follow_up = $('#WITH_FOLLOW_UP').prop('checked');
+	var is_without_follow_up = $('#WITHOUT_FOLLOW_UP').prop('checked');
+	
+	if (is_with_follow_up && is_without_follow_up) {
+		
+	} else if (is_with_follow_up) {
+		c.push('app_register_followup');
+		o.push('LIKE');
+		v.push('%');
+	} else if (is_without_follow_up) {
+		f1 = 'app_register_followup is null';
+	}
+	
+	var member_name = $('#QUERY input.member_name').val();
+	if (member_name.length > 0) {
+		c.push('app_member_name');
+		o.push('LIKE');
+		v.push('%' + member_name + '%');
+	}
+	
+	var phone_no = $('#QUERY input.phone_no').val();
+	if (phone_no.length > 0) {
+		c.push('app_phone_no');
+		o.push('LIKE');
+		v.push(phone_no + '%');
+	}
+	
+	var arc_no = $('#QUERY input.arc_no').val();
+	if (arc_no.length > 0) {
+		c.push('arc_no');
+		o.push('LIKE');
+		v.push(arc_no + '%');
+	}
+	
+	var status_ids = [];
+	$('#QUERY input.status_id:checked').each(function(i, e) {
+		status_ids.push($(e).val());
+	});
+	
+	if (status_ids.length > 0) {
+		c.push('status_id');
+		o.push('IN');
+		v.push(status_ids.join(','));
+	} else {
+		c.push('status_id');
+		o.push('=');
+		v.push('0');
+	}
+	
+	var signature_need_fix = $('#STATUS_SIGNATURE_NEED_FIX').prop('checked');
+	if (signature_need_fix) {
+		c.push('signature_need_fix');
+		o.push('=');
+		v.push('1');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2);
+});
+
+funcAreaChange = function() {
+	var v = $('#ADDRESS select.city option:selected').val();
+	if (v.length == 0)
+		return;
+	
+	var tokens = v.split(String.fromCharCode(30));
+	var city = tokens[0];
+	
+	v = $('#ADDRESS select.area option:selected').val();
+	if (v.length == 0)
+		return;
+	
+	tokens = v.split(String.fromCharCode(31));
+	var area = tokens[0];
+	
+	sendRequest.relay({
+		data:
+		{
+			'RelayId': RELAY_ID_MEMBER_CONFIG,
+			'action': 'getAddressRoad',
+			'city': city,
+			'area': area
+		},
+		success: function(data) {
+			$('#ADDRESS select.road').empty().append(data);
+		}
+	});
+};
+
+funcClearAddress = function() {
+	$('#ADDRESS .reset').val('');
+	$('#ADDRESS .empty').empty();
+};
+
+$('#ADDRESS select.city').change(function() {
+	var v = $(this).val();
+	if (v.length == 0)
+		return;
+	
+	var tokens = v.split(String.fromCharCode(30));
+	var city = tokens[0];
+	
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER_CONFIG,
+			'action': 'getAddressArea',
+			'city': city
+		},
+		success: function(data) {
+			$('#ADDRESS select.area').empty().append(data);
+			funcAreaChange();
+		}
+	});
+});
+
+$('#ADDRESS select.area').change(funcAreaChange);
+$('#ADDRESS input.data').createNumericTextInput();
+$('#SET_ADDRESS').button().click(function() {
+	var v = $('#ADDRESS select.city option:selected').val();
+	if (v.length == 0)
+		return;
+	var tokens = v.split(String.fromCharCode(30));
+	var city_cname = tokens[0];
+	var city_ename = tokens[1];
+	
+	v = $('#ADDRESS select.area option:selected').val();
+	if (v.length == 0)
+		return;
+	tokens = v.split(String.fromCharCode(31));
+	var area_cname = tokens[0];
+	var area_ename = tokens[1];
+	
+	v = $('#ADDRESS select.road option:selected').val();
+	if (v.length == 0)
+		return;
+	tokens = v.split(String.fromCharCode(31));
+	var road_cname = tokens[0];
+	var road_ename = tokens[1];
+	var zipcode = tokens[2];
+	
+	var neighbor = $('#ADDRESS input.neighbor').val();
+	var lane = $('#ADDRESS input.lane').val();
+	var alley = $('#ADDRESS input.alley').val();
+	var no1 = $('#ADDRESS input.no1').val();
+	var no2 = $('#ADDRESS input.no2').val();
+	var floor1 = $('#ADDRESS input.floor1').val();
+	var floor2 = $('#ADDRESS input.floor2').val();
+	var room = $('#ADDRESS input.room').val();
+
+	var chinese = city_cname + area_cname + road_cname;
+	var english = road_ename + ', ' + area_ename + ', ' + city_ename + ' ' + zipcode + ', Taiwan (R.O.C.)';
+	
+	if (neighbor.length > 0) {
+		chinese += neighbor + '鄰';
+		english = 'Neighbor ' + neighbor + ', ' + english;
+	}
+	
+	if (lane.length > 0) {
+		chinese += lane + '巷';
+		english = 'Ln. ' + lane + ', ' + english;
+	}
+	
+	if (alley.length > 0) {
+		chinese += alley + '弄';
+		english = 'Aly. ' + alley + ', ' + english;
+	}
+	
+	if (no1.length > 0 && no2.length > 0) {
+		chinese += no1 + '號之' + no2;
+		english = 'No. ' + no1 + '-' + no2 + ', ' + english;
+	}
+	else if (no1.length > 0) {
+		chinese += no1 + '號';
+		english = 'No. ' + no1 + ', ' + english;
+	}
+	
+	if (floor1.length > 0 && floor2.length > 0) {
+		chinese += floor1 + '樓之' + floor2;
+		english = floor1 + 'F.-' + floor2 + ', ' + english;
+	}
+	else if (floor1.length > 0) {
+		chinese += floor1 + '樓';
+		english = floor1 + 'F., ' + english;
+	}
+	
+	if (room.length > 0) {
+		chinese += room + '室';
+		english = 'Rm. ' + room + ', ' + english;
+	}
+	
+	$('#F .address').val(chinese);
+});
+
+$('#DOWNLOAD_APP_IMAGE_ARC').button().click(function() {
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+			'action': 'download_app_image_arc',
+			'member_login_id': $('#F input.member_login_id').val()
+		},
+		success: function(filename) {
+			sendRequest.downloadFile(filename, 'N');
+		}
+	});
+});
+
+$('#DOWNLOAD_APP_IMAGE_SIGNATURE').button().click(function() {
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+			'action': 'download_app_image_signature',
+			'member_login_id': $('#F input.member_login_id').val()
+		},
+		success: function(filename) {
+			sendRequest.downloadFile(filename, 'N');
+		}
+	});
+});
+
+$('#DOWNLOAD_APP_IMAGE_ADDRESS').button().click(function() {
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+			'action': 'download_app_image_address',
+			'member_login_id': $('#F input.member_login_id').val()
+		},
+		success: function(filename) {
+			sendRequest.downloadFile(filename, 'N');
+		}
+	});
+});
+
+$('#USE_APP_IMAGE_ARC').button().click(function() {
+	var url = $('#F img.app_arc_photo').attr('src');
+	$('#F img.arc_photo').attr('src', url);
+	$('#F input.arc_photo_action').val('1');
+});
+
+$('#USE_CURRENT_IMAGE_ARC').button().click(function() {
+	var url = $('#F img.arc_photo').data('original_url');
+	$('#F img.arc_photo').attr('src', url);
+	$('#F input.arc_photo_action').val('3');
+});
+
+$('#UPLOAD_NEW_IMAGE_ARC').button().click(function() {
+	$('#DIALOG_UPLOAD_ARC').dialog('open');
+	$('#FORM_UPLOAD_ARC input.arc_photo_upload').click();
+});
+
+$('#FORM_UPLOAD_ARC button.ok').button().click(function() {
+	$('#FORM_UPLOAD_ARC').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_MEMBER_CONFIG,
+			'action': 'arc_photo_upload'
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			var arc_photo_basename = tokens[0];
+			var arc_url = tokens[1];
+			$('#F input.arc_photo_basename, #FORM_UPLOAD_ARC input.arc_photo_basename').val(arc_photo_basename);
+			$('#F img.arc_photo').attr('src', arc_url);
+			$('#F input.arc_photo_action').val('2');
+			$('#DIALOG_UPLOAD_ARC').dialog('close');
+		}
+	});
+});
+
+$('#FORM_UPLOAD_ARC button.cancel').button().click(function() {
+	$('#DIALOG_UPLOAD_ARC').dialog('close');
+});
+
+$('#USE_APP_IMAGE_SIGNATURE').button().click(function() {
+	var url = $('#F img.app_signature_photo').attr('src');
+	$('#F img.signature_photo').attr('src', url);
+	$('#F input.signature_photo_action').val('1');
+});
+
+$('#USE_CURRENT_IMAGE_SIGNATURE').button().click(function() {
+	var url = $('#F img.signature_photo').data('original_url');
+	$('#F img.signature_photo').attr('src', url);
+	$('#F input.signature_photo_action').val('3');
+});
+
+$('#UPLOAD_NEW_IMAGE_SIGNATURE').button().click(function() {
+	$('#DIALOG_UPLOAD_SIGNATURE').dialog('open');
+	$('#FORM_UPLOAD_SIGNATURE input.signature_photo_upload').click();
+});
+
+$('#FORM_UPLOAD_SIGNATURE button.ok').button().click(function() {
+	$('#FORM_UPLOAD_SIGNATURE').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_MEMBER_CONFIG,
+			'action': 'signature_photo_upload'
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			var signature_photo_basename = tokens[0];
+			var signature_url = tokens[1];
+			$('#F input.signature_photo_basename, #FORM_UPLOAD_SIGNATURE input.signature_photo_basename').val(signature_photo_basename);
+			$('#F img.signature_photo').attr('src', signature_url);
+			$('#F input.signature_photo_action').val('2');
+			$('#DIALOG_UPLOAD_SIGNATURE').dialog('close');
+		}
+	});
+});
+
+$('#FORM_UPLOAD_SIGNATURE button.cancel').button().click(function() {
+	$('#DIALOG_UPLOAD_SIGNATURE').dialog('close');
+});
+
+$('#F button.followup').button().click(function() {
+	var member_id = $('#F input.member_id').val();
+	var lm_time = $('#F input.lm_time').val();
+	var app_register_followup = $('#F textarea.app_register_followup').val();
+	
+	$('#FORM_FOLLOWUP input.member_id').val(member_id);
+	$('#FORM_FOLLOWUP input.lm_time').val(lm_time);
+	$('#FORM_FOLLOWUP textarea.app_register_followup').val(app_register_followup);
+	
+	$('#DIALOG_FOLLOWUP').dialog('open');
+});
+
+$('#FIX_ME').checkboxradio().change(function() {
+	var signature_need_fix = $(this).prop('checked');
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+			'action': 'mark_as_fixme',
+			'member_id': $('#F input.member_id').val(),
+			'signature_need_fix': signature_need_fix ? '1' : '0'
+		}, success: function(data) {
+			if (signature_need_fix) {
+				$('#USE_CURRENT_IMAGE_SIGNATURE').click();
+			}
+		}, error: function(XMLHttpRequest, textStatus, errorThrown) {
+			$('#FIX_ME').prop('checked', !signature_need_fix);
+		}
+	});
+});
+
+$('#CLEAR_FOLLOWUP').button().click(function() {
+	if ($('#F textarea.app_register_followup').val().length > 0) {
+		var member_id = $('#F input.member_id').val();
+		var lm_time = $('#F input.lm_time').val();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+				'action': 'clear_followup',
+				'member_id': member_id,
+				'lm_time': lm_time
+			},
+			success: function(new_lm_time) {
+				$('#F textarea.app_register_followup').val('');
+				$('#F input.lm_time').val(new_lm_time);
+				
+				TABLE.funcGetTableBody().find('td.member_id').each(function(i, e) {
+					var cell = $(e);
+					if (cell.text() == member_id) {
+						var row = cell.parent();
+						row.find('td.lm_time').text(new_lm_time);
+						row.find('td.app_register_followup').empty();
+						return false;
+					}
+				});
+			}
+		});
+	}
+});
+
+//# sourceURL=member_app_register.js
+
+</script>

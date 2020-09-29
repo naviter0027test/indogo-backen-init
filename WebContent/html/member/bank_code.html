@@ -1,0 +1,176 @@
+<div id="AREA1">
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="lm_time" name="lm_time"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Bank Code Configuration</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Bank Code</td>
+					<td><input type="text" name="bank_code" class="bank_code" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Bank Name</td>
+					<td><input type="text" name="bank_name" class="bank_name" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Display Seq</td>
+					<td><input type="text" name="display_seq" class="display_seq" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Swift Code</td>
+					<td><input type="text" name="swift_code" class="swift_code" value=""/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID = 'member.bank_code_config';
+
+$('#AREA2').hide();
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(String.fromCharCode(31));
+		var roleIdsSize = parseInt(tokens.shift(), 10);
+		var roleIds = [];
+		for (var i = 0; i < roleIdsSize; i++) {
+			var roleId = parseInt(tokens.shift(), 10);
+			roleIds.push(roleId);
+		}
+		createTable(roleIds);
+	}
+});
+
+var TABLE;
+
+var createTable = function(roleIds) {
+	var disableInsert = true;
+	var disableUpdate = true;
+	var disableDelete = true;
+	var disableExport = true;
+	
+	if ($.inArray(1, roleIds) > -1 || $.inArray(2, roleIds) > -1) {
+		disableInsert = false;
+		disableUpdate = false;
+		disableDelete = false;
+		disableExport = false;
+	} else if ($.inArray(3, roleIds) > -1) {
+		disableInsert = false;
+		disableUpdate = false;
+		disableExport = false;
+	}
+	
+	TABLE = $('#TABLE').createTable({
+		className: 'com.indogo.relay.member.BankCodeConfiguration',
+		disableInsert: disableInsert,
+		disableUpdate: disableUpdate,
+		disableDelete: disableDelete,
+		disableExport: disableExport,
+		executeInsert: function(callback) {
+			$('#F').clearForm().resetForm();
+			$('#F .bank_code').attr('readonly', false);
+			$('#F button.ok').data('action', 'insert');
+			$('#F button.ok').data('callback', callback);
+			$('#AREA1').hide();
+			$('#AREA2').show();
+		},
+		executeUpdate: function(row, callback) {
+			var bank_code = row.filter('.bank_code').text();
+			
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID,
+					'action': 'getDataForUpdate',
+					'bank_code': bank_code
+				},
+				success: function(data) {
+					var tokens = data.split(String.fromCharCode(31));
+					var bank_name = tokens.shift();
+					var lm_time = tokens.shift();
+					var lm_user = tokens.shift();
+					var display_seq = tokens.shift();
+					var swift_code = tokens.shift();
+					
+					$('#F .bank_code').val(bank_code).attr('readonly', true);
+					$('#F .bank_name').val(bank_name);
+					$('#F .lm_time').val(lm_time);
+					$('#F .display_seq').val(display_seq);
+					$('#F input.swift_code').val(swift_code);
+					
+					$('#F button.ok').data('action', 'update');
+					$('#F button.ok').data('callback', callback);
+					$('#AREA1').hide();
+					$('#AREA2').show();
+				}
+			});
+		},
+		executeDelete: function(row, callback) {
+			var bank_code = row.filter('.bank_code').text();
+			var lm_time = row.filter('.lm_time').text();
+	
+			if (confirm('are you sure to delete ' + bank_code + '?')) {
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID,
+						'action': 'delete',
+						'bank_code': bank_code,
+						'lm_time': lm_time
+					},
+					success: function(data) {
+						callback(data);
+					}
+				});
+			}
+		}
+	})[0];
+};
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': action
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+//# sourceURL=bank_code.js
+
+</script>

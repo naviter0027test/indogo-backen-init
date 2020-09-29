@@ -1,0 +1,390 @@
+<div id="AREA1">
+	<form id="F">
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Checkout</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Shop</td>
+					<td><select class="shop_name" name="shop_id"><option value=""></option></select></td>
+				</tr>
+				<tr>
+					<td class="category">Sales Id</td>
+					<td><input type="text" class="sales_id" name="sales_id" value=""/> <button type="button" id="SEARCH_SALES">fetch</button> <button type="button" id="BROWSE_SALES">browse</button></td>
+				</tr>
+				<tr>
+					<td class="category">Freight Type</td>
+					<td><input type="text" class="freight_name" value="" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="category">Shipping Number</td>
+					<td><input type="text" class="ship_no" value="" name="ship_no"/></td>
+				</tr>
+				<tr>
+					<td class="category">Member Name</td>
+					<td><input type="text" class="member_name" value="" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="category">Phone No</td>
+					<td><input type="text" class="phone_no" value="" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="category">Shipping Address</td>
+					<td><input type="text" class="ship_address" value="" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="category">Shipping Fee</td>
+					<td><input type="text" class="ship_fee" value="" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="category">Total Amount</td>
+					<td><input type="text" class="total_amount" value="" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea class="comment" readonly></textarea></td>
+				</tr>
+				<tr>
+					<td class="category">發票號碼</td>
+					<td><input type="text" class="invoice_no" value="" name="invoice_no"/></td>
+				</tr>
+				<tr>
+					<td class="category">Items</td>
+					<td>
+						<table id="ITEM_LIST_CHECK" class="query" style="margin-bottom: 10px; margin-top: 10px;">
+							<tr>
+								<td class="category">Barcode</td>
+								<td><textarea class="item_name"></textarea></td>
+							</tr>
+							<tr>
+								<td class="category"></td>
+								<td><button type="button" class="check">Check</button> x <input type="text" class="qty_multiplier" value="1" style="width: 50px; text-align: right;"/></td>
+							</tr>
+						</table>
+						<table id="ITEM_LIST" class="winbond-table" style="margin-bottom: 10px;">
+							<thead>
+								<tr>
+									<td></td>
+									<td>Sales Qty</td>
+									<td>Price</td>
+									<td>Discount</td>
+									<td>Total</td>
+									<td>Picture</td>
+									<td>Barcode</td>
+									<td>Item Name</td>
+									<td>Category</td>
+									<td>Color</td>
+									<td>Size</td>
+									<td>Comment</td>
+									<td>Imei</td>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="checkout" type="button">Checkout</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="AREA2">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category">Checkout Time</td>
+			<td><input type="text" class="start_time"/> ~ <input type="text" class="end_time"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button> <button type="button" class="select">Select</button> <button type="button" class="close">Close</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_SALES_CHECKOUT = 'shop.sales_checkout';
+var TABLE;
+
+$('#AREA2').hide();
+$('#QUERY input.start_time, #QUERY input.end_time').createDatePicker();
+$('#F input.qty_multiplier').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true});
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_SALES_CHECKOUT,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		
+		var shop_list_size = parseInt(tokens.shift(), 10);
+		var html = '';
+		var shop_id;
+		for (var i = 0; i < shop_list_size; i++) {
+			shop_id = tokens.shift();
+			var shop_name = tokens.shift();
+			html = html + '<option value="' + shop_id + '">' + shop_name + '</option>';
+		}
+		$('#F select.shop_name').append(html);
+		
+		if (shop_list_size == 1) {
+			$('#F select.shop_name').val(shop_id);
+		}
+	}
+});
+
+$('#F input.sales_id').keydown(function(e) {
+	if (e.which == 13) {
+		$('#SEARCH_SALES').click();
+	}
+});
+
+$('#F input.ship_no').keydown(function(e) {
+	if (e.which == 13) {
+		$('#F textarea.item_name').focus();
+		return false;
+	}
+});
+
+$('#SEARCH_SALES').button({icon: 'ui-icon-search', showLabel: false}).click(function() {
+	$('#ITEM_LIST tbody').empty();
+	var sales_id = $('#F input.sales_id').val();
+	$('#ITEM_LIST_CHECK input.item_name').focus();
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_SALES_CHECKOUT,
+			'action': 'get',
+			'sales_id': sales_id
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			var ship_address = tokens.shift();
+			var ship_fee = tokens.shift();
+			var total_amount = tokens.shift();
+			var freight_name = tokens.shift();
+			var member_name = tokens.shift();
+			var phone_no = tokens.shift();
+			var comment = tokens.shift();
+			var items_size = parseInt(tokens.shift(), 10);
+			
+			var html = '';
+			for (var i = 0; i < items_size; i++) {
+				var cells = tokens.shift().split(char_30);
+				var sales_qty = parseInt(cells.shift(), 10);
+				var sales_price = cells.shift();
+				var sales_discount = cells.shift();
+				var sales_total = cells.shift();
+				var item_name = cells.shift();
+				var item_desc = cells.shift();
+				var item_image = cells.shift();
+				var category_name = cells.shift();
+				var imei_flag = parseInt(cells.shift(), 10);
+				var color_name = cells.shift();
+				var size_name = cells.shift();
+				var item_id = cells.shift();
+				var item_comment = cells.shift();
+				
+				html = html + '<tr class="even"><td><input type="checkbox" class="item_check item_id_' + item_id + '" value="' + sales_qty + '"/></td>';
+				html = html + '<td>' + sales_qty + '<span class="not_enough" style="margin-left: 4px; color: red;"></span></td>';
+				html = html + '<td>' + sales_price + '</td>';
+				html = html + '<td>' + sales_discount + '</td>';
+				html = html + '<td>' + sales_total + '</td>';
+				html = html + '<td>' + item_image + '</td>';
+				html = html + '<td>' + item_name + '</td>';
+				html = html + '<td>' + item_desc + '</td>';
+				html = html + '<td>' + category_name + '</td>';
+				html = html + '<td>' + color_name + '</td>';
+				html = html + '<td>' + size_name + '</td>';
+				html = html + '<td>' + nl2br(item_comment) + '</td>';
+				if (imei_flag == 1) {
+					if (sales_qty == 1) {
+						html = html + '<td><input class="imei" type="text" style="width: 200px"/><input type="hidden" value="' + item_id + '" class="item_id"/></td>';
+					} else {
+						html = html + '<td><textarea class="imei" style="width: 200px; height: 50px;"></textarea><input type="hidden" value="' + item_id + '" class="item_id"/></td>';
+					}
+				} else {
+					html = html + '<td></td>';
+				}
+				html = html + '</tr>';
+			}
+
+			$('#F input.ship_address').val(ship_address);
+			$('#F input.ship_fee').val(ship_fee);
+			$('#F input.total_amount').val(total_amount);
+			$('#F input.member_name').val(member_name);
+			$('#F input.phone_no').val(phone_no);
+			$('#F textarea.comment').val(comment);
+			$('#F input.freight_name').val(freight_name);
+			$('#ITEM_LIST tbody').append(html);
+			
+			$('#winbond-menu-loading').data('ActiveElement', $('#F input.ship_no').get(0));
+		}
+	});
+});
+
+$('#ITEM_LIST_CHECK button.check').button().click(function() {
+	var item_name = $.trim($('#ITEM_LIST_CHECK textarea.item_name').val());
+	if (item_name.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_SALES_CHECKOUT,
+				'action': 'barcode_id',
+				'item_name': item_name
+			}, success: function(data) {
+				var qty_multiplier = parseInt($('#F input.qty_multiplier').autoNumeric('get'), 10);
+				var tokens = data.split(char_31);
+				var size = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < size; i++) {
+					var item_id = tokens.shift();
+					var qty = parseInt(tokens.shift(), 10) * qty_multiplier;
+					
+					var item = $('#ITEM_LIST input.item_id_' + item_id);
+					if (item.length > 0) {
+						var sales_qty = parseInt(item.val(), 10);
+						if (sales_qty == qty) {
+							item.prop('checked', true);
+							item.parent().parent().find('span.not_enough').text('');
+						} else {
+							var diff = sales_qty - qty;
+							var ss;
+							if (diff > 0) {
+								ss = 'KURANG (' + diff + ')';
+							} else {
+								ss = 'LEBIH (' + diff + ')';
+							}
+							item.parent().parent().find('span.not_enough').text(ss);
+						}
+					}
+				}
+				
+				size = parseInt(tokens.shift(), 10);
+				var text = '';
+				for (var i = 0; i < size; i++) {
+					text += tokens.shift() + '\n';
+				}
+				$('#ITEM_LIST_CHECK textarea.item_name').val(text);
+			}
+		});
+	}
+});
+
+$('#F button.checkout').button().click(function() {
+	if ($('#ITEM_LIST input.item_check:checked').length != $('#ITEM_LIST input.item_check').length) {
+		return false;
+	}
+	
+	var shop_id = $('#F select.shop_name').val();
+	var sales_id = $('#F input.sales_id').val();
+	
+	var imeis = [];
+	$('#ITEM_LIST tbody .imei').each(function(i, e) {
+		var cell = $(e);
+		var imei = cell.val();
+		var item_id = cell.parent().find('input.item_id').val();
+		imeis.push(item_id + char_30 + imei);
+	});
+	
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_SALES_CHECKOUT,
+			'action': 'checkout',
+			'sales_id': sales_id,
+			'imeis': $.join(imeis)
+		}, success: function(data) {
+			alert('success');
+			$('#F').clearForm().resetForm();
+			$('#ITEM_LIST tbody').empty();
+			$('#F select.shop_name').val(shop_id);
+			$('#F input.qty_multiplier').val('1');
+		}
+	});
+});
+
+TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.onlineshopping.SalesCheckout',
+	viewMode: true,
+	showCheckBox: true,
+	disablePaging: true,
+	singleSelectMode: true,
+	afterSetTableColumnEvent: function() {
+	},
+	afterSetTableDataEvent: function(rows) {
+	},
+	singleSelectModeDblClick: function() {
+		$('#QUERY button.select').click();
+	}
+})[0];
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	c.push('shop_id');
+	o.push('=');
+	v.push($('#F select.shop_name').val());
+	
+	var start_time = $('#QUERY input.start_time').val();
+	var end_time = $('#QUERY input.end_time').val();
+	if (start_time.length > 0 && end_time.length > 0) {
+		c.push('lm_time_checkout');
+		o.push('BETWEEN');
+		v.push(start_time + ' 00:00:00' + char_31 + end_time + ' 23:59:59');
+	} else if (start_time.length > 0) {
+		c.push('lm_time_checkout');
+		o.push('>=');
+		v.push(start_time + ' 00:00:00');
+	} else if (end_time.length > 0) {
+		c.push('lm_time_checkout');
+		o.push('<=');
+		v.push(end_time + ' 23:59:59');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+});
+
+$('#QUERY button.close').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#QUERY button.select').button().click(function() {
+	var rows = TABLE.funcGetCheckedRows();
+	if (rows.length <= 0)
+		return false;
+	
+	var row = rows[0];
+	var sales_id = row.find('td.sales_id').text();
+	$('#F input.sales_id').val(sales_id);
+	$('#AREA2').hide();
+	$('#AREA1').show();
+	$('#SEARCH_SALES').click();
+});
+
+$('#BROWSE_SALES').button().click(function() {
+	var shop_id = $('#F select.shop_name').val();
+	if (shop_id.length == 0) {
+		page.showWarningDialog('Please select a Shop');
+		return false;
+	}
+
+	$('#AREA1').hide();
+	$('#AREA2').show();
+	$('#QUERY button.ok').click();
+});
+
+//# sourceURL=sales_checkout.js
+</script>

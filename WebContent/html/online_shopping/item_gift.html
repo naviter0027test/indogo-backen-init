@@ -1,0 +1,385 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Gift Configuration</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Product</td>
+					<td>
+						<button type="button" id="SELECT_PRODUCT" style="margin-top: 10px;">Choose Product</button>
+						<table id="PRODUCT_INFO" class="winbond-table" style="margin-top: 10px; margin-bottom: 10px;">
+							<thead>
+								<tr>
+									<td><label class="item_image">item_image</label></td>
+									<td><label class="item_name">item_name</label></td>
+									<td><label class="item_desc">item_desc</label></td>
+									<td><label class="price_sale">price_sale</label></td>
+									<td><label class="category_name">category_name</label></td>
+									<td><label class="color_name">color_name</label></td>
+									<td><label class="size_name">size_name</label></td>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Gift Options</td>
+					<td>
+						<table id="GIFT" class="query" style="margin-bottom: 10px; margin-top: 10px;">
+							<tr>
+								<td class="category">Product Name</td>
+								<td><input type="text" class="item_desc"/></td>
+							</tr>
+							<tr>
+								<td class="category">Barcode</td>
+								<td><textarea class="item_name"></textarea></td>
+							</tr>
+							<tr>
+								<td class="category"></td>
+								<td><button id="ADD_ITEM" type="button">add item</button> <button id="BROWSE_ITEM" type="button">browse item</button></td>
+							</tr>
+						</table>
+						<table id="ITEM_LIST" class="winbond-table" style="margin-bottom: 10px;">
+							<thead>
+								<tr>
+									<td><input type="checkbox" id="ITEM_LIST_CHECK_ALL"/></td>
+									<td><button type="button" id="ITEM_LIST_DELETE_CHECKED">delete_checked</button></td>
+									<td><label class="qty">qty</label></td>
+									<td><label class="item_image">item_image</label></td>
+									<td><label class="item_name">item_name</label></td>
+									<td><label class="item_desc">item_desc</label></td>
+									<td><label class="price_sale">price_sale</label></td>
+									<td><label class="category_name">category_name</label></td>
+									<td><label class="color_name">color_name</label></td>
+									<td><label class="size_name">size_name</label></td>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="AREA3">
+	<table id="TABLE_ITEM">
+	</table>
+</div>
+
+<style type="text/css">
+#ITEM_LIST input.qty {
+	width: 100px;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_ITEM_GIFT = 'shop.item_gift';
+var RELAY_ID_ITEM = 'shop.item';
+
+$('#AREA2, #AREA3').hide();
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.onlineshopping.ItemGift',
+	afterSetTableColumnEvent: function() {
+		$('#QUERY button.ok').click();
+	},
+	executeInsert: function(callback) {
+		$('#F').clearForm().resetForm();
+		$('#SELECT_PRODUCT').show();
+		$('#ITEM_LIST tbody, #PRODUCT_INFO tbody').empty();
+		$('#F button.ok').data('action', 'insert');
+		$('#F button.ok').data('callback', callback);
+		$('#AREA1').hide();
+		$('#AREA2').show();
+	},
+	executeUpdate: function(row, callback) {
+		var item_id = row.filter('td.item_id').text();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ITEM_GIFT,
+				'action': 'get',
+				'item_id': item_id
+			},
+			success: function(data) {
+				$('#F').clearForm().resetForm();
+				$('#ITEM_LIST tbody, #PRODUCT_INFO tbody').empty();
+				
+				var tokens = data.split(char_31);
+				
+				var product_row = $(tokens.shift());
+				onItemSelectedSingle(product_row);
+				
+				var gifts_size = parseInt(tokens.shift(), 10);
+				$('#ITEM_LIST tbody').empty();
+				for (var i = 0; i < gifts_size; i++) {
+					var gift_row = $(tokens.shift());
+					var newRow = onItemSelected(gift_row);
+					if (newRow != null) {
+						var qty = gift_row.find('td.qty').text();
+						newRow.find('input.qty').autoNumeric('set', qty);
+					}
+				}
+				
+				$('#SELECT_PRODUCT').hide();
+				$('#F button.ok').data('action', 'update');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA2').show();
+			}
+		});
+	},
+	executeDelete: function(row, callback) {
+		var item_id = row.filter('.item_id').text();
+		var item_name = row.filter('.item_name').text();
+		var lm_time = row.filter('.lm_time').text();
+		if (confirm('are you sure to delete ' + item_name + '?')) {
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_ITEM_GIFT,
+					'action': 'delete',
+					'item_id': item_id,
+					'lm_time': lm_time
+				},
+				success: function(data) {
+					callback(data);
+				}
+			});
+		}
+	}
+})[0];
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+});
+
+$('#SELECT_PRODUCT').button().click(function() {
+	window.open('page.html?menu_row_id=23&item_disabled=0&item_hide=0&single_select=1', 'browse_item', 'width=1200,height=600');
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var gift_ids = [];
+	var gift_qtys = [];
+	
+	$('#ITEM_LIST tbody tr').each(function(i, e) {
+		var row = $(e);
+		var id = row.find('input.item_id').val();
+		var qty = row.find('input.qty').autoNumeric('get');
+		
+		gift_ids.push(id);
+		gift_qtys.push(qty);
+	});
+	
+	var action = $(this).data('action');
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_ITEM_GIFT,
+			'action': action,
+			'gift_ids': $.join(gift_ids),
+			'gift_qtys': $.join(gift_qtys)
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			var v = callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+function onItemSelectedSingle(row) {
+	var item_id = row.find('td.item_id').text();
+	var item_image_url = row.find('td.item_image img').attr('src');
+	var item_name = row.find('td.item_name').text();
+	var item_desc = row.find('td.item_desc').text();
+	var price_sale = row.find('td.price_sale').text();
+	var category_name = row.find('td.category_name').text();
+	var color_name = row.find('td.color_name').text();
+	var size_name = row.find('td.size_name').text();
+	
+	var html = '<tr class="even">';
+	html = html + '<td><img src="' + item_image_url + '"/><input type="hidden" class="item_id item_id_' + item_id + '" value="' + item_id + '" name="item_id"/></td>';
+	html = html + '<td>' + item_name + '</td>';
+	html = html + '<td>' + item_desc + '</td>';
+	html = html + '<td>' + price_sale + '</td>';
+	html = html + '<td>' + category_name + '</td>';
+	html = html + '<td>' + color_name + '</td>';
+	html = html + '<td>' + size_name + '</td>';
+	html = html + '</tr>';
+	
+	$('#PRODUCT_INFO tbody').empty().append(html);
+}
+
+function onItemSelected(row) {
+	var item_id = row.find('td.item_id').text();
+	if ($('#ITEM_LIST tbody').find('input.item_id_' + item_id).length == 0) {
+		var item_image_url = row.find('td.item_image img').attr('src');
+		var item_name = row.find('td.item_name').text();
+		var item_desc = row.find('td.item_desc').text();
+		var price_sale = row.find('td.price_sale').text();
+		var category_name = row.find('td.category_name').text();
+		var color_name = row.find('td.color_name').text();
+		var size_name = row.find('td.size_name').text();
+		
+		var html = '<tr class="even"><td><input type="checkbox" class="item_check"/></td><td><button type="button" class="item_delete">item_delete</button></td>';
+		html = html + '<td><input type="text" class="qty"/></td>';
+		html = html + '<td><img src="' + item_image_url + '"/><input type="hidden" class="item_id item_id_' + item_id + '" value="' + item_id + '"/></td>';
+		html = html + '<td>' + item_name + '</td>';
+		html = html + '<td>' + item_desc + '</td>';
+		html = html + '<td>' + price_sale + '</td>';
+		html = html + '<td>' + category_name + '</td>';
+		html = html + '<td>' + color_name + '</td>';
+		html = html + '<td>' + size_name + '</td>';
+		html = html + '</tr>';
+		
+		var newRow = $(html);
+		
+		newRow.find('input.qty').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true});
+		newRow.find('input.qty').incrementOnEnter();
+		
+		newRow.find('button.item_delete').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+			$(this).parent().parent().remove();
+		});
+		
+		$('#ITEM_LIST tbody').append(newRow);
+		
+		return newRow;
+	} else {
+		return null;
+	}
+};
+
+var TABLE_ITEM = $('#TABLE_ITEM').createTable({
+	className: 'com.indogo.relay.onlineshopping.Item',
+	viewMode: true,
+	afterSetTableColumnEvent: function() {
+		
+	},
+	afterSetTableDataEvent: function(rows) {
+		if ($('#AREA2').is(':hidden')) {
+			rows.each(function(i, e) {
+				onItemSelected($(e));
+			});
+		}
+	}
+})[0];
+
+$('#BROWSE_ITEM').button().click(function() {
+	window.open('page.html?menu_row_id=23&item_disabled=0&item_hide=0', 'browse_item', 'width=800,height=600');
+});
+
+$('#ADD_ITEM').button().click(function() {
+	var item_name = $.trim($('#ITEM_LIST_ADD textarea.item_name').val());
+	var item_desc = $('#ITEM_LIST_ADD input.item_desc').val();
+	
+	if (item_name.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ITEM,
+				'action': 'sql_temp_table',
+				'item_name': item_name
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					var c = [];
+					var o = [];
+					var v = [];
+					var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+					
+					c.push('item_disabled');
+					o.push('=');
+					v.push('0');
+					
+					c.push('item_hide');
+					o.push('=');
+					v.push('0');
+					
+					if (item_desc.length > 0) {
+						c.push('item_desc');
+						o.push('LIKE');
+						v.push('%' + item_desc + '%');
+					}
+					
+					sessionId = GLOBAL_SID;
+					pageId = 'item';
+					joinSql = 'a.item_id = b.long1';
+					
+					TABLE_ITEM.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+				}
+				
+				$('#ITEM_LIST_ADD textarea.item_name').val('');
+			}
+		});
+	} else if (item_desc.length > 0) {
+		var c = [];
+		var o = [];
+		var v = [];
+		var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+		
+		c.push('item_disabled');
+		o.push('=');
+		v.push('0');
+		
+		c.push('item_hide');
+		o.push('=');
+		v.push('0');
+		
+		c.push('item_desc');
+		o.push('LIKE');
+		v.push('%' + item_desc + '%');
+		
+		TABLE_ITEM.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+	}
+});
+
+$('#ITEM_LIST_DELETE_CHECKED').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+	$('#ITEM_LIST tbody input.item_check:checked').each(function(i, e) {
+		$(e).parent().parent().remove();
+	});
+	$('#ITEM_LIST_CHECK_ALL').prop('checked', false);
+});
+
+$('#ITEM_LIST_CHECK_ALL').change(function() {
+	var value = $(this).prop('checked');
+	$('#ITEM_LIST tbody input.item_check').prop('checked', value);
+});
+
+//# sourceURL=item_gift.js
+</script>

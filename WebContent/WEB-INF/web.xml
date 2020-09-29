@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+    <display-name>IndoGO Console</display-name>
+	<welcome-file-list>
+		<welcome-file>/login.html</welcome-file>
+	</welcome-file-list>
+	<context-param>
+		<param-name>DB_TYPE</param-name>
+		<param-value>MYSQL</param-value>
+	</context-param>
+	<context-param>
+		<param-name>DB_IP</param-name>
+		<param-value>192.168.1.102</param-value>
+	</context-param>
+	<context-param>
+		<param-name>DB_PORT</param-name>
+		<param-value>3306</param-value>
+	</context-param>
+	<context-param>
+		<param-name>DB_INSTANCE</param-name>
+		<param-value>indogo_dev</param-value>
+	</context-param>
+	<context-param>
+		<param-name>DB_ACCOUNT</param-name>
+		<param-value>indogo</param-value>
+	</context-param>
+	<context-param>
+		<param-name>DB_PASSWORD</param-name>
+		<param-value>indogo#go#</param-value>
+	</context-param>
+	
+	<filter>
+		<filter-name>HtmlFilter</filter-name>
+		<filter-class>com.lionpig.webui.http.filter.HtmlFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>HtmlFilter</filter-name>
+		<url-pattern>/html/*</url-pattern>
+	</filter-mapping>
+	
+  	<servlet>
+  		<servlet-name>UrlEncodedFormData</servlet-name>
+  		<servlet-class>com.lionpig.webui.http.servlet.UrlEncodedFormData</servlet-class>
+  	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>UrlEncodedFormData</servlet-name>
+    	<url-pattern>/servlet/UrlEncodedFormData</url-pattern>
+  	</servlet-mapping>
+	
+  	<servlet>
+  		<servlet-name>MultipartFormData</servlet-name>
+  		<servlet-class>com.lionpig.webui.http.servlet.MultipartFormData</servlet-class>
+  	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>MultipartFormData</servlet-name>
+    	<url-pattern>/servlet/MultipartFormData</url-pattern>
+  	</servlet-mapping>
+	
+  	<servlet>
+  		<servlet-name>DownloadServlet</servlet-name>
+  		<servlet-class>com.lionpig.webui.http.servlet.DownloadServlet</servlet-class>
+  	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>DownloadServlet</servlet-name>
+    	<url-pattern>/servlet/DownloadServlet</url-pattern>
+  	</servlet-mapping>
+	
+	<servlet>
+  		<servlet-name>AutoPage</servlet-name>
+  		<servlet-class>com.lionpig.webui.http.servlet.AutoPage</servlet-class>
+	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>AutoPage</servlet-name>
+    	<url-pattern>/servlet/AutoPage</url-pattern>
+  	</servlet-mapping>
+	
+	<servlet>
+  		<servlet-name>Chart</servlet-name>
+  		<servlet-class>com.lionpig.webui.http.servlet.Chart</servlet-class>
+	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>Chart</servlet-name>
+    	<url-pattern>/servlet/Chart</url-pattern>
+  	</servlet-mapping>
+</web-app>

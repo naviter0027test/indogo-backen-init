@@ -1,0 +1,8 @@
+/build/
+*.swp
+WebContent/WEB-INF/classes
+bin
+*.class
+env.properties
+logs
+/target/

@@ -1,0 +1,255 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category">Shop</td>
+			<td id="QUERY_SHOP"></td>
+		</tr>
+		<tr>
+			<td class="category">Create Time</td>
+			<td><input type="text" class="start_date"/> <select class="start_hour"></select>:<select class="start_min"></select>:<select class="start_sec"></select> to <input type="text" class="end_date"/> <select class="end_hour"></select>:<select class="end_min"></select>:<select class="end_sec"></select></td>
+		</tr>
+		<tr>
+			<td class="category">Status</td>
+			<td>
+				<input type="checkbox" value="1" id="SALES_STATUS_1" class="status_id" checked/><label for="SALES_STATUS_1">Created</label>
+				<input type="checkbox" value="2" id="SALES_STATUS_2" class="status_id"/><label for="SALES_STATUS_2">Checkout</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Customer Name</td>
+			<td><input type="text" class="member_name"/></td>
+		</tr>
+		<tr>
+			<td class="category">Customer Telp</td>
+			<td><input type="text" class="phone_no"/></td>
+		</tr>
+		<tr>
+			<td class="category">Product Name</td>
+			<td><input type="text" class="item_desc"/></td>
+		</tr>
+		<tr>
+			<td class="category">Sales Id</td>
+			<td><textarea class="sales_id" style="width: 380px; height: 90px;"></textarea></td>
+		</tr>
+		<tr>
+			<td class="category">Shipping Number</td>
+			<td><input type="text" class="ship_no"/></td>
+		</tr>
+		<tr>
+			<td class="category">Comment</td>
+			<td><input type="text" class="comment"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_SALES_EXPORT_HEIMAO = 'shop.sales_export_heimao';
+var TABLE;
+
+$('#QUERY input.start_date, #QUERY input.end_date').createDatePickerWritable();
+
+var html = '';
+for (var i = 0; i <= 23; i++) {
+	html = html + '<option value="' + i + '">' + i + '</option>';
+}
+$('#QUERY select.start_hour, #QUERY select.end_hour').append(html);
+$('#QUERY select.start_hour').val('0');
+$('#QUERY select.end_hour').val('23');
+
+html = '';
+for (var i = 0; i <= 59; i++) {
+	html = html + '<option value="' + i + '">' + i + '</option>';
+}
+$('#QUERY select.start_min, #QUERY select.start_sec, #QUERY select.end_min, #QUERY select.end_sec').append(html);
+$('#QUERY select.start_min, #QUERY select.start_sec').val('0');
+$('#QUERY select.end_min, #QUERY select.end_sec').val('59');
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_SALES_EXPORT_HEIMAO,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		
+		var shop_list_size = parseInt(tokens.shift(), 10);
+		var html_query_shop = '';
+		for (var i = 0; i < shop_list_size; i++) {
+			var shop_id = tokens.shift();
+			var shop_name = tokens.shift();
+			html_query_shop = html_query_shop + '<label for="QUERY_SHOP_' + shop_id + '"><input type="checkbox" value="' + shop_id + '" id="QUERY_SHOP_' + shop_id + '"/>' + shop_name + '</label> ';
+		}
+		$('#QUERY_SHOP').append(html_query_shop);
+	}
+})
+
+TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.onlineshopping.SalesExportHeimao',
+	viewMode: true,
+	showCheckBox: true,
+	disablePaging: true,
+	afterSetTableColumnEvent: function() {
+		var button_print = $('<button style="margin-left: 4px;">Export Heimao</button>').button().click(function() {
+			var sales_ids = [];
+			var rows = TABLE.funcGetCheckedRows();
+			for (var i = 0; i < rows.length; i++) {
+				var sales_id = rows[i].find('td.sales_id').text();
+				sales_ids.push(sales_id);
+			}
+			
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_SALES_EXPORT_HEIMAO,
+					'action': 'print',
+					'sales_ids': $.join(sales_ids)
+				}, success: function(data) {
+					sendRequest.downloadFile(data, 'N');
+				}
+			});
+		});
+		
+		$('#TABLE button.export-to-excel').parent().append(button_print);
+		
+		$('#QUERY button.ok').click();
+	},
+	afterSetTableDataEvent: function(rows) {
+		
+	}
+})[0];
+
+function onQuery(is_using_temp_table) {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	if (is_using_temp_table) {
+		sessionId = GLOBAL_SID;
+		pageId = 'sales_export_heimao';
+		joinSql = 'a.sales_id = b.long1';
+	}
+	
+	var shop_ids = [];
+	$('#QUERY_SHOP input:checked').each(function(i, e) {
+		shop_ids.push($(e).val());
+	});
+	if (shop_ids.length == 0) {
+		$('#QUERY_SHOP input').each(function(i, e) {
+			shop_ids.push($(e).val());
+		});
+	}
+	
+	c.push('shop_id');
+	o.push('IN');
+	v.push($.join(shop_ids, ','));
+	
+	var start_date = $('#QUERY input.start_date').val();
+	var end_date = $('#QUERY input.end_date').val();
+	if (start_date.length > 0 && end_date.length > 0) {
+		var start_hour = $('#QUERY select.start_hour').val();
+		var start_min = $('#QUERY select.start_min').val();
+		var start_sec = $('#QUERY select.start_sec').val();
+
+		var end_hour = $('#QUERY select.end_hour').val();
+		var end_min = $('#QUERY select.end_min').val();
+		var end_sec = $('#QUERY select.end_sec').val();
+		
+		c.push('lm_time_created');
+		o.push('BETWEEN');
+		v.push(start_date + ' ' + start_hour + ':' + start_min + ':' + start_sec + char_31 + end_date + ' ' + end_hour + ':' + end_min + ':' + end_sec);
+	} else if (start_date.length > 0) {
+		var start_hour = $('#QUERY select.start_hour').val();
+		var start_min = $('#QUERY select.start_min').val();
+		var start_sec = $('#QUERY select.start_sec').val();
+		
+		c.push('lm_time_created');
+		o.push('>=');
+		v.push(start_date + ' ' + start_hour + ':' + start_min + ':' + start_sec);
+	} else if (end_date.length > 0) {
+		var end_hour = $('#QUERY select.end_hour').val();
+		var end_min = $('#QUERY select.end_min').val();
+		var end_sec = $('#QUERY select.end_sec').val();
+		
+		c.push('lm_time_created');
+		o.push('<=');
+		v.push(end_date + ' ' + end_hour + ':' + end_min + ':' + end_sec);
+	}
+	
+	var status_ids = $('#QUERY input.status_id:checked');
+	if (status_ids.length > 0) {
+		var values = [];
+		status_ids.each(function(i, e) {
+			values.push($(e).val());
+		});
+		c.push('status_id');
+		o.push('IN');
+		v.push($.join(values, ','));
+	}
+	
+	var sales_id = $('#QUERY textarea.sales_id').val();
+	if (sales_id.length > 0) {
+		var lines = sales_id.split('\n');
+		var ary = [];
+		for (var i = 0; i < lines.length; i++) {
+			lines[i] = $.trim(lines[i]);
+			if (lines[i].length > 0) {
+				ary.push(lines[i]);
+			}
+		}
+		
+		c.push('sales_id');
+		o.push('IN');
+		v.push($.join(ary, ','));
+	}
+	
+	var ship_no = $('#QUERY input.ship_no').val();
+	if (ship_no.length > 0) {
+		c.push('ship_no');
+		o.push('=');
+		v.push(ship_no);
+	}
+	
+	var comment = $('#QUERY input.comment').val();
+	if (comment.length > 0) {
+		c.push('comment');
+		o.push('LIKE');
+		v.push('%' + comment + '%');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+}
+
+$('#QUERY button.ok').button().click(function() {
+	var member_name = $('#QUERY input.member_name').val();
+	var phone_no = $('#QUERY input.phone_no').val();
+	var item_desc = $('#QUERY input.item_desc').val();
+	
+	if (member_name.length > 0 || phone_no.length > 0 || item_desc.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_SALES_EXPORT_HEIMAO,
+				'action': 'sql_temp_table',
+				'member_name': member_name,
+				'phone_no': phone_no,
+				'item_desc': item_desc
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					onQuery(true);
+				} else {
+					TABLE.funcEmptyTableBody();
+				}
+			}
+		});
+	} else {
+		onQuery(false);
+	}
+});
+
+//# sourceURL=sales_export_heimao.js
+</script>

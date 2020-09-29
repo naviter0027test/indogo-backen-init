@@ -1,0 +1,144 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category">Time Range</td>
+			<td><input type="text" class="start_time"/> ~ <input type="text" class="end_time"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+		<tr>
+			<td class="category">Current Rupiah Amount</td>
+			<td><label class="current_idr"></label></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" name="amount" class="hidden_amount"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">IDR Book Keeping</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Amount</td>
+					<td><input type="text" class="amount" value="0" style="text-align: right; width: 150px;"/></td>
+				</tr>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea name="comment" class="comment"></textarea></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID = 'book.idr';
+var char_31 = String.fromCharCode(31);
+$('#QUERY .start_time, #QUERY .end_time').createDatePickerWritable();
+$('#F input.amount').autoNumeric('init', {vMin: '-99999999999999999999999999999', vMax: '99999999999999999999999999999'});
+$('#AREA2').hide();
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.bookkeeping.IdrBookkeeping',
+	disableUpdate: true,
+	disableDelete: true,
+	afterSetTableColumnEvent: function() {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID,
+				'action': 'init'
+			}, success: function(data) {
+				$('#QUERY label.current_idr').text(data);
+				$('#QUERY button.ok').click();
+			}
+		});
+	},
+	afterSetTableDataEvent: function() {
+		var tableBody = TABLE.funcGetTableBody();
+		tableBody.find('td.comment').each(function(i, e) {
+			var ee = $(e);
+			var text = ee.text().replace(/\n/g, '<br/>');
+			ee.empty().append(text);
+		});
+	},
+	executeInsert: function(callback) {
+		$('#F').clearForm().resetForm();
+		$('#F button.ok').data('action', 'insert');
+		$('#AREA1').hide();
+		$('#AREA2').show();
+	}
+})[0];
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var startTime = $('#QUERY input.start_time').val();
+	var endTime = $('#QUERY input.end_time').val();
+	
+	if (startTime.length > 0 && endTime.length > 0) {
+		c.push('lm_time');
+		o.push('BETWEEN');
+		v.push(startTime + ' 00:00:00' + char_31 + endTime + ' 23:59:59');
+	} else if (startTime.length > 0) {
+		c.push('lm_time');
+		o.push('>=')
+		v.push(startTime + ' 00:00:00');
+	} else if (endTime.length > 0) {
+		c.push('lm_time');
+		o.push('<=');
+		v.push(endTime + ' 23:59:59');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2);
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	
+	var amount = $('#F input.amount').autoNumeric('get');
+	$('#F input.hidden_amount').val(amount);
+	
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': action
+		},
+		success: function(data) {
+			$('#QUERY label.current_idr').text(data);
+			$('#QUERY button.ok').click();
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+//# sourceURL=idr_bookkeeping.js
+
+</script>

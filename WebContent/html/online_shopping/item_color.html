@@ -1,0 +1,112 @@
+<div id="AREA1">
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="color_id" name="color_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category"><label class="color_name">Color Name</label></td>
+					<td><input type="text" name="color_name" class="color_name"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_ITEM_COLOR = 'shop.item_color';
+$('#AREA2').hide();
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_ITEM_COLOR,
+		'action': 'init'
+	}, success: function(data) {
+		$('label.color_name').text(data);
+	}
+});
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.onlineshopping.ItemColor',
+	disablePaging: true,
+	executeInsert: function(callback) {
+		$('#F').clearForm().resetForm();
+		$('#F button.ok').data('action', 'insert');
+		$('#F button.ok').data('callback', callback);
+		$('#AREA1').hide();
+		$('#AREA2').show();
+	},
+	executeUpdate: function(row, callback) {
+		var color_id = row.filter('.color_id').text();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ITEM_COLOR,
+				'action': 'get',
+				'color_id': color_id
+			},
+			success: function(color_name) {
+				$('#F input.color_id').val(color_id);
+				$('#F input.color_name').val(color_name);
+				
+				$('#F button.ok').data('action', 'update');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA2').show();
+			}
+		});
+	},
+	executeDelete: function(row, callback) {
+		var color_id = row.filter('.color_id').text();
+		var color_name = row.filter('.color_name').text();
+		if (confirm('are you sure to delete ' + color_name + '?')) {
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_ITEM_COLOR,
+					'action': 'delete',
+					'color_id': color_id
+				},
+				success: function(data) {
+					callback(data);
+				}
+			});
+		}
+	}
+})[0];
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_ITEM_COLOR,
+			'action': action
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+//# sourceURL=item_color.js
+</script>

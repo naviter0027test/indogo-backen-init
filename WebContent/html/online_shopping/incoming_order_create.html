@@ -1,0 +1,667 @@
+<div id="AREA1">
+	<form id="F">
+		<input type="hidden" class="vendor_id" name="vendor_id"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2"><label class="incoming_order_title">Incoming Order</label></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category"><label class="shop_name">shop_name</label></td>
+					<td><select class="shop_name" name="shop_id"></select></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="invoice_no">invoice_no</label></td>
+					<td><input type="text" class="invoice_no" name="invoice_no"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="vendor_name">vendor_name</label></td>
+					<td><input type="text" class="vendor_name"/> <button id="SEARCH_VENDOR" type="button">search vendor</button> <button id="BROWSE_VENDOR" type="button">browse vendor</button></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="item_list">item_list</label></td>
+					<td>
+						<table id="ITEM_LIST_ADD" class="query" style="margin-bottom: 10px; margin-top: 10px;">
+							<tr>
+								<td class="category">Product Name</td>
+								<td><input type="text" class="item_desc"/></td>
+							</tr>
+							<tr>
+								<td class="category"><label class="item_name">item_name</label></td>
+								<td><textarea class="item_name"></textarea></td>
+							</tr>
+							<tr>
+								<td class="category"></td>
+								<td><button id="ADD_ITEM" type="button">add item</button> <button id="BROWSE_ITEM" type="button">browse item</button></td>
+							</tr>
+						</table>
+						<table id="ITEM_LIST" class="winbond-table" style="margin-bottom: 10px;">
+							<thead>
+								<tr>
+									<td><input type="checkbox" id="ITEM_LIST_CHECK_ALL"/></td>
+									<td><button type="button" id="ITEM_LIST_DELETE_CHECKED">delete_checked</button></td>
+									<td><label class="qty">qty</label></td>
+									<td><label class="price_buy">price_buy</label></td>
+									<td><span class="discount">discount</span></td>
+									<td><label class="total">total</label></td>
+									<td><label class="item_image">item_image</label></td>
+									<td><label class="item_name">item_name</label></td>
+									<td><label class="item_desc">item_desc</label></td>
+									<td><label class="price_sale">price_sale</label></td>
+									<td><label class="category_name">category_name</label></td>
+									<td><label class="color_name">color_name</label></td>
+									<td><label class="size_name">size_name</label></td>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Total Qty</td>
+					<td><input type="text" id="TOTAL_QTY" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Total Cost</td>
+					<td><input type="text" id="TOTAL_COST" readonly/></td>
+				</tr>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea class="comment" name="comment" style="height: 100px; width: 400px;"></textarea></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="create" type="button">Create</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="AREA2">
+	<table id="TABLE_ITEM">
+	</table>
+</div>
+
+<div id="AREA3">
+	<table id="QUERY_VENDOR" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"><label class="vendor_name">vendor_name</label></td>
+			<td><input type="text" class="vendor_name"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button> <button type="button" class="cancel">Cancel</button> <button type="button" class="confirm">Confirm</button></td>
+		</tr>
+	</table>
+	<table id="TABLE_VENDOR">
+	</table>
+</div>
+
+<div id="AREA4">
+	<form id="FORM_VENDOR">
+		<input type="hidden" class="vendor_id" name="vendor_id"/>
+		<input type="hidden" class="lm_time" name="lm_time"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2"><label class="vendor_maintenance_title">Vendor Configuration</label></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category"><label class="vendor_name">vendor_name</label></td>
+					<td><input type="text" name="vendor_name" class="vendor_name"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="contact_person">contact_person</label></td>
+					<td><input type="text" name="contact_person" class="contact_person"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="phone_no">phone_no</label></td>
+					<td><input type="text" name="phone_no" class="phone_no"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="fax_no">fax_no</label></td>
+					<td><input type="text" name="fax_no" class="fax_no"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="address">address</label></td>
+					<td><input type="text" name="address" class="address"/></td>
+				</tr>
+				<tr>
+					<td class="category"><label class="email">email</label></td>
+					<td><input type="text" name="email" class="email"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_INCOMING_ORDER_CREATE_SUCCESS" title="Success">
+	<table class="maintenance" id="TABLE_INCOMING_ORDER_CREATE_SUCCESS">
+		<tr>
+			<td class="category"><label class="order_id">order_id</label></td>
+			<td><input type="text" class="order_id" style="width: 200px;" readonly/></td>
+		</tr>
+	</table>
+</div>
+
+<style type="text/css">
+#ITEM_LIST input.qty {
+	width: 50px;
+}
+#ITEM_LIST input.price_buy, #ITEM_LIST input.total, #ITEM_LIST input.discount {
+	width: 80px;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_INCOMING_ORDER_CREATE = 'shop.incoming_order_create';
+var RELAY_ID_VENDOR = 'shop.vendor';
+var RELAY_ID_ITEM = 'shop.item';
+
+$('#AREA2, #AREA3, #AREA4').hide();
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_INCOMING_ORDER_CREATE,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		var label_shop_name = tokens.shift();
+		var label_item_name = tokens.shift();
+		var label_item_qty = tokens.shift();
+		var label_price_sale = tokens.shift();
+		var label_invoice_no = tokens.shift();
+		var label_vendor_name = tokens.shift();
+		var label_item_list = tokens.shift();
+		var label_qty = tokens.shift();
+		var label_price_buy = tokens.shift();
+		var label_total = tokens.shift();
+		var label_item_image = tokens.shift();
+		var label_item_desc = tokens.shift();
+		var label_category_name = tokens.shift();
+		var label_color_name = tokens.shift();
+		var label_size_name = tokens.shift();
+		var label_vendor_maintenance_title = tokens.shift();
+		var label_contact_person = tokens.shift();
+		var label_phone_no = tokens.shift();
+		var label_fax_no = tokens.shift();
+		var label_address = tokens.shift();
+		var label_email = tokens.shift();
+		var label_incoming_order_title = tokens.shift();
+		var label_button_search_vendor = tokens.shift();
+		var label_button_browse_vendor = tokens.shift();
+		var label_button_add_item = tokens.shift();
+		var label_button_browse_item = tokens.shift();
+		var label_button_create = tokens.shift();
+		var label_button_confirm = tokens.shift();
+		var label_order_id = tokens.shift();
+		var lang_discount = tokens.shift();
+		
+		var shop_list_size = parseInt(tokens.shift(), 10);
+		var html_shop_select = '';
+		var html_query_shop = '';
+		if (shop_list_size > 1) {
+			html_shop_select = '<option value=""></option>';
+		}
+		for (var i = 0; i < shop_list_size; i++) {
+			var shop_id = tokens.shift();
+			var shop_name = tokens.shift();
+			html_shop_select = html_shop_select + '<option value="' + shop_id + '">' + shop_name + '</option>';
+			html_query_shop = html_query_shop + '<label for="QUERY_SHOP_' + shop_id + '"><input type="checkbox" value="' + shop_id + '" id="QUERY_SHOP_' + shop_id + '"/>' + shop_name + '</label> ';
+		}
+		
+		var item_category_size = parseInt(tokens.shift(), 10);
+		var html_item_category_select = '';
+		var html_query_item_category = '';
+		for (var i = 0; i < item_category_size; i++) {
+			var category_id = tokens.shift();
+			var category_name = tokens.shift();
+			html_item_category_select = html_item_category_select + '<option value="' + category_id + '">' + category_name + '</option>';
+			html_query_item_category = html_query_item_category + '<label for="QUERY_ITEM_CATEGORY_' + category_id + '"><input type="checkbox" value="' + category_id + '" id="QUERY_ITEM_CATEGORY_' + category_id + '"/>' + category_name + '</label> ';
+		}
+		
+		$('label.shop_name').text(label_shop_name);
+		$('label.item_name').text(label_item_name);
+		$('label.item_qty').text(label_item_qty);
+		$('label.price_sale').text(label_price_sale);
+		$('label.invoice_no').text(label_invoice_no);
+		$('label.vendor_name').text(label_vendor_name);
+		$('label.item_list').text(label_item_list);
+		$('label.qty').text(label_qty);
+		$('label.price_buy').text(label_price_buy);
+		$('label.total').text(label_total);
+		$('label.item_image').text(label_item_image);
+		$('label.item_desc').text(label_item_desc);
+		$('label.category_name').text(label_category_name);
+		$('label.color_name').text(label_color_name);
+		$('label.size_name').text(label_size_name);
+		$('label.vendor_maintenance_title').text(label_vendor_maintenance_title);
+		$('label.contact_person').text(label_contact_person);
+		$('label.phone_no').text(label_phone_no);
+		$('label.fax_no').text(label_fax_no);
+		$('label.address').text(label_address);
+		$('label.email').text(label_email);
+		$('label.incoming_order_title').text(label_incoming_order_title);
+		$('#SEARCH_VENDOR').button({label: label_button_search_vendor}).attr('title', label_button_search_vendor);
+		$('#BROWSE_VENDOR').button({label: label_button_browse_vendor}).attr('title', label_button_browse_vendor);
+		$('#ADD_ITEM').button({label: label_button_add_item});
+		$('#BROWSE_ITEM').button({label: label_button_browse_item});
+		$('select.shop_name').append(html_shop_select);
+		$('#QUERY_ITEM_CATEGORY').append(html_query_item_category);
+		$('#QUERY_SHOP').append(html_query_shop);
+		$('button.create').button({label: label_button_create}).attr('title', label_button_create);
+		$('button.confirm').button({label: label_button_confirm}).attr('title', label_button_confirm);
+		$('label.order_id').text(label_order_id);
+		$('span.discount').text(lang_discount);
+	}
+});
+
+function calculateTotalQtyAndCost() {
+	var total_qty = 0;
+	var total_cost = 0;
+	
+	$('#ITEM_LIST tbody tr').each(function(i, e) {
+		var row = $(this);
+		var qty = row.find('input.qty').autoNumeric('get');
+		var total = row.find('input.total').autoNumeric('get');
+		
+		if (qty.length > 0) {
+			total_qty += parseInt(qty, 10);
+		}
+		
+		if (total.length > 0) {
+			total_cost += parseInt(total, 10);
+		}
+	});
+	
+	$('#TOTAL_QTY').val(toCurrency(total_qty));
+	$('#TOTAL_COST').val(toCurrency(total_cost));
+}
+
+function onItemSelected(row) {
+	var item_id = row.find('td.item_id').text();
+	if ($('#ITEM_LIST tbody').find('input.item_id_' + item_id).length == 0) {
+		var item_image_url = row.find('td.item_image img').attr('src');
+		var item_name = row.find('td.item_name').text();
+		var item_desc = row.find('td.item_desc').text();
+		var price_sale = row.find('td.price_sale').text();
+		var category_name = row.find('td.category_name').text();
+		var color_name = row.find('td.color_name').text();
+		var size_name = row.find('td.size_name').text();
+		
+		var html = '<tr class="even"><td><input type="checkbox" class="item_check"/></td><td><button type="button" class="item_delete">item_delete</button></td>';
+		html = html + '<td><input type="text" class="qty"/></td>';
+		html = html + '<td><input type="text" class="price_buy"/></td>';
+		html = html + '<td><input type="text" class="discount"/></td>';
+		html = html + '<td><input type="text" class="total"/></td>';
+		html = html + '<td><img src="' + item_image_url + '"/><input type="hidden" class="item_id item_id_' + item_id + '" value="' + item_id + '"/></td>';
+		html = html + '<td>' + item_name + '</td>';
+		html = html + '<td>' + item_desc + '</td>';
+		html = html + '<td>' + price_sale + '</td>';
+		html = html + '<td>' + category_name + '</td>';
+		html = html + '<td>' + color_name + '</td>';
+		html = html + '<td>' + size_name + '</td>';
+		html = html + '</tr>';
+		
+		var newRow = $(html);
+		
+		newRow.find('input.qty, input.price_buy, input.discount, input.total').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true});
+		newRow.find('input.qty').incrementOnEnter();
+		
+		newRow.find('button.item_delete').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+			$(this).parent().parent().remove();
+		});
+		
+		newRow.find('input.qty, input.price_buy, input.discount').change(function() {
+			var row = $(this).parent().parent();
+			var qty = row.find('input.qty').autoNumeric('get');
+			var price_buy = row.find('input.price_buy').autoNumeric('get');
+			var discount = row.find('input.discount').autoNumeric('get');
+			
+			if (qty.length == 0) {
+				qty = '0';
+			}
+			if (price_buy.length == 0) {
+				price_buy = '0';
+			}
+			if (discount.length == 0) {
+				discount = '0';
+			}
+			
+			qty = parseInt(qty, 10);
+			price_buy = parseInt(price_buy, 10);
+			discount = parseInt(discount, 10);
+			var total = (qty * price_buy) - discount;
+			row.find('input.total').autoNumeric('set', total).trigger('change');
+			
+			//calculateTotalQtyAndCost();
+		});
+		
+		newRow.find('input.total').change(calculateTotalQtyAndCost);
+		
+		$('#ITEM_LIST tbody').append(newRow);
+	}
+};
+
+var TABLE_ITEM = $('#TABLE_ITEM').createTable({
+	className: 'com.indogo.relay.onlineshopping.Item',
+	viewMode: true,
+	afterSetTableColumnEvent: function() {
+		
+	},
+	afterSetTableDataEvent: function(rows) {
+		if ($('#AREA2').is(':hidden')) {
+			rows.each(function(i, e) {
+				onItemSelected($(e));
+			});
+		}
+	}
+})[0];
+
+var TABLE_VENDOR = $('#TABLE_VENDOR').createTable({
+	className: 'com.indogo.relay.onlineshopping.Vendor',
+	singleSelectMode: true,
+	showCheckBox: true,
+	afterSetTableColumnEvent: function() {
+		
+	},
+	afterSetTableDataEvent: function(rows) {
+		if ($('#AREA3').is(':hidden')) {
+			if (rows.length == 1) {
+				var vendor_id = rows.find('td.vendor_id').text();
+				var vendor_name = rows.find('td.vendor_name').text();
+				
+				$('#F input.vendor_id').val(vendor_id);
+				$('#F input.vendor_name').val(vendor_name);
+			} else {
+				$('#AREA1').hide();
+				$('#AREA3').show();
+			}
+		}
+	},
+	executeInsert: function(callback) {
+		$('#FORM_VENDOR').clearForm().resetForm();
+		$('#FORM_VENDOR button.ok').data('action', 'insert');
+		$('#FORM_VENDOR button.ok').data('callback', callback);
+		$('#AREA3').hide();
+		$('#AREA4').show();
+	},
+	executeUpdate: function(row, callback) {
+		var vendor_id = row.filter('.vendor_id').text();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_VENDOR,
+				'action': 'get',
+				'vendor_id': vendor_id
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				var vendor_name = tokens.shift();
+				var contact_person = tokens.shift();
+				var phone_no = tokens.shift();
+				var fax_no = tokens.shift();
+				var address = tokens.shift();
+				var email = tokens.shift();
+				var lm_time = tokens.shift();
+				
+				$('#FORM_VENDOR input.vendor_name').val(vendor_name);
+				$('#FORM_VENDOR input.contact_person').val(contact_person);
+				$('#FORM_VENDOR input.phone_no').val(phone_no);
+				$('#FORM_VENDOR input.fax_no').val(fax_no);
+				$('#FORM_VENDOR input.address').val(address);
+				$('#FORM_VENDOR input.email').val(email);
+				$('#FORM_VENDOR input.lm_time').val(lm_time);
+				$('#FORM_VENDOR input.vendor_id').val(vendor_id);
+				
+				$('#FORM_VENDOR button.ok').data('action', 'update');
+				$('#FORM_VENDOR button.ok').data('callback', callback);
+				$('#AREA3').hide();
+				$('#AREA4').show();
+			}
+		});
+	},
+	executeDelete: function(row, callback) {
+		var vendor_id = row.filter('.vendor_id').text();
+		var lm_time = row.filter('.lm_time').text();
+		var vendor_name = row.filter('.vendor_name').text();
+		if (confirm('are you sure to delete ' + vendor_name + '?')) {
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_VENDOR,
+					'action': 'delete',
+					'vendor_id': vendor_id,
+					'lm_time': lm_time
+				},
+				success: function(data) {
+					callback(data);
+				}
+			});
+		}
+	}
+})[0];
+
+$('#BROWSE_ITEM').button().click(function() {
+	window.open('page.html?menu_row_id=41&item_disabled=0&item_hide=0&is_composite=0', 'browse_item', 'width=800,height=600');
+});
+
+$('#ADD_ITEM').button().click(function() {
+	var item_name = $.trim($('#ITEM_LIST_ADD textarea.item_name').val());
+	var item_desc = $('#ITEM_LIST_ADD input.item_desc').val();
+	
+	if (item_name.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ITEM,
+				'action': 'sql_temp_table',
+				'item_name': item_name
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					var c = [];
+					var o = [];
+					var v = [];
+					var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+					
+					c.push('item_disabled');
+					o.push('=');
+					v.push('0');
+					
+					c.push('item_hide');
+					o.push('=');
+					v.push('0');
+					
+					c.push('is_composite');
+					o.push('=');
+					v.push('0');
+					
+					if (item_desc.length > 0) {
+						c.push('item_desc');
+						o.push('LIKE');
+						v.push('%' + item_desc + '%');
+					}
+					
+					sessionId = GLOBAL_SID;
+					pageId = 'item';
+					joinSql = 'a.item_id = b.long1';
+					
+					TABLE_ITEM.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+				}
+				
+				$('#ITEM_LIST_ADD textarea.item_name').val('');
+			}
+		});
+	} else if (item_desc.length > 0) {
+		var c = [];
+		var o = [];
+		var v = [];
+		var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+		
+		c.push('item_disabled');
+		o.push('=');
+		v.push('0');
+		
+		c.push('item_hide');
+		o.push('=');
+		v.push('0');
+		
+		c.push('is_composite');
+		o.push('=');
+		v.push('0');
+		
+		c.push('item_desc');
+		o.push('LIKE');
+		v.push('%' + item_desc + '%');
+		
+		TABLE_ITEM.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+	}
+});
+
+$('#ITEM_LIST_DELETE_CHECKED').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+	$('#ITEM_LIST tbody input.item_check:checked').each(function(i, e) {
+		$(e).parent().parent().remove();
+	});
+	$('#ITEM_LIST_CHECK_ALL').prop('checked', false);
+});
+
+$('#ITEM_LIST_CHECK_ALL').change(function() {
+	var value = $(this).prop('checked');
+	$('#ITEM_LIST tbody input.item_check').prop('checked', value);
+});
+
+$('#F button.create').button().click(function() {
+	var items = [];
+	$('#ITEM_LIST tbody tr').each(function(i, e) {
+		var row = $(e);
+		var item_id = row.find('input.item_id').val();
+		var qty = row.find('input.qty').autoNumeric('get');
+		var price_buy = row.find('input.price_buy').autoNumeric('get');
+		var discount = row.find('input.discount').autoNumeric('get');
+		var total = row.find('input.total').autoNumeric('get');
+		
+		if (discount.length == 0) {
+			discount = '0';
+		}
+		
+		items.push(item_id + char_30 + qty + char_30 + price_buy + char_30 + discount + char_30 + total);
+	});
+	
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_INCOMING_ORDER_CREATE,
+			'action': 'insert',
+			'items': $.join(items)
+		},
+		success: function(data) {
+			$('#TABLE_INCOMING_ORDER_CREATE_SUCCESS input.order_id').val(data);
+			$('#DIALOG_INCOMING_ORDER_CREATE_SUCCESS').dialog('open');
+			$('#F').clearForm().resetForm();
+			$('#ITEM_LIST tbody').empty();
+		}
+	});
+});
+
+$('#QUERY_VENDOR button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var vendor_name = $('#QUERY_VENDOR input.vendor_name').val();
+	if (vendor_name.length > 0) {
+		c.push('vendor_name');
+		o.push('LIKE');
+		v.push('%' + vendor_name + '%');
+	}
+	
+	TABLE_VENDOR.searchFor(c, o, v, f1, f2);
+});
+
+$('#QUERY_VENDOR button.cancel').button().click(function() {
+	$('#AREA3').hide();
+	$('#AREA1').show();
+});
+
+$('#QUERY_VENDOR button.confirm').button().click(function() {
+	var rows = TABLE_VENDOR.funcGetCheckedRows();
+	if (rows.length > 0) {
+		var row = rows.shift();
+		var vendor_id = row.find('td.vendor_id').text();
+		var vendor_name = row.find('td.vendor_name').text();
+		$('#F input.vendor_id').val(vendor_id);
+		$('#F input.vendor_name').val(vendor_name);
+		$('#AREA3').hide();
+		$('#AREA1').show();
+	}
+});
+
+$('#SEARCH_VENDOR').button({icon: 'ui-icon-search', showLabel: false}).click(function() {
+	var vendor_name = $('#F input.vendor_name').val();
+	$('#QUERY_VENDOR input.vendor_name').val(vendor_name);
+	$('#QUERY_VENDOR button.ok').click();
+});
+
+$('#F input.vendor_name').keydown(function(e) {
+	if (e.which == 13) {
+		$('#SEARCH_VENDOR').click();
+	}
+});
+
+$('#BROWSE_VENDOR').button({icon: 'ui-icon-folder', showLabel: false}).click(function() {
+	$('#QUERY_VENDOR input').val('');
+	$('#AREA1').hide();
+	$('#AREA3').show();
+});
+
+$('#FORM_VENDOR button.cancel').button().click(function() {
+	$('#AREA4').hide();
+	$('#AREA3').show();
+});
+
+$('#FORM_VENDOR button.ok').button().click(function() {
+	var action = $(this).data('action');
+	$('#FORM_VENDOR').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_VENDOR,
+			'action': action
+		},
+		success: function(data) {
+			var callback = $('#FORM_VENDOR button.ok').data('callback');
+			callback(data);
+			$('#AREA4').hide();
+			$('#AREA3').show();
+		}
+	});
+});
+
+$('#DIALOG_INCOMING_ORDER_CREATE_SUCCESS').dialog({
+	modal: true,
+	width: 350,
+	autoOpen: false
+});
+
+$('#F select.shop_name').change(function() {
+	$('#ITEM_LIST tbody').empty();
+});
+
+//# sourceURL=incoming_order_create.js
+</script>

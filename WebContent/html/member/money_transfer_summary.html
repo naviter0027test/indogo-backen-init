@@ -1,0 +1,355 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category"><label for="QUERY_PAID_DATE" style="cursor: pointer"><input type="radio" name="query_date" class="query_date" id="QUERY_PAID_DATE" value="paid" checked="checked"/>繳款日期</label></td>
+			<td><input type="text" class="start_date paid"/> <select class="start_hour paid"></select>:<select class="start_min paid"></select>:<select class="start_sec paid"></select> to <input type="text" class="end_date paid"/> <select class="end_hour paid"></select>:<select class="end_min paid"></select>:<select class="end_sec paid"></select></td>
+		</tr>
+		<tr>
+			<td class="category"><label for="QUERY_TRANSFER_DATE" style="cursor: pointer"><input type="radio" name="query_date" class="query_date" id="QUERY_TRANSFER_DATE" value="transfer"/>匯款日期</label></td>
+			<td><input type="text" class="start_date transfer"/> <select class="start_hour transfer"></select>:<select class="start_min transfer"></select>:<select class="start_sec transfer"></select> to <input type="text" class="end_date transfer"/> <select class="end_hour transfer"></select>:<select class="end_min transfer"></select>:<select class="end_sec transfer"></select></td>
+		</tr>
+		<tr>
+			<td class="category">通路</td>
+			<td>
+				<input type="checkbox" value="1" id="MINI_MART_ID_1" class="mini_mart_id" style="cursor: pointer"/><label for="MINI_MART_ID_1" style="cursor: pointer">7-11</label>
+				<input type="checkbox" value="2" id="MINI_MART_ID_2" class="mini_mart_id" style="cursor: pointer"/><label for="MINI_MART_ID_2" style="cursor: pointer">全家</label>
+				<input type="checkbox" value="3" id="MINI_MART_ID_3" class="mini_mart_id" style="cursor: pointer"/><label for="MINI_MART_ID_3" style="cursor: pointer">OK</label>
+				<input type="checkbox" value="4" id="MINI_MART_ID_4" class="mini_mart_id" style="cursor: pointer"/><label for="MINI_MART_ID_4" style="cursor: pointer">萊爾富</label>
+				<input type="checkbox" value="3" id="PAYMENT_ID_3" class="payment_id" style="cursor: pointer"/><label for="PAYMENT_ID_3" style="cursor: pointer">Cash</label>
+				<input type="checkbox" value="99" id="PAYMENT_ID_99" class="payment_id" style="cursor: pointer"/><label for="PAYMENT_ID_99" style="cursor: pointer">黑貓</label>
+				<input type="checkbox" value="1" id="IS_APP_1" class="is_app" style="cursor: pointer"/><label for="IS_APP_1" style="cursor: pointer">From APP</label>
+				<input type="checkbox" value="0" id="IS_APP_0" class="is_app" style="cursor: pointer"/><label for="IS_APP_0" style="cursor: pointer">From Console</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">交易狀態</td>
+			<td><div id="STATUS"></div></td>
+		</tr>
+		<tr>
+			<td class="category">匯款銀行</td>
+			<td>
+				<input type="checkbox" value="1" id="FROM_BNI" class="transfer_through_bank_name" style="cursor: pointer"/><label for="FROM_BNI" style="cursor: pointer">BNI</label>
+				<input type="checkbox" value="2" id="FROM_BRI" class="transfer_through_bank_name" style="cursor: pointer"/><label for="FROM_BRI" style="cursor: pointer">BRI</label>
+				<input type="checkbox" value="3" id="FROM_BOT" class="transfer_through_bank_name" style="cursor: pointer"/><label for="FROM_BOT" style="cursor: pointer">BOT</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">入款銀行</td>
+			<td>
+				<input type="checkbox" value="1" id="TO_BNI" class="bank_name" style="cursor: pointer"/><label for="TO_BNI" style="cursor: pointer">BNI</label>
+				<input type="checkbox" value="2" id="TO_BRI" class="bank_name" style="cursor: pointer"/><label for="TO_BRI" style="cursor: pointer">BRI</label>
+				<input type="checkbox" value="3" id="TO_OTHERS" class="bank_name" style="cursor: pointer"/><label for="TO_OTHERS" style="cursor: pointer">OTHERS</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Recipient Name</td>
+			<td><input type="text" class="recipient_name"/></td>
+		</tr>
+		<tr>
+			<td class="category">Bank Account</td>
+			<td><input type="text" class="bank_acc"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_MONEY_TRANSFER_SUMMARY = 'member.money_transfer_summary';
+var RELAY_ID_MONEY_TRANSFER = 'member.money_transfer';
+var char_31 = String.fromCharCode(31);
+//var char_30 = String.fromCharCode(30);
+var TABLE;
+
+$('#QUERY input.start_date, #QUERY input.end_date').createDatePickerWritable();
+$('#QUERY input.start_date, #QUERY input.end_date').datepicker('setDate', new Date());
+
+var html = '';
+for (var i = 0; i <= 23; i++) {
+	html = html + '<option value="' + i + '">' + i + '</option>';
+}
+$('#QUERY select.start_hour, #QUERY select.end_hour').append(html);
+$('#QUERY select.start_hour').val('0');
+$('#QUERY select.end_hour').val('23');
+
+html = '';
+for (var i = 0; i <= 59; i++) {
+	html = html + '<option value="' + i + '">' + i + '</option>';
+}
+$('#QUERY select.start_min, #QUERY select.start_sec, #QUERY select.end_min, #QUERY select.end_sec').append(html);
+$('#QUERY select.start_min, #QUERY select.start_sec').val('0');
+$('#QUERY select.end_min, #QUERY select.end_sec').val('59');
+
+$('#QUERY input.bank_acc').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: '', lZero: 'keep', strictDigitOnly: true});
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_MONEY_TRANSFER_SUMMARY,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+
+		var html = '';
+		var transferStatusSize = parseInt(tokens.shift(), 10);
+		for (var i = 0; i < transferStatusSize; i++) {
+			var transfer_status_id = tokens.shift();
+			var transfer_status_name = tokens.shift();
+			html = html + '<input type="checkbox" class="transfer_status_id" value="' + transfer_status_id + '" id="TS' + i + '" style="cursor: pointer"/><label for="TS' + i + '" style="cursor: pointer">' + transfer_status_name + '</label>\n';
+		}
+		$('#STATUS').append(html);
+		
+		TABLE = $('#TABLE').createTable({
+			className: 'com.indogo.relay.member.MoneyTransferSummary',
+			viewMode: true,
+			disablePaging: true,
+			showCheckBox: true,
+			afterSetTableColumnEvent: function() {
+				var button_export_bank_format = $('<button type="button" style="margin-left: 4px;">Export Bank Format</button>').button().click(function() {
+					var txn_ids = [];
+					TABLE.funcGetTableBody().find('td.winbond-table-cell-control-box input.winbond-table-cell-control-box-check:checked').each(function(i, e) {
+						var row = $(e).parent().parent();
+						var txn_id = row.find('td.txn_id').text();
+						txn_ids.push(txn_id);
+					});
+					if (txn_ids.length == 0)
+						return false;
+					
+					sendRequest.relay({
+						data: {
+							'RelayId': RELAY_ID_MONEY_TRANSFER_SUMMARY,
+							'action': 'export_bank_format',
+							'txn_ids': $.join(txn_ids)
+						}, success: function(data) {
+							var tokens = data.split(char_31);
+							var filename = tokens.shift();
+							var timestamp = tokens.shift();
+							TABLE.funcGetTableBody().find('td.winbond-table-cell-control-box input.winbond-table-cell-control-box-check:checked').each(function(i, e) {
+								var row = $(e).parent().parent();
+								var export_time = row.find('td.export_time').text();
+								if (export_time.length == 0) {
+									row.find('td.export_time').text(timestamp);
+								}
+							});
+							sendRequest.downloadFile(filename, 'N');
+						}
+					});
+				});
+				
+				$('#TABLE button.export-to-excel').parent().append(button_export_bank_format);
+				
+				$('#QUERY button.ok').click();
+			}
+		})[0];
+	}
+});
+
+var TABLE_QUERY = function(is_using_temp_table, query_date_type, start_time, end_time) {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	if (query_date_type == 'paid') {
+		c.push('lm_time_paid');
+		o.push('BETWEEN');
+		v.push(start_time + char_31 + end_time);
+		
+		var columns = TABLE.funcGetTableHeader();
+		columns.find('tr td.sort').removeClass('default asc desc').addClass('default').attr('DIRECTION', 'default');
+		columns.find('td[column_name=lm_time_paid]').removeClass('default asc desc').addClass('desc').attr('DIRECTION', 'desc');
+	} else {
+		c.push('lm_time_transfer');
+		o.push('BETWEEN');
+		v.push(start_time + char_31 + end_time);
+		
+		var columns = TABLE.funcGetTableHeader();
+		columns.find('tr td.sort').removeClass('default asc desc').addClass('default').attr('DIRECTION', 'default');
+		columns.find('td[column_name=lm_time_transfer]').removeClass('default asc desc').addClass('desc').attr('DIRECTION', 'desc');
+	}
+	
+	var mini_mart_ids = [];
+	$('#QUERY input.mini_mart_id:checked').each(function(i, e) {
+		mini_mart_ids.push($(e).val());
+	});
+	
+	var payment_ids = [];
+	$('#QUERY input.payment_id:checked').each(function(i, e) {
+		payment_ids.push($(e).val());
+	});
+	
+	if (mini_mart_ids.length > 0 && payment_ids.length > 0) {
+		f1 = '(payment_id in (' + $.join(payment_ids, ',') + ') or (payment_id = 2 and mini_mart_id in (' + $.join(mini_mart_ids, ',') + ')))';
+	} else if (payment_ids.length > 0) {
+		c.push('payment_id');
+		o.push('IN');
+		v.push($.join(payment_ids, ','));
+	} else if (mini_mart_ids.length > 0) {
+		f1 = '(payment_id = 2 and mini_mart_id in (' + $.join(mini_mart_ids, ',') + '))';
+	}
+	
+	var is_apps = [];
+	if ($('#IS_APP_0').prop('checked')) {
+		is_apps.push('0');
+	}
+	if ($('#IS_APP_1').prop('checked')) {
+		is_apps.push('1');
+	}
+	if (is_apps.length > 0) {
+		c.push('is_app');
+		o.push('IN');
+		v.push($.join(is_apps, ','));
+	}
+	
+	var transfer_through_bank_names = [];
+	if ($('#FROM_BNI').prop('checked')) {
+		transfer_through_bank_names.push('BNI');
+	}
+	if ($('#FROM_BRI').prop('checked')) {
+		transfer_through_bank_names.push('BRI');
+	}
+	if ($('#FROM_BOT').prop('checked')) {
+		transfer_through_bank_names.push('BOT');
+	}
+	if (transfer_through_bank_names.length > 0) {
+		c.push('transfer_through_bank_name');
+		o.push('IN');
+		v.push($.join(transfer_through_bank_names, ','));
+	}
+	
+	var transfer_status_ids = [];
+	$('#STATUS input:checked').each(function(i, e) {
+		transfer_status_ids.push($(e).val());
+	});
+	if (transfer_status_ids.length > 0) {
+		c.push('transfer_status_id');
+		o.push('IN');
+		v.push($.join(transfer_status_ids, ','));
+	}
+	
+	if (is_using_temp_table) {
+		sessionId = GLOBAL_SID;
+		pageId = 'money_transfer_summary';
+		joinSql = 'a.txn_id = b.long1';
+	}
+	
+	var bank_acc = $('#QUERY input.bank_acc').autoNumeric('get');
+	if (bank_acc.length > 0) {
+		c.push('bank_acc');
+		o.push('=');
+		v.push(bank_acc);
+	}
+	
+	var recipient_name = $('#QUERY input.recipient_name').val();
+	if (recipient_name.length > 0) {
+		c.push('recipient_name');
+		o.push('LIKE');
+		v.push('%' + recipient_name + '%');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+}
+
+$('#QUERY button.ok').button().click(function() {
+	var start_time, end_time;
+	
+	var query_date_type = $('#QUERY input.query_date:checked').val();
+	var transfer_status_id;
+	if (query_date_type == 'paid') {
+		var paid_start_date = $('#QUERY input.start_date.paid').val();
+		var paid_start_hour = $('#QUERY select.start_hour.paid').val();
+		var paid_start_min = $('#QUERY select.start_min.paid').val();
+		var paid_start_sec = $('#QUERY select.start_sec.paid').val();
+		
+		var paid_end_date = $('#QUERY input.end_date.paid').val();
+		var paid_end_hour = $('#QUERY select.end_hour.paid').val();
+		var paid_end_min = $('#QUERY select.end_min.paid').val();
+		var paid_end_sec = $('#QUERY select.end_sec.paid').val();
+		
+		start_time = paid_start_date + ' ' + paid_start_hour + ':' + paid_start_min + ':' + paid_start_sec;
+		end_time = paid_end_date + ' ' + paid_end_hour + ':' + paid_end_min + ':' + paid_end_sec;
+		transfer_status_id = '2';
+	} else {
+		var transfer_start_date = $('#QUERY input.start_date.transfer').val();
+		var transfer_start_hour = $('#QUERY select.start_hour.transfer').val();
+		var transfer_start_min = $('#QUERY select.start_min.transfer').val();
+		var transfer_start_sec = $('#QUERY select.start_sec.transfer').val();
+		
+		var transfer_end_date = $('#QUERY input.end_date.transfer').val();
+		var transfer_end_hour = $('#QUERY select.end_hour.transfer').val();
+		var transfer_end_min = $('#QUERY select.end_min.transfer').val();
+		var transfer_end_sec = $('#QUERY select.end_sec.transfer').val();
+		
+		start_time = transfer_start_date + ' ' + transfer_start_hour + ':' + transfer_start_min + ':' + transfer_start_sec;
+		end_time = transfer_end_date + ' ' + transfer_end_hour + ':' + transfer_end_min + ':' + transfer_end_sec;
+		transfer_status_id = '4';
+	}
+	
+	var to_bni = $('#TO_BNI').prop('checked');
+	var to_bri = $('#TO_BRI').prop('checked');
+	var to_others = $('#TO_OTHERS').prop('checked');
+	
+	if (to_bni && to_bri && to_others) {
+		TABLE_QUERY(false, query_date_type, start_time, end_time);
+	} else if (to_others) {
+		var exclude_bank_codes = [];
+		if (!to_bni) {
+			exclude_bank_codes.push('009');
+		}
+		if (!to_bri) {
+			exclude_bank_codes.push('002');
+		}
+		sendRequest.relay({
+			data: {
+				RelayId: RELAY_ID_MONEY_TRANSFER_SUMMARY,
+				action: 'sql_temp_table',
+				transfer_status_id: transfer_status_id,
+				start_time: start_time,
+				end_time: end_time,
+				bank_codes: $.join(exclude_bank_codes),
+				query_type: 'exclude'
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					TABLE_QUERY(true, query_date_type, start_time, end_time);
+				} else {
+					TABLE.funcEmptyTableBody();
+				}
+			}
+		});
+	} else if (to_bni || to_bri) {
+		var bank_codes = [];
+		if (to_bni) {
+			bank_codes.push('009');
+		}
+		if (to_bri) {
+			bank_codes.push('002');
+		}
+		sendRequest.relay({
+			data: {
+				RelayId: RELAY_ID_MONEY_TRANSFER_SUMMARY,
+				action: 'sql_temp_table',
+				transfer_status_id: transfer_status_id,
+				start_time: start_time,
+				end_time: end_time,
+				bank_codes: $.join(bank_codes),
+				query_type: 'include'
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					TABLE_QUERY(true, query_date_type, start_time, end_time);
+				} else {
+					TABLE.funcEmptyTableBody();
+				}
+			}
+		});
+	} else {
+		TABLE_QUERY(false, query_date_type, start_time, end_time);
+	}
+});
+
+//# sourceURL=money_transfer_summary.js
+</script>

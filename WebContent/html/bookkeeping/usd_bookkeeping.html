@@ -1,0 +1,309 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category">Date Range</td>
+			<td><input type="text" class="start_date"/> ~ <input type="text" class="end_date"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+		<tr>
+			<td class="category">Total USD</td>
+			<td><label id="TOTAL_USD"></label></td>
+		</tr>
+	</table>
+	<table id="TABLE"></table>
+</div>
+
+<div id="AREA2">
+	<form id="FORM_CONVERT_TO_USD">
+		<input type="hidden" name="amount_ntd" class="hid_amount_ntd"/>
+		<input type="hidden" name="usd_to_ntd" class="hid_usd_to_ntd"/>
+		<input type="hidden" name="amount_usd" class="hid_amount_usd"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Convert to USD</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">NTD</td>
+					<td><input type="text" class="amount_ntd int" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">USD to NTD Kurs Rate</td>
+					<td><input type="text" class="usd_to_ntd dec"/></td>
+				</tr>
+				<tr>
+					<td class="category">USD</td>
+					<td><input type="text" class="amount_usd dec"/> <button type="button" id="AUTO_CONVERT_NTD_TO_USD">auto convert</button></td>
+				</tr>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea name="comment" class="comment"></textarea></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="AREA3">
+	<form id="FORM_CONVERT_TO_IDR">
+		<input type="hidden" name="amount_usd_used" class="hid_amount_usd_used"/>
+		<input type="hidden" name="usd_to_idr" class="hid_usd_to_idr"/>
+		<input type="hidden" name="amount_idr" class="hid_amount_idr"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Convert to IDR</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">USD</td>
+					<td><input type="text" class="amount_usd_used dec" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">USD to IDR Kurs Rate</td>
+					<td><input type="text" class="usd_to_idr dec"/></td>
+				</tr>
+				<tr>
+					<td class="category">IDR</td>
+					<td><input type="text" class="amount_idr int"/> <button type="button" id="AUTO_CONVERT_USD_TO_IDR">auto convert</button></td>
+				</tr>
+				<tr>
+					<td class="category">Comment</td>
+					<td><textarea name="comment" class="comment"></textarea></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_CHOICE">
+	<br/>
+	<button id="BUTTON_CONVERT_TO_USD">Convert to USD</button>
+	<br/>
+	<br/>
+	<button id="BUTTON_CONVERT_TO_IDR">Convert to IDR</button>
+</div>
+
+<style type="text/css">
+#AREA2 input.dec, #AREA3 input.dec, #AREA2 input.int, #AREA3 input.int {
+	text-align: right;
+	width: 200px;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID = 'book.usd';
+var char_31 = String.fromCharCode(31);
+$('#AREA2, #AREA3').hide();
+$('#QUERY input.start_date, #QUERY input.end_date').createDatePickerWritable();
+$('#AREA2 input.dec, #AREA3 input.dec').autoNumeric('init', {vMin: '0.0000', vMax: '99999999999999999999999999999.9999'});
+$('#AREA2 input.int, #AREA3 input.int').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999'});
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.bookkeeping.UsdBookkeeping',
+	disableUpdate: true,
+	afterSetTableColumnEvent: function() {
+		$('#QUERY button.ok').click();
+	},
+	afterSetTableDataEvent: function() {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID,
+				'action': 'total'
+			}, success: function(data) {
+				$('#TOTAL_USD').text(data);
+			}
+		});
+	},
+	executeInsert: function(callback) {
+		$('#FORM_CONVERT_TO_USD button.ok, #FORM_CONVERT_TO_IDR button.ok').data('action', 'insert');
+		$('#FORM_CONVERT_TO_USD button.ok, #FORM_CONVERT_TO_IDR button.ok').data('callback', callback);
+		$('#DIALOG_CHOICE').dialog('open');
+	},
+	executeDelete: function(row, callback) {
+		var lm_time = row.filter('.lm_time').text();
+		if (confirm('are you sure to delete?')) {
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID,
+					'action': 'delete',
+					'lm_time': lm_time
+				},
+				success: function(data) {
+					callback(data);
+				}
+			});
+		}
+	}
+})[0];
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var start_date = $('#QUERY input.start_date').val();
+	var end_date = $('#QUERY input.end_date').val();
+	if (start_date.length > 0 && end_date.length > 0) {
+		c.push('lm_time');
+		o.push('BETWEEN');
+		v.push(start_date + char_31 + end_date);
+	} else if (start_date.length > 0) {
+		c.push('lm_time');
+		o.push('>=');
+		v.push(start_date);
+	} else if (end_date.length > 0) {
+		c.push('lm_time');
+		o.push('<=');
+		v.push(end_date);
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2);
+});
+
+$('#DIALOG_CHOICE').dialog({
+	modal: true,
+	width: 180,
+	autoOpen: false
+});
+
+$('#BUTTON_CONVERT_TO_USD').button().click(function() {
+	$('#FORM_CONVERT_TO_USD').clearForm().resetForm();
+	$('#AREA1').hide();
+	$('#AREA2').show();
+	$('#DIALOG_CHOICE').dialog('close');
+});
+
+$('#BUTTON_CONVERT_TO_IDR').button().click(function() {
+	$('#FORM_CONVERT_TO_IDR').clearForm().resetForm();
+	$('#AREA1').hide();
+	$('#AREA3').show();
+	$('#DIALOG_CHOICE').dialog('close');
+});
+
+$('#FORM_CONVERT_TO_USD button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#FORM_CONVERT_TO_USD button.ok').button().click(function() {
+	$('#FORM_CONVERT_TO_USD input.hid_amount_ntd').val($('#FORM_CONVERT_TO_USD input.amount_ntd').autoNumeric('get'));
+	$('#FORM_CONVERT_TO_USD input.hid_usd_to_ntd').val($('#FORM_CONVERT_TO_USD input.usd_to_ntd').autoNumeric('get'));
+	$('#FORM_CONVERT_TO_USD input.hid_amount_usd').val($('#FORM_CONVERT_TO_USD input.amount_usd').autoNumeric('get'));
+	var action = $(this).data('action');
+	$('#FORM_CONVERT_TO_USD').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': action,
+			'action_2': 'usd'
+		}, success: function(data) {
+			$('#TABLE button.winbond-table-cell-control-box-delete').button('disable');
+			
+			var idx = data.indexOf(char_31);
+			var total = data.substring(0, idx);
+			var row = data.substring(idx + 1);
+
+			$('#TOTAL_USD').text(total);
+			
+			var callback = $('#FORM_CONVERT_TO_USD button.ok').data('callback');
+			callback(row);
+			
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#AUTO_CONVERT_NTD_TO_USD').button({icon: 'ui-icon-lightbulb', showLabel: false}).click(function() {
+	var amount_ntd_string = $('#FORM_CONVERT_TO_USD input.amount_ntd').autoNumeric('get');
+	if (amount_ntd_string.length == 0)
+		return false;
+	
+	var usd_to_ntd_string = $('#FORM_CONVERT_TO_USD input.usd_to_ntd').autoNumeric('get');
+	if (usd_to_ntd_string.length == 0)
+		return false;
+	
+	var amount_ntd = parseInt(amount_ntd_string, 10);
+	var usd_to_ntd = parseFloat(usd_to_ntd_string);
+	var amount_usd = amount_ntd / usd_to_ntd;
+	$('#FORM_CONVERT_TO_USD input.amount_usd').autoNumeric('set', amount_usd);
+});
+
+
+$('#FORM_CONVERT_TO_IDR button.cancel').button().click(function() {
+	$('#AREA3').hide();
+	$('#AREA1').show();
+});
+
+$('#FORM_CONVERT_TO_IDR button.ok').button().click(function() {
+	$('#FORM_CONVERT_TO_IDR input.hid_amount_usd_used').val($('#FORM_CONVERT_TO_IDR input.amount_usd_used').autoNumeric('get'));
+	$('#FORM_CONVERT_TO_IDR input.hid_usd_to_idr').val($('#FORM_CONVERT_TO_IDR input.usd_to_idr').autoNumeric('get'));
+	$('#FORM_CONVERT_TO_IDR input.hid_amount_idr').val($('#FORM_CONVERT_TO_IDR input.amount_idr').autoNumeric('get'));
+	var action = $(this).data('action');
+	$('#FORM_CONVERT_TO_IDR').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': action,
+			'action_2': 'idr'
+		}, success: function(data) {
+			$('#TABLE button.winbond-table-cell-control-box-delete').button('disable');
+			
+			var idx = data.indexOf(char_31);
+			var total = data.substring(0, idx);
+			var row = data.substring(idx + 1);
+			
+			$('#TOTAL_USD').text(total);
+			
+			var callback = $('#FORM_CONVERT_TO_IDR button.ok').data('callback');
+			callback(row);
+			$('#AREA3').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#AUTO_CONVERT_USD_TO_IDR').button({icon: 'ui-icon-lightbulb', showLabel: false}).click(function() {
+	var amount_usd_string = $('#FORM_CONVERT_TO_IDR input.amount_usd_used').autoNumeric('get');
+	if (amount_usd_string.length == 0)
+		return false;
+	
+	var usd_to_idr_string = $('#FORM_CONVERT_TO_IDR input.usd_to_idr').autoNumeric('get');
+	if (usd_to_idr_string.length == 0)
+		return false;
+	
+	var amount_usd = parseFloat(amount_usd_string);
+	var usd_to_idr = parseFloat(usd_to_idr_string);
+	var amount_idr = parseInt(amount_usd * usd_to_idr, 10);
+	$('#FORM_CONVERT_TO_IDR input.amount_idr').autoNumeric('set', amount_idr);
+});
+
+//# sourceURL=usd_bookkeeping.js
+
+</script>

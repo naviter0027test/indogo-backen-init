@@ -1,0 +1,93 @@
+<div id="AREA1">
+	<form id="F">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Kurs Value</td>
+					<td><input type="text" name="kurs_value" class="kurs_value" id="KURS_VALUE" value=""/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Update Kurs</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+	
+	<table id="TABLE">
+	</table>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID = 'member.kurs_config';
+
+$('#F').hide();
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(String.fromCharCode(31));
+		var roleIdsSize = parseInt(tokens.shift(), 10);
+		var roleIds = [];
+		for (var i = 0; i < roleIdsSize; i++) {
+			var roleId = parseInt(tokens.shift(), 10);
+			roleIds.push(roleId);
+		}
+		
+		if ($.inArray(1, roleIds) > -1 || $.inArray(2, roleIds) > -1) {
+			$('#F').show();
+		}
+		
+		createTable(roleIds);
+	}
+});
+
+var TABLE;
+
+var createTable = function(roleIds) {
+	var disableExport = true;
+	if ($.inArray(1, roleIds) > -1 || $.inArray(2, roleIds) > -1 || $.inArray(5, roleIds) > -1) {
+		disableExport = false;
+	}
+	
+	TABLE = $('#TABLE').createTable({
+		className: 'com.indogo.relay.member.KursConfiguration',
+		viewMode: true,
+		disableExport: disableExport,
+		afterSetTableColumnEvent: function() {
+			var c = [];
+			var o = [];
+			var v = [];
+			var f1 = '', f2 = '';
+			TABLE.searchFor(c, o, v, f1, f2);
+		}
+	})[0];
+}
+
+$('#F button.ok').button().click(function() {
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': 'update',
+			'kurs': $('#KURS_VALUE').val()
+		},
+		success: function(data) {
+			var c = [];
+			var o = [];
+			var v = [];
+			var f1 = '', f2 = '';
+			TABLE.searchFor(c, o, v, f1, f2);
+		}
+	});
+});
+
+//# sourceURL=kurs_value.js
+
+</script>

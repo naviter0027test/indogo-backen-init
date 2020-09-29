@@ -1,0 +1,235 @@
+<div id="CHART_AREA" class="container-fluid">
+	<ul class="nav nav-pills">
+		<li style="padding: 10px 15px;">Chart Timeline: </li>
+		<li class="active timeline"><a href="#" class="timeline">7d</a><input type="hidden" value="7"/></li>
+		<li class="timeline"><a href="#" class="timeline">30d</a><input type="hidden" value="30"/></li>
+		<li class="timeline"><a href="#" class="timeline">3m</a><input type="hidden" value="90"/></li>
+		<li class="timeline"><a href="#" class="timeline">1y</a><input type="hidden" value="365"/></li>
+	</ul>
+	<div class="row">
+		<div class="col-md-9">
+			<div style="margin: 25px;">
+				<canvas id="CHART_1"></canvas>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_CHART_TOOL = 'report.employee_performance';
+var char_31 = String.fromCharCode(31);
+var char_30 = String.fromCharCode(30);
+
+var ctx = $('#CHART_1').get()[0].getContext('2d');
+var CHART = new Chart(ctx, {
+	type: 'line',
+	data: {
+		labels: [],
+		datasets: []
+	},
+	options: {
+		title:{
+			display: true,
+			text: 'Employee Performance Overall'
+		},
+		legend: {
+            position: 'right',
+			onClick: function(e, legendItem) {
+				var index = legendItem.datasetIndex;
+				var ci = this.chart;
+				var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;			 
+				var anyOthersAlreadyHidden = false;
+				var allOthersHidden = true;
+
+				// figure out the current state of the labels
+				ci.data.datasets.forEach(function(e, i) {
+					var meta = ci.getDatasetMeta(i);
+
+					if (i !== index) {
+						if (meta.hidden) {
+							anyOthersAlreadyHidden = true;
+						} else {
+							allOthersHidden = false;
+						}
+					}
+				});
+
+				// if the label we clicked is already hidden 
+				// then we now want to unhide (with any others already unhidden)
+				if (alreadyHidden) {
+					ci.getDatasetMeta(index).hidden = null;
+				} else { 
+					// otherwise, lets figure out how to toggle visibility based upon the current state
+					ci.data.datasets.forEach(function(e, i) {
+						var meta = ci.getDatasetMeta(i);
+
+						if (i !== index) {
+							// handles logic when we click on visible hidden label and there is currently at least
+							// one other label that is visible and at least one other label already hidden
+							// (we want to keep those already hidden still hidden)
+							if (anyOthersAlreadyHidden && !allOthersHidden) {
+								meta.hidden = true;
+							} else {
+								// toggle visibility
+								meta.hidden = meta.hidden === null ? !meta.hidden : null;
+							}
+						} else {
+							meta.hidden = null;
+						}
+					});
+				}
+
+				ci.update();
+			}
+        },
+		scales: {
+            xAxes: [{
+                stacked: false
+            }],
+            yAxes: [{
+                stacked: false
+            }]
+        },
+        responsive: true,
+        hover: {
+			mode: 'index',
+			intersect: false
+		},
+		tooltips: {
+			mode: 'index',
+			intersect: false
+		}
+	}
+});
+
+function getEmployeePerformance() {
+	sendRequest.relay({
+		data: {
+			RelayId: RELAY_ID_CHART_TOOL,
+			action: 'employee_performance',
+			interval_day: $('#CHART_AREA li.timeline.active input').val()
+		}, success: function(data) {
+			var rows = data.split(char_30);
+			
+			var x_labels = [];
+			var series = {};
+			var color = {};
+			var all_users = {};
+			var all_users_name = [];
+			
+			for (var i = 0; i < rows.length; i++) {
+				var row = rows[i].split(char_31);
+				var action_time = row.shift();
+				var action_user = row.shift();
+				var score = parseInt(row.shift(), 10);
+				var color_id = row.shift();
+				
+				if (x_labels.indexOf(action_time) < 0) {
+					x_labels.push(action_time);
+				}
+				
+				if (!(action_user in series)) {
+					series[action_user] = {};
+				}
+				
+				var series_data = series[action_user];
+				series_data[action_time] = score;
+				series[action_user] = series_data;
+				
+				color[action_user] = color_id;
+				all_users[action_user] = false;
+				if (all_users_name.indexOf(action_user) < 0) {
+					all_users_name.push(action_user);
+				}
+			}
+			
+			x_labels.sort();
+			
+			var latest_action_time = x_labels[x_labels.length - 1];
+			
+			var score_user = {};
+			var scores = [];
+			for (var i = 0; i < rows.length; i++) {
+				var row = rows[i].split(char_31);
+				var action_time = row.shift();
+				var action_user = row.shift();
+				var score = parseInt(row.shift(), 10);
+				var color_id = row.shift();
+				
+				if (action_time === latest_action_time) {
+					if (!(score in score_user)) {
+						score_user[score] = [];
+					}
+					score_user[score].push(action_user);
+					
+					if (!(score in scores)) {
+						scores.push(score);
+					}
+				}
+			}
+			scores.sort(function(a, b){return b-a});
+			
+			var datasets = [];
+			for (var i = 0; i < scores.length; i++) {
+				var score = scores[i];
+				var users = score_user[score];
+				
+				for (var j = 0; j < users.length; j++) {
+					var action_user = users[j];
+					all_users[action_user] = true;
+					
+					var series_data = series[action_user];
+					var data = [];
+					for (var k = 0; k < x_labels.length; k++) {
+						data.push(series_data[x_labels[k]]);
+					}
+					
+					datasets.push({
+						label: action_user,
+						borderColor: color[action_user],
+						backgroundColor: color[action_user],
+						fill: false,
+						data: data,
+						lineTension: 0
+					});
+				}
+			}
+			
+			for (var i = 0; i < all_users_name.length; i++) {
+				var action_user = all_users_name[i];
+				if (!all_users[action_user]) {
+					var series_data = series[action_user];
+					var data = [];
+					for (var k = 0; k < x_labels.length; k++) {
+						data.push(series_data[x_labels[k]]);
+					}
+					
+					datasets.push({
+						label: action_user,
+						borderColor: color[action_user],
+						backgroundColor: color[action_user],
+						fill: false,
+						data: data,
+						lineTension: 0
+					});
+				}
+			}
+			
+			CHART.data.labels = x_labels;
+			CHART.data.datasets = datasets;
+			CHART.update();
+		}
+	});
+};
+
+$('#CHART_AREA a.timeline').click(function() {
+	$('#CHART_AREA li.timeline').removeClass('active');
+	$(this).parent().addClass('active');
+	getEmployeePerformance();
+	return false;
+});
+
+getEmployeePerformance();
+
+//# sourceURL=employee_performance.js
+</script>

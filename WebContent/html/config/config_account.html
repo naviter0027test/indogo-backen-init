@@ -1,0 +1,253 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category">Login Id:</td>
+			<td><input type="text" class="user_name"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td colspan="3"><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="user_row_id" name="user_row_id"/>
+		<input type="hidden" class="password" name="password"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Account Configuration</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Login Id</td>
+					<td><input type="text" name="user_name" class="user_name" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Name</td>
+					<td><input type="text" name="alias_id" class="alias_id" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Email</td>
+					<td><input type="text" name="email_address" class="email_address" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Is Disabled?</td>
+					<td><input type="checkbox" name="disabled" class="disabled" value="Y" /></td>
+				</tr>
+				<tr>
+					<td class="category">Password</td>
+					<td><input type="password" class="password1" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Password Confirm</td>
+					<td><input type="password" class="password2" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Roles</td>
+					<td><div id="ROLES"></div></td>
+				</tr>
+				<tr>
+					<td class="category">Color</td>
+					<td><input type="text" name="color_id" class="color_id" value=""/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID = 'CONFIG_ACCOUNT';
+
+$('#AREA2').hide();
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID,
+		'action': 'init'
+	},
+	success: function(data) {
+		var roles = data.split(String.fromCharCode(30));
+		var html = '';
+		for (i = 0; i < roles.length; i++) {
+			var role = roles[i].split(String.fromCharCode(31));
+			html = html + '<input type="checkbox" value="' + role[0] + '" id="ROLE_' + i + '"/><label for="ROLE_' + i + '">' + role[1] + ' (' + role[2] + ')</label><br/>';
+		}
+		$('#ROLES').empty().append(html);
+	}
+});
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.config.AccountConfiguration',
+	afterSetTableColumnEvent: function() {
+		$('#QUERY button.ok').click();
+	},
+	afterSetTableDataEvent: function(rows) {
+		rows.find('td.color_id').each(function(i, e) {
+			var cell = $(this);
+			var color_id = cell.text();
+			cell.empty().append('<input type="text" value="' + color_id + '" disabled="disabled"/>').find('input').spectrum({
+				allowEmpty: true,
+				preferredFormat: 'hex'
+			});
+		});
+	},
+	executeInsert: function(callback) {
+		$('#F').clearForm().resetForm();
+		$('#F input.color_id').spectrum('set', '');
+		$('#F .user_name').removeAttr('disabled');
+		$('#F button.ok').data('action', 'insert');
+		$('#F button.ok').data('callback', callback);
+		$('#AREA1').hide();
+		$('#AREA2').show();
+	},
+	executeUpdate: function(row, callback) {
+		var user_row_id = row.filter('.user_row_id').text();
+		
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID,
+				'action': 'getDataForUpdate',
+				'user_row_id': user_row_id
+			},
+			success: function(data) {
+				$('#F .user_row_id').val(user_row_id);
+				
+				var lines = data.split(String.fromCharCode(30));
+				
+				var o = lines[0].split(String.fromCharCode(31));
+				$('#F .user_name').val(o[0]);
+				$('#F .email_address').val(o[1]);
+				if (o[2] == 'Y') {
+					$('#F .disabled').attr('checked', true);
+				}
+				else {
+					$('#F .disabled').removeAttr('checked');
+				}
+				$('#F .password').val(o[3]);
+				$('#F .password1, #F .password2').val('');
+				$('#F .alias_id').val(o[4]);
+				$('#F input.color_id').spectrum('set', o[5]);
+				
+				var userRoleIds = lines[1].split(String.fromCharCode(31));
+				var html = '';
+				for (i = 2; i < lines.length; i++) {
+					var role = lines[i].split(String.fromCharCode(31));
+					var extra = "";
+					if ($.inArray(role[0], userRoleIds) >= 0) {
+						extra = "checked";
+					}
+					html = html + '<input type="checkbox" value="' + role[0] + '" id="ROLE_' + (i-2) + '" ' + extra + '/><label for="ROLE_' + (i-2) + '">' + role[1] + ' (' + role[2] + ')</label><br/>';
+				}
+				$('#ROLES').empty().append(html);
+				
+				$('#F .user_name').attr('disabled', true);
+				$('#F button.ok').data('action', 'update');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA2').show();
+			}
+		});
+	},
+	executeDelete: function(row, callback) {
+		var user_row_id = row.filter('.user_row_id').text();
+		var user_name = row.filter('.user_name').text();
+
+		if (confirm('are you sure to delete ' + user_name + '?')) {
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID,
+					'action': 'delete',
+					'user_row_id': user_row_id
+				},
+				success: function(data) {
+					callback(data);
+				}
+			});
+		}
+	}
+})[0];
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var user_name = $('#QUERY .user_name').val();
+	
+	if (user_name.length > 0) {
+		c.push('user_name');
+		o.push('LIKE');
+		v.push(user_name + '%');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2);
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	var password = $('#F .password1').val();
+	var password_confirm = $('#F .password2').val();
+	if (action == 'insert' || (action == 'update' && (password.length > 0 || password_confirm.length > 0))) {
+		if (password.length == 0) {
+			alert('password is empty');
+			return;
+		}
+		if (password != password_confirm) {
+			alert('password confirmation failed, please enter again');
+			$('#F .password1, #F .password2').val('');
+			return;
+		}
+		$('#F .password').val(SHA256(password));
+	}
+	else {
+		$('#F .password').val('');
+	}
+	
+	var roleIds = [];
+	$('#ROLES input:checked').each(function(i, e) {
+		roleIds.push($(e).val());
+	});
+	
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': action,
+			'role_ids': roleIds.join(String.fromCharCode(31))
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#F input.color_id').spectrum({
+	allowEmpty: true,
+	preferredFormat: 'hex',
+	showInput: true
+});
+</script>

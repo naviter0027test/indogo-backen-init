@@ -1,0 +1,11 @@
+/**
+ * Use this ScriptDoc file to manage the documentation for the corresponding namespace in your JavaScript library.
+ *
+ * @author ythung1
+ */
+
+/**
+ * Use this to get data from other java class or other website
+ * @alias sendRequest.relay
+ * @param {Options} options Support "data", "success", "beforeSend", "complete". Warning! Please provide "data.RelayId" before using this function.
+ */

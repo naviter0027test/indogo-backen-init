@@ -1,0 +1,132 @@
+.winbond-table,
+.winbond-table input,
+.winbond-table select,
+.ui-datepicker,
+.winbond-picker select,
+.winbond-picker input,
+.filter {
+	font-size:10pt;
+	font-family:tahoma;
+}
+.filter .ui-dialog-buttonpane 
+{
+	font-size:10pt;
+}
+.filter .ui-dialog-title,
+.filter .ui-dialog-titlebar {
+	font-size:10pt;
+}
+.filter,
+.filter .ui-dialog-content,
+.filter .ui-dialog-buttonpane
+{
+	background-color:White;
+}
+.winbond-table {
+	background-color: #CDCDCD;
+	text-align: left;
+	white-space: nowrap;
+	border-collapse: separate;
+	border-spacing: 1px;
+}
+.winbond-table thead tr td {
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	padding: 4px 4px 4px 4px;
+	font-weight: bold;
+}
+.winbond-table thead tr td.sort 
+{
+	padding-right:28px;
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+.winbond-table thead tr td.sort.default {
+	background-image: url(img/bg.gif);
+}
+.winbond-table thead tr td.sort.asc {
+	background-image: url(img/asc.gif);
+}
+.winbond-table thead tr td.sort.desc {
+	background-image: url(img/desc.gif);
+}
+.winbond-table-control tr td {
+	height:20px;
+	vertical-align:middle;
+}
+.winbond-table-control .winbond-table-loading-icon {
+	background-image: url(img/load.gif);
+	width:16px;
+	height:16px;
+}
+.winbond-table thead tr td.sort.asc, .winbond-table thead tr td.sort.desc {
+	background-color: #8dbdd8;
+}
+.winbond-table tfoot tr td {
+	/*color: #3D3D3D;*/
+	padding: 4px;
+	vertical-align: center;
+	height:18px;
+	background-color: #FFF;
+}
+.winbond-table tbody tr td {
+	/*color: #3D3D3D;*/
+	padding: 4px;
+	vertical-align: center;
+	height:18px;
+}
+.winbond-table tbody tr td label {
+	cursor: text;
+}
+.winbond-table tbody tr td.col_type_NUMBER {
+	text-align: right;
+}
+.winbond-table tbody tr.even td {
+	background-color: #FFF;
+}
+.winbond-table tbody tr.odd td {
+	background-color: #F0F0F6;
+}
+.winbond-table tbody tr.highlight td {
+	/*font-weight: bold;*/
+	background-color: yellow;
+}
+.winbond-table tbody tr.dont-select td {
+	color: white;
+	background-color: red;
+}
+.winbond-table tbody tr.hover td {
+	color: red;
+}
+.winbond-table tbody tr.edit td {
+	background-color: #fdf5ce;
+}
+.winbond-table tbody tr td.edit {
+	padding: 2px;
+}
+.winbond-table tbody tr td.edit input.modified,
+.winbond-table tbody tr td.edit select.modified,
+.winbond-table tbody tr td.edit div.modified select,
+.winbond-table tbody tr td.edit div.modified input {
+	color: red;
+}
+.winbond-table tbody tr td.edit select option {
+	color: black;
+}
+.winbond-table tbody tr td select {
+	width: 95%;
+}
+select.filter-operator {
+	width: 100px;
+}
+table.winbond-table-filter {
+	border: 1px solid black;
+}
+table.winbond-table-filter td.title {
+	text-align: right;
+	font-weight: bold;
+}
+table.winbond-table tbody td img {
+	width: 100px;
+}

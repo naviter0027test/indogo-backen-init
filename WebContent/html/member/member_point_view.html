@@ -1,0 +1,62 @@
+<div id="AREA1">
+	<table id="QUERY" class="query hide_when_popup">
+		<tr class="hide_when_popup">
+			<td class="category">Member Id</td>
+			<td><input type="text" class="member_id"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE" style="margin-top: 10px;"></table>
+</div>
+
+<script type="text/javascript">
+var IS_POPUP_WINDOW = $.query.get('menu_row_id') == '54';
+var RELAY_ID_MEMBER_POINT_VIEW = 'member.member_point_view';
+
+if (IS_POPUP_WINDOW) {
+	$('.hide_when_popup').hide();
+} else {
+	$('.show_when_popup').hide();
+}
+
+$('#AREA2').hide();
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.member.MemberPointView',
+	viewMode: true,
+	afterSetTableColumnEvent: function() {
+		if (IS_POPUP_WINDOW) {
+			var member_id = $.query.get('member_id');
+			
+			$('#QUERY input.member_id').val(member_id);
+			$('#QUERY button.ok').click();
+		}
+	},
+	afterSetTableDataEvent: function(rows) {
+		
+	}
+})[0];
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	var member_id = $('#QUERY input.member_id').val();
+	if (member_id.length > 0) {
+		c.push('member_id');
+		o.push('=');
+		v.push(member_id);
+	} else {
+		return false;
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+});
+
+//# sourceURL=member_point_view.js
+</script>

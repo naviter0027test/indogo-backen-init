@@ -1,0 +1,168 @@
+<div id="AREA1">
+	<table class="winbond-table" style="margin-bottom: 10px; margin-top: 10px;">
+		<thead>
+			<tr>
+				<td>Configuration Name</td>
+				<td>Value</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="even">
+				<td>Beneficiary Verification</td>
+				<td>
+					<select id="ACC_VERIFICATION">
+						<option value="BNI">BNI</option>
+						<option value="BRI">BRI</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="even">
+				<td>Maximum Remit Invoice Count</td>
+				<td>
+					<table class="winbond-table" style="margin-bottom: 10px; margin-top: 10px;">
+						<tbody>
+							<tr>
+								<td>（日）Sunday</td>
+								<td><input type="text" id="MAX_CREATE_COUNT_0" class="num"/></td>
+							</tr>
+							<tr>
+								<td>（一）Monday</td>
+								<td><input type="text" id="MAX_CREATE_COUNT_1" class="num"/></td>
+							</tr>
+							<tr>
+								<td>（二）Tuesday</td>
+								<td><input type="text" id="MAX_CREATE_COUNT_2" class="num"/></td>
+							</tr>
+							<tr>
+								<td>（三）Wednesday</td>
+								<td><input type="text" id="MAX_CREATE_COUNT_3" class="num"/></td>
+							</tr>
+							<tr>
+								<td>（四）Thursday</td>
+								<td><input type="text" id="MAX_CREATE_COUNT_4" class="num"/></td>
+							</tr>
+							<tr>
+								<td>（五）Friday</td>
+								<td><input type="text" id="MAX_CREATE_COUNT_5" class="num"/></td>
+							</tr>
+							<tr>
+								<td>（六）Saturday</td>
+								<td><input type="text" id="MAX_CREATE_COUNT_6" class="num"/></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<button type="button" id="UPDATE_MAX_CREATE_COUNT">Update</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr class="even">
+				<td>Maximum Recipient Count per Member</td>
+				<td><input type="text" id="MAX_RECIPIENT_COUNT" class="num"/></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<style type="text/css">
+input.num {
+	width: 100px;
+	text-align: right;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_MONEY_TRANSFER_CONFIG = 'member.money_transfer_config';
+
+$('#AREA1 input.num').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true});
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_MONEY_TRANSFER_CONFIG,
+		'action': 'init'
+	},
+	success: function(data) {
+		var tokens = data.split(char_31);
+		
+		var default_acc_verification = tokens.shift();
+		var max_create_count_0 = tokens.shift();
+		var max_create_count_1 = tokens.shift();
+		var max_create_count_2 = tokens.shift();
+		var max_create_count_3 = tokens.shift();
+		var max_create_count_4 = tokens.shift();
+		var max_create_count_5 = tokens.shift();
+		var max_create_count_6 = tokens.shift();
+		var max_recipient_count = tokens.shift();
+		
+		$('#ACC_VERIFICATION').val(default_acc_verification);
+		$('#MAX_CREATE_COUNT_0').autoNumeric('set', max_create_count_0);
+		$('#MAX_CREATE_COUNT_1').autoNumeric('set', max_create_count_1);
+		$('#MAX_CREATE_COUNT_2').autoNumeric('set', max_create_count_2);
+		$('#MAX_CREATE_COUNT_3').autoNumeric('set', max_create_count_3);
+		$('#MAX_CREATE_COUNT_4').autoNumeric('set', max_create_count_4);
+		$('#MAX_CREATE_COUNT_5').autoNumeric('set', max_create_count_5);
+		$('#MAX_CREATE_COUNT_6').autoNumeric('set', max_create_count_6);
+		$('#MAX_RECIPIENT_COUNT').autoNumeric('set', max_recipient_count);
+	}
+});
+
+$('#ACC_VERIFICATION').change(function() {
+	var acc_verification = $('#ACC_VERIFICATION').val();
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MONEY_TRANSFER_CONFIG,
+			'action': 'default_acc_verification',
+			'value': acc_verification
+		},
+		success: function(data) {
+			
+		}
+	});
+});
+
+$('#UPDATE_MAX_CREATE_COUNT').button().click(function() {
+	var max_create_count_0 = $('#MAX_CREATE_COUNT_0').autoNumeric('get');
+	var max_create_count_1 = $('#MAX_CREATE_COUNT_1').autoNumeric('get');
+	var max_create_count_2 = $('#MAX_CREATE_COUNT_2').autoNumeric('get');
+	var max_create_count_3 = $('#MAX_CREATE_COUNT_3').autoNumeric('get');
+	var max_create_count_4 = $('#MAX_CREATE_COUNT_4').autoNumeric('get');
+	var max_create_count_5 = $('#MAX_CREATE_COUNT_5').autoNumeric('get');
+	var max_create_count_6 = $('#MAX_CREATE_COUNT_6').autoNumeric('get');
+	
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MONEY_TRANSFER_CONFIG,
+			'action': 'max_create_count',
+			'max_create_count_0': max_create_count_0,
+			'max_create_count_1': max_create_count_1,
+			'max_create_count_2': max_create_count_2,
+			'max_create_count_3': max_create_count_3,
+			'max_create_count_4': max_create_count_4,
+			'max_create_count_5': max_create_count_5,
+			'max_create_count_6': max_create_count_6
+		},
+		success: function(data) {
+			
+		}
+	});
+});
+
+$('#MAX_RECIPIENT_COUNT').change(function() {
+	var max_recipient_count = $('#MAX_RECIPIENT_COUNT').autoNumeric('get');
+	
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MONEY_TRANSFER_CONFIG,
+			'action': 'max_recipient_count',
+			'max_recipient_count': max_recipient_count
+		},
+		success: function(data) {
+			
+		}
+	});
+});
+
+//# sourceURL=money_transfer_config.js
+</script>

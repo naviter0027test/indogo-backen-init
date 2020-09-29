@@ -1,0 +1,367 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr id="QUERY_SHOP_ROW">
+			<td class="category"><label class="shop_name">shop_name</label></td>
+			<td id="QUERY_SHOP"></td>
+		</tr>
+		<tr>
+			<td class="category">Product Name</td>
+			<td><input type="text" class="item_desc"/></td>
+		</tr>
+		<tr>
+			<td class="category"><label class="item_name">item_name</label></td>
+			<td><textarea class="item_name"></textarea></td>
+		</tr>
+		<tr>
+			<td class="category">Product Discontinued</td>
+			<td><select id="ITEM_DISABLED"><option value=""></option><option value="0" selected>No</option><option value="1">Yes</option></select></td>
+		</tr>
+		<tr>
+			<td class="category">Product Hidden</td>
+			<td><select id="ITEM_HIDE"><option value=""></option><option value="0" selected>No</option><option value="1">Yes</option></select></td>
+		</tr>
+		<tr>
+			<td class="category">Product Categories</td>
+			<td id="QUERY_CATEGORY"></td>
+		</tr>
+		<tr>
+			<td class="category">Quantity</td>
+			<td><input type="text" class="item_qty_start" style="width: 100px;"/> to <input type="text" class="item_qty_end" style="width: 100px;"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<table id="QUERY_INVENTORY_HISTORY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"></td>
+			<td>
+				<table id="ITEM" class="winbond-table">
+					<thead>
+						<tr>
+							<td></td>
+							<td>Product Name</td>
+							<td>Color Name</td>
+							<td>Size Name</td>
+							<td>Product Quantity</td>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="close">Close</button></td>
+		</tr>
+	</table>
+	<table id="TABLE_INVENTORY_HISTORY">
+	</table>
+</div>
+
+<script type="text/javascript">
+var IS_POPUP_WINDOW = $.query.get('menu_row_id') == '26';
+var RELAY_ID_INVENTORY = 'shop.inventory';
+var RELAY_ID_VENDOR = 'shop.vendor';
+var TABLE, TABLE_INVENTORY_HISTORY;
+
+$('#AREA2').hide();
+$('#QUERY input.item_qty_start, #QUERY input.item_qty_end').autoNumeric('init', {vMin: '-99999999999999999999999999999', vMax: '99999999999999999999999999999', aSep: ','});
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_INVENTORY,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		var label_shop_name = tokens.shift();
+		var label_item_name = tokens.shift();
+		
+		var shop_list_size = parseInt(tokens.shift(), 10);
+		var html_query_shop = '';
+		for (var i = 0; i < shop_list_size; i++) {
+			var shop_id = tokens.shift();
+			var shop_name = tokens.shift();
+			html_query_shop = html_query_shop + '<label for="QUERY_SHOP_' + shop_id + '"><input type="checkbox" value="' + shop_id + '" id="QUERY_SHOP_' + shop_id + '"/>' + shop_name + '</label> ';
+		}
+		
+		var category_list_size = parseInt(tokens.shift(), 10);
+		//var html_query_category = '';
+		var html_query_category = '<select><option value=""></option>';
+		for (var i = 0; i < category_list_size; i++) {
+			var category_id = tokens.shift();
+			var category_name = tokens.shift();
+			var name_prefix = tokens.shift();
+			//html_query_category = html_query_category + '<label for="QUERY_CATEGORY_' + category_id + '"><input type="checkbox" value="' + category_id + '" id="QUERY_CATEGORY_' + category_id + '"/>' + category_name + '</label> ';
+			html_query_category = html_query_category + '<option value="' + category_id + '">' + category_name + '</option>';
+		}
+		html_query_category = html_query_category + '</select>';
+		
+		var is_allowed_to_edit_qty = tokens.shift();
+		
+		$('label.shop_name').text(label_shop_name);
+		$('label.item_name').text(label_item_name);
+		$('#QUERY_SHOP').append(html_query_shop).val('1');
+		$('#QUERY_CATEGORY').append(html_query_category);
+		
+		if (IS_POPUP_WINDOW) {
+			var shop_id = $.query.get('shop_id');
+			var item_disabled = $.query.get('item_disabled');
+			var item_hide = $.query.get('item_hide');
+			
+			$('#QUERY_SHOP_' + shop_id).prop('checked', true);
+			$('#QUERY_SHOP_ROW').hide();
+			
+			$('#ITEM_DISABLED').val(item_disabled);
+			$('#ITEM_HIDE').val(item_hide);
+		}
+		
+		TABLE = $('#TABLE').createTable({
+			className: 'com.indogo.relay.onlineshopping.Inventory',
+			viewMode: true,
+			showCheckBox: IS_POPUP_WINDOW,
+			afterSetTableColumnEvent: function() {
+				$('#QUERY button.ok').click();
+			},
+			afterSetTableDataEvent: function(rows) {
+				rows.find('td.item_qty').each(function(i, e) {
+					var cell = $(e);
+					var row = cell.parent();
+					
+					var item_qty = cell.text();
+					var is_composite = parseInt(row.find('td.is_composite').text(), 10);
+					
+					var edit_area = $('<div class="edit_area"><button type="button" class="edit_ok">ok</button><button type="button" class="edit_cancel" style="margin-left: 4px;">cancel</button><input style="margin-left: 4px; text-align: right; width: 100px;" type="text" class="edit_value" value="' + item_qty.replace(/,/g, '') + '"/><input type="hidden" class="old_qty"/></div>');
+					edit_area.hide();
+					
+					edit_area.find('input.edit_value').autoNumeric('init', {vMin: '-99999999999999999999999999999', vMax: '99999999999999999999999999999', aSep: ','});
+					
+					edit_area.find('button.edit_ok').button({icon: 'ui-icon-check', showLabel: false}).click(function() {
+						var cell = $(this).parent().parent();
+						var item_qty = cell.find('input.edit_value').autoNumeric('get');
+						var old_qty = cell.find('input.old_qty').val();
+
+						var row = cell.parent();
+						var item_id = row.find('td.item_id').text();
+						var shop_id = row.find('td.shop_id').text();
+						
+						sendRequest.relay({
+							data: {
+								'RelayId': RELAY_ID_INVENTORY,
+								'action': 'update',
+								'shop_id': shop_id,
+								'item_id': item_id,
+								'item_qty': item_qty,
+								'old_qty': old_qty
+							}, success: function(data) {
+								var tokens = data.split(char_31);
+								var lm_time = tokens.shift();
+								var lm_user = tokens.shift();
+								var item_qty = tokens.shift();
+								
+								row.find('td.lm_time').text(lm_time);
+								row.find('td.lm_user').text(lm_user);
+								cell.find('div.view_area label').text(item_qty);
+								cell.find('div.edit_area').hide();
+								cell.find('div.view_area').show();
+							}
+						});
+					});
+					
+					edit_area.find('button.edit_cancel').button({icon: 'ui-icon-close', showLabel: false}).click(function() {
+						var cell = $(this).parent().parent();
+						cell.find('div.edit_area').hide();
+						cell.find('div.view_area').show();
+					});
+					
+					var view_area = $('<div class="view_area"><button type="button" class="show_history">history</button><button type="button" class="edit_begin" style="margin-left: 4px;">edit qty</button><label style="margin-left: 4px;">' + item_qty + '</label></div>');
+					
+					view_area.find('button.show_history').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+						var cell = $(this).parent().parent();
+						var row = cell.parent();
+						var shop_id = row.find('td.shop_id').text();
+						var item_id = row.find('td.item_id').text();
+						var img_src = row.find('td.item_image img').attr('src');
+						var item_desc = row.find('td.item_desc').text();
+						var color_name = row.find('td.color_name').text();
+						var size_name = row.find('td.size_name').text();
+						var item_qty = cell.find('label').text();
+						
+						var html = '<tr>';
+						html = html + '<td><img src="' + img_src + '"/></td>';
+						html = html + '<td>' + item_desc + '</td>';
+						html = html + '<td>' + color_name + '</td>';
+						html = html + '<td>' + size_name + '</td>';
+						html = html + '<td>' + item_qty + '</td>';
+						html = html + '</tr>';
+						$('#ITEM tbody').empty().append(html);
+						
+						var c = [];
+						var o = [];
+						var v = [];
+						var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+						
+						c.push('shop_id');
+						o.push('=');
+						v.push(shop_id);
+						
+						c.push('item_id');
+						o.push('=');
+						v.push(item_id);
+						
+						TABLE_INVENTORY_HISTORY.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+						
+						$('#AREA1').hide();
+						$('#AREA2').show();
+					});
+					
+					view_area.find('button.edit_begin').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+						var cell = $(this).parent().parent();
+						
+						var item_qty = cell.find('div.view_area label').text().replace(/,/g, '');
+						cell.find('input.edit_value').autoNumeric('set', item_qty);
+						cell.find('input.old_qty').val(item_qty);
+						
+						cell.find('div.view_area').hide();
+						cell.find('div.edit_area').show();
+					});
+					
+					if (is_allowed_to_edit_qty == "0") {
+						view_area.find('button.edit_begin').button('disable');
+					}
+					
+					cell.empty().append(view_area).append(edit_area);
+				});
+			}
+		})[0];
+		
+		TABLE_INVENTORY_HISTORY = $('#TABLE_INVENTORY_HISTORY').createTable({
+			className: 'com.indogo.relay.onlineshopping.InventoryHistory',
+			viewMode: true,
+			afterSetTableColumnEvent: function() {
+				
+			},
+			afterSetTableDataEvent: function(rows) {
+				rows.find('td.sales_id').each(function(i, e) {
+					var cell = $(e);
+					var sales_id = cell.text();
+					
+					if (sales_id.length > 0) {
+						var btn = $('<button type="button" style="margin-left: 4px;">view</button>').button({icon: 'ui-icon-link', showLabel: false}).click(function() {
+							var row = $(this).parent().parent();
+							var reason_id = parseInt(row.find('td.reason_id').text(), 10);
+							var sales_id = row.find('td.sales_id span').text();
+							var lm_time = row.find('td.lm_time').text();
+							var start_date = moment(lm_time, 'YYYY/MM/DD hh:mm:ss').add(-1, 'days').format('YYYY-MM-DD');
+							var end_date = moment(lm_time, 'YYYY/MM/DD hh:mm:ss').add(1, 'days').format('YYYY-MM-DD');
+							var status_id = 1;
+							if (reason_id == 4) {
+								status_id = 6;
+							}
+							window.open('page.html?menu_row_id=33&sales_id=' + sales_id + '&start_date=' + start_date + '&end_date=' + end_date + '&status_id=' + status_id, 'browse_current_stock', 'width=1000,height=800');
+						});
+						
+						cell.empty().append('<span>' + sales_id + '</span>').append(btn);
+					}
+				});
+			}
+		})[0];
+	}
+});
+
+function onQuery(is_using_temp_table) {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+	
+	if (is_using_temp_table) {
+		sessionId = GLOBAL_SID;
+		pageId = 'inventory';
+		joinSql = 'a.item_id = b.long1';
+	}
+	
+	var shop_ids = [];
+	$('#QUERY_SHOP input:checked').each(function(i, e) {
+		shop_ids.push($(e).val());
+	});
+	if (shop_ids.length > 0) {
+		c.push('shop_id');
+		o.push('IN');
+		v.push($.join(shop_ids, ','));
+	}
+	
+	var item_qty_start = $('#QUERY input.item_qty_start').autoNumeric('get');
+	var item_qty_end = $('#QUERY input.item_qty_end').autoNumeric('get');
+	if (item_qty_start.length > 0 && item_qty_end.length > 0) {
+		c.push('item_qty');
+		o.push('BETWEEN');
+		v.push(item_qty_start + char_31 + item_qty_end);
+	} else if (item_qty_start.length > 0) {
+		c.push('item_qty');
+		o.push('>=');
+		v.push(item_qty_start);
+	} else if (item_qty_end.length > 0) {
+		c.push('item_qty');
+		o.push('<=');
+		v.push(item_qty_end);
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+};
+
+$('#QUERY button.ok').button().click(function() {
+	var item_name = $.trim($('#QUERY textarea.item_name').val());
+	var item_disabled = $('#ITEM_DISABLED').val();
+	var item_hide = $('#ITEM_HIDE').val();
+	var category_id = $('#QUERY_CATEGORY select').val();
+	var item_desc = $('#QUERY input.item_desc').val();
+	
+	if (item_name.length > 0 || item_disabled.length > 0 || item_hide.length > 0 || category_id.length > 0 || item_desc.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INVENTORY,
+				'action': 'sql_temp_table',
+				'item_name': item_name,
+				'item_disabled': item_disabled,
+				'item_hide': item_hide,
+				'category_id': category_id,
+				'item_desc': item_desc
+			}, success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					onQuery(true);
+				} else {
+					TABLE.funcEmptyTableBody();
+				}
+			}
+		});
+	} else {
+		onQuery(false);
+	}
+});
+
+if (IS_POPUP_WINDOW) {
+	var button = $('<button type="button" style="margin-left: 4px;" >Add Checked Item to List</button>').button().click(function() {
+		var rows = TABLE.funcGetTableBody();
+		rows.find('input.winbond-table-cell-control-box-check:checked').each(function(i, e) {
+			var row = $(e).parent().parent();
+			window.opener.onItemSelected(row);
+		});
+	});
+	$('#QUERY button.ok').parent().append(button);
+}
+
+$('#QUERY_INVENTORY_HISTORY button.close').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+//# sourceURL=inventory.js
+</script>

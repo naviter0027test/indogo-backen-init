@@ -1,0 +1,1353 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category">Phone No:</td>
+			<td><input type="text" class="phone_no"/></td>
+			<td class="category">ARC No:</td>
+			<td><input type="text" class="arc_no uppercase"/></td>
+		</tr>
+		<tr>
+			<td class="category">Name:</td>
+			<td><input type="text" class="member_name uppercase"/></td>
+			<td class="category">Birthday:</td>
+			<td>
+				<select class="birthday_month">
+					<option value=""></option>
+					<option value="1">01</option>
+					<option value="2">02</option>
+					<option value="3">03</option>
+					<option value="4">04</option>
+					<option value="5">05</option>
+					<option value="6">06</option>
+					<option value="7">07</option>
+					<option value="8">08</option>
+					<option value="9">09</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+				</select> / <select class="birthday_date">
+					<option value=""></option>
+					<option value="1">01</option>
+					<option value="2">02</option>
+					<option value="3">03</option>
+					<option value="4">04</option>
+					<option value="5">05</option>
+					<option value="6">06</option>
+					<option value="7">07</option>
+					<option value="8">08</option>
+					<option value="9">09</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+					<option value="13">13</option>
+					<option value="14">14</option>
+					<option value="15">15</option>
+					<option value="16">16</option>
+					<option value="17">17</option>
+					<option value="18">18</option>
+					<option value="19">19</option>
+					<option value="20">20</option>
+					<option value="21">21</option>
+					<option value="22">22</option>
+					<option value="23">23</option>
+					<option value="24">24</option>
+					<option value="25">25</option>
+					<option value="26">26</option>
+					<option value="27">27</option>
+					<option value="28">28</option>
+					<option value="29">29</option>
+					<option value="30">30</option>
+					<option value="31">31</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Status:</td>
+			<td>
+				<input type="checkbox" class="status_id" name="status_id" id="status_id_0" value="0" checked/><label for="status_id_0">ACTIVE</label>
+				<input type="checkbox" class="status_id" name="status_id" id="status_id_1" value="1"/><label for="status_id_1">INACTIVE</label>
+				<input type="checkbox" class="signature_need_fix" id="STATUS_SIGNATURE_NEED_FIX" style="cursor: pointer" value="1"/><label for="STATUS_SIGNATURE_NEED_FIX" style="cursor: pointer">Signature Need Fix</label>
+			</td>
+			<td class="category">Print:</td>
+			<td><select class="is_print"><option value=""></option><option value="0">Not printed</option><option value="1">Has been printed</option></select></td>
+		</tr>
+		<tr>
+			<td class="category">App Verify Time</td>
+			<td colspan="3"><input type="text" class="app_verify_time_start"/> ~ <input type="text" class="app_verify_time_end"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td colspan="3"><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+	<input type="hidden" id="ARC_NO_PHOTO_URL"/>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<input type="hidden" class="lm_time" name="lm_time"/>
+		<input type="hidden" class="arc_photo_basename" name="arc_photo_basename"/>
+		<input type="hidden" class="signature_photo_basename" name="signature_photo_basename"/>
+		<input type="hidden" class="phone_no" name="phone_no"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Member Configuration</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Phone No</td>
+					<td>
+						<input type="text" class="phone_no1" value=""/><br/>
+						<input type="text" class="phone_no2" value=""/><br/>
+						<input type="text" class="phone_no3" value=""/>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">ARC Picture</td>
+					<td>
+						<div style="margin-bottom: 5px;"><button id="SELECT_ARC_PHOTO">Select ARC Photo</button></div>
+						<img alt="" src="" class="arc_photo" style="width: 800px"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">ARC No</td>
+					<td><input type="text" name="arc_no" class="arc_no uppercase" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Name</td>
+					<td><input type="text" name="member_name" class="member_name uppercase" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Birthday</td>
+					<td><input type="text" name="birthday" class="birthday" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">ARC Expire</td>
+					<td><input type="text" name="arc_expire_date" class="arc_expire_date" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Address</td>
+					<td>
+						<table id="ADDRESS" class="winbond-table" style="margin-top: 4px;">
+							<thead>
+								<tr>
+									<td align="center">縣市</td>
+									<td align="center">鄉鎮市區</td>
+									<td align="center">道路或街名</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="even">
+									<td align="center"><select class="city reset"></select></td>
+									<td align="center"><select class="area empty"></select></td>
+									<td align="center"><select class="road empty"></select></td>
+								</tr>
+								<tr class="even">
+									<td align="center" colspan="3">
+										<input style="width: 25px" type="text" class="neighbor data reset"/> 鄰 <input style="width: 25px" type="text" class="lane data reset"/> 巷 <input style="width: 25px" type="text" class="alley data reset"/> 弄 <input style="width: 25px" type="text" class="no1 data reset"/> 號之 <input style="width: 25px" type="text" class="no2 data reset"/> <input style="width: 25px" type="text" class="floor1 data reset"/> 樓之 <input style="width: 25px" type="text" class="floor2 data reset"/> <input style="width: 25px" type="text" class="room data reset"/> 室
+									</td>
+								</tr>
+								<tr class="even">
+									<td colspan="3">
+										<button type="button" id="SET_ADDRESS">Set</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div style="margin-bottom: 4px; margin-top: 8px;"><input type="text" name="address" class="address" value=""/></div>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Signature</td>
+					<td>
+						<div style="margin-bottom: 5px;"><button id="SELECT_SIGNATURE_PHOTO">Select Signature Photo</button> <label for="FIX_ME">Mark as "Fix Me" <input type="checkbox" id="FIX_ME"/></label></div>
+						<img alt="" src="" class="signature_photo" style="width: 300px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Email</td>
+					<td><input type="text" name="email" class="email" value=""/></td>
+				</tr>
+				<tr>
+					<td class="category">Sex</td>
+					<td><select name="sex_id" class="sex_id"></select></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="AREA3">
+	<form id="FORM_RECIPIENT_LIST">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<table id="TABLE_RECIPIENT_LIST" class="winbond-table">
+			<thead>
+				<tr>
+					<td><button type="button" id="TABLE_RECIPIENT_LIST_BUTTON_ADD">add</button></td>
+					<td>Bank Code</td>
+					<td>Bank Name</td>
+					<td>Account No</td>
+					<td>Recipient Name</td>
+					<td>Recipient Name 2</td>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="verify" type="button">Verify with BNI</button>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_UPLOAD_ARC" title="Upload ARC Photo">
+	<form id="FORM_UPLOAD_ARC">
+		<input type="hidden" class="arc_photo_basename" name="arc_photo_basename"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">File</td>
+					<td><input type="file" class="arc_photo_upload" name="arc_photo_upload"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_UPLOAD_SIGNATURE" title="Upload Signature Photo">
+	<form id="FORM_UPLOAD_SIGNATURE">
+		<input type="hidden" class="signature_photo_basename" name="signature_photo_basename"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">File</td>
+					<td><input type="file" class="signature_photo_upload" name="signature_photo_upload"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_HISTORY" title="History">
+	<table id="TABLE_HISTORY" class="winbond-table">
+		<thead>
+			<tr>
+				<td>Timestamp</td>
+				<td>User</td>
+				<td>Action</td>
+				<td>Description</td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>
+
+<style type="text/css">
+#TABLE_RECIPIENT_LIST input {
+	width: 150px;
+}
+input.phone_no, input.phone_no1, input.phone_no2, input.phone_no3 {
+	width: 150px;
+}
+#TABLE tr.banned td {
+	background-color: gray;
+}
+#TABLE_RECIPIENT_LIST tbody tr.verified.hidden input.recipient_name, #TABLE_RECIPIENT_LIST tbody tr.hidden input, #TABLE_RECIPIENT_LIST tbody tr.hidden select {
+	color: lightgray;
+}
+#TABLE_RECIPIENT_LIST tbody tr.verified input.recipient_name {
+	color: red;
+	font-weight: bold;
+}
+#ADDRESS {
+	border-collapse: separate; border-spacing: 1px;
+}
+#ADDRESS td {
+	padding: 4px;
+}
+#TABLE td.print {
+	text-align: center;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID = 'member.member_config';
+var RELAY_ID_MEMBER_APP_REGISTER = 'member.member_app_register';
+var RELAY_ID_MEMBER_POINT = 'member.member_point';
+var deleteMemberRecipients = [];
+var char_31 = String.fromCharCode(31);
+var char_30 = String.fromCharCode(30);
+var BANK_NAME_TO_CODE = {};
+var BANK_CODE_TO_NAME = {};
+var BANK_NAMES = [];
+var VERIFY_LIST = [];
+
+$('#AREA2, #AREA3').hide();
+$('#F .birthday, #F .arc_expire_date, #QUERY input.app_verify_time_start, #QUERY input.app_verify_time_end').createDatePickerWritable();
+$('#F input.phone_no1, #F input.phone_no2, #F input.phone_no3').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: '', lZero: 'keep', strictDigitOnly: true});
+
+$('#DIALOG_UPLOAD_ARC, #DIALOG_UPLOAD_SIGNATURE').dialog({
+	modal: true,
+	width: 450,
+	autoOpen: false
+});
+
+$('#DIALOG_HISTORY').dialog({
+	modal: true,
+	width: 600,
+	autoOpen: false
+});
+
+$('#SELECT_ARC_PHOTO').button().click(function() {
+	$('#DIALOG_UPLOAD_ARC').dialog('open');
+	$('#FORM_UPLOAD_ARC input.arc_photo_upload').click();
+});
+
+$('#FORM_UPLOAD_ARC button.cancel').button().click(function() {
+	$('#DIALOG_UPLOAD_ARC').dialog('close');
+});
+
+$('#FORM_UPLOAD_ARC button.ok').button().click(function() {
+	$('#FORM_UPLOAD_ARC').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': 'arc_photo_upload'
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			var arc_photo_basename = tokens[0];
+			var arc_url = tokens[1];
+			$('#F input.arc_photo_basename, #FORM_UPLOAD_ARC input.arc_photo_basename').val(arc_photo_basename);
+			$('#F img.arc_photo').attr('src', arc_url);
+			$('#DIALOG_UPLOAD_ARC').dialog('close');
+		}
+	});
+});
+
+$('#SELECT_SIGNATURE_PHOTO').button().click(function() {
+	$('#DIALOG_UPLOAD_SIGNATURE').dialog('open');
+	$('#FORM_UPLOAD_SIGNATURE input.signature_photo_upload').click();
+});
+
+$('#FORM_UPLOAD_SIGNATURE button.cancel').button().click(function() {
+	$('#DIALOG_UPLOAD_SIGNATURE').dialog('close');
+});
+
+$('#FORM_UPLOAD_SIGNATURE button.ok').button().click(function() {
+	$('#FORM_UPLOAD_SIGNATURE').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': 'signature_photo_upload'
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			var signature_photo_basename = tokens[0];
+			var signature_url = tokens[1];
+			$('#F input.signature_photo_basename, #FORM_UPLOAD_SIGNATURE input.signature_photo_basename').val(signature_photo_basename);
+			$('#F img.signature_photo').attr('src', signature_url);
+			$('#DIALOG_UPLOAD_SIGNATURE').dialog('close');
+		}
+	});
+});
+
+function update_member_status(row, status_id) {
+	var member_id = row.find('.member_id').text();
+	var lm_time = row.find('.lm_time').text();
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID,
+			'action': 'update_member_status',
+			'member_id': member_id,
+			'lm_time': lm_time,
+			'status_id': status_id
+		},
+		success: function(data) {
+			row.find('.lm_time').text(data);
+			row.find('.status_id').text(status_id);
+			
+			var button = row.find('button.ban_or_release_member');
+			if (status_id == '1') {
+				row.addClass('banned');
+				
+				button.button('destroy');
+				button.text('release this member');
+				button.button({icon: 'ui-icon-unlocked', showLabel: false});
+			} else {
+				row.removeClass('banned');
+				
+				button.button('destroy');
+				button.text('ban this member');
+				button.button({icon: 'ui-icon-locked', showLabel: false});
+			}
+		}
+	});
+};
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID,
+		'action': 'init'
+	},
+	success: function(data) {
+		var tokens = data.split(String.fromCharCode(31));
+		var city = tokens.shift();
+		var arcNoPhoto = tokens.shift();
+		$('#ADDRESS select.city').empty().append('<option value="" selected="selected">請選擇縣市</option>').append(city);
+		$('#ARC_NO_PHOTO_URL').val(arcNoPhoto);
+		
+		var bankCodeSize = parseInt(tokens.shift(), 10);
+		var htmlBankCode = '<option value="">select one...</option>';
+		for (var i = 0; i < bankCodeSize; i++) {
+			var bankCode = tokens.shift();
+			var bankName = tokens.shift();
+			htmlBankCode = htmlBankCode + '<option value="' + bankCode + '">' + bankCode  + '</option>';
+			BANK_CODE_TO_NAME[bankCode] = bankName;
+		}
+		
+		bankCodeSize = parseInt(tokens.shift(), 10);
+		for (var i = 0; i < bankCodeSize; i++) {
+			var bankCode = tokens.shift();
+			var bankName = tokens.shift();
+			BANK_NAME_TO_CODE[bankName] = bankCode;
+			BANK_NAMES.push(bankName);
+		}
+		
+		$('#FORM_RECIPIENT_LIST').data('htmlBankCode', htmlBankCode);
+		
+		var roleIdsSize = parseInt(tokens.shift(), 10);
+		var roleIds = [];
+		for (var i = 0; i < roleIdsSize; i++) {
+			var roleId = parseInt(tokens.shift(), 10);
+			roleIds.push(roleId);
+		}
+		
+		var sexSize = parseInt(tokens.shift(), 10);
+		var htmlSex = '';
+		for (var i = 0; i < sexSize; i++) {
+			var sexId = tokens.shift();
+			var sexName = tokens.shift();
+			htmlSex = htmlSex + '<option value="' + sexId + '">' + sexName + '</option>';
+		}
+		$('#F select.sex_id').append(htmlSex);
+		
+		createTable(roleIds);
+	}
+});
+
+var TABLE;
+
+var createTable = function(roleIds) {
+	var disableInsert = true;
+	var disableUpdate = true;
+	var disableDelete = true;
+	var disableExport = true;
+	var disableBanOrReleaseMember = true;
+	
+	if ($.inArray(1, roleIds) > -1 || $.inArray(2, roleIds) > -1) {
+		disableInsert = false;
+		disableUpdate = false;
+		disableDelete = false;
+		disableExport = false;
+		disableBanOrReleaseMember = false;
+	} else if ($.inArray(3, roleIds) > -1) {
+		disableInsert = false;
+		disableUpdate = false;
+		disableExport = false;
+		disableBanOrReleaseMember = false;
+	} else if ($.inArray(4, roleIds) > -1 || $.inArray(7, roleIds) > -1 || $.inArray(8, roleIds) > -1) {
+		disableInsert = false;
+		disableUpdate = false;
+		disableBanOrReleaseMember = false;
+	}
+	
+	TABLE = $('#TABLE').createTable({
+		className: 'com.indogo.relay.member.MemberConfiguration',
+		disableInsert: disableInsert,
+		disableUpdate: disableUpdate,
+		disableDelete: disableDelete,
+		disableExport: disableExport,
+		afterSetTableColumnEvent: function() {
+			var button_export_bank_format = $('<button type="button" style="margin-left: 4px;">Export Bank Format</button>').button().click(function() {
+				var q = TABLE.funcGetFilter();
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID,
+						'action': 'export_bank_format',
+						'Sort': q.Sort,
+						'Filter': q.Filter,
+						'FilterSql': q.FilterSql,
+						'FilterSqlValues': q.FilterSqlValues,
+						'SessionId': q.SessionId,
+						'PageId': q.PageId,
+						'JoinSql': q.JoinSql
+					}, success: function(data) {
+						var tokens = data.split(char_31);
+						var filename = tokens.shift();
+						var timestamp = tokens.shift();
+						TABLE.funcGetTableBody().find('td.winbond-table-cell-control-box input.winbond-table-cell-control-box-check:checked').each(function(i, e) {
+							var row = $(e).parent().parent();
+							var export_time = row.find('td.export_time').text();
+							if (export_time.length == 0) {
+								row.find('td.export_time').text(timestamp);
+							}
+						});
+						sendRequest.downloadFile(filename, 'N');
+					}
+				});
+			});
+			
+			$('#TABLE button.export-to-excel').parent().append(button_export_bank_format);
+			
+			$('#QUERY button.ok').click();
+		},
+		afterSetTableDataEvent: function(rows) {
+			rows.find('button.recipient_button').button({icons: {primary: 'ui-icon-person'}, text: false}).click(function() {
+				var row = $(this).parent().parent();
+				var memberId = row.find('.member_id').text();
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID,
+						'action': 'getRecipients',
+						'member_id': memberId
+					},
+					success: function(data) {
+						var rows = data.length == 0 ? [] : data.split(String.fromCharCode(30));
+						var html = '';
+						for (i = 0; i < rows.length; i++) {
+							var cells = rows[i].split(String.fromCharCode(31));
+							var recipient_id = cells[0];
+							var recipient_name = cells[1];
+							var bank_acc = cells[2];
+							var bank_code = cells[3];
+							var bank_name = cells[4];
+							var lm_time = cells[5];
+							var is_verified = cells[6];
+							var is_hidden = cells[7];
+							var recipient_name_2 = cells[8];
+							html = html + '<tr class="even ' + (is_verified == '1' ? 'verified' : '') + " " + (is_hidden == '1' ? 'hidden' : '') + '"><td><button type="button" class="delete">delete</button> <button type="button" class="hide_or_show ' + (is_hidden == '1' ? 'show' : 'hide') + '">hide or show</button><input type="hidden" class="old_bank_acc" value="' + bank_acc + '"/><input type="hidden" class="old_bank_code" value="' + bank_code + '"/><input type="hidden" class="is_verified" value="' + is_verified + '"/><input type="hidden" class="old_recipient_name" value="' + recipient_name + '"/><input type="hidden" class="old_recipient_name_2" value="' + recipient_name_2 + '"/><input type="hidden" class="action_type" value="update"/><input type="hidden" class="lm_time" value="' + lm_time + '"/><input type="hidden" class="recipient_id" value="' + recipient_id + '"/><input type="hidden" class="is_hidden" value="' + is_hidden + '"/></td><td><select class="bank_code" default_value="' + bank_code + '"></select></td><td><input type="text" class="bank_name" style="width: 400px;"/></td><td><input type="text" class="bank_acc" value="' + bank_acc + '"/></td><td><input type="text" class="recipient_name uppercase" value="' + recipient_name + '"/></td><td><input type="text" class="recipient_name_2 uppercase" value="' + recipient_name_2 + '"/></td></tr>\n';
+						}
+						$('#TABLE_RECIPIENT_LIST tbody').empty();
+						deleteMemberRecipients.length = 0;
+						funcAppendMemberRecipient(html);
+						$('#TABLE_RECIPIENT_LIST tbody button.delete').button({icons: {primary: 'ui-icon-minus'}, text: false}).click(function() {
+							$(this).parent().parent().remove();
+						});
+						$('#FORM_RECIPIENT_LIST input.member_id').val(memberId);
+						$('#AREA1').hide();
+						$('#AREA3').show();
+					}
+				})
+			});
+			
+			rows.find('td.phone_no').each(function(i, e) {
+				var ee = $(e);
+				var tokens = ee.text().substring(1).split('.');
+				var html = '';
+				for (var i = 0; i < tokens.length; i++) {
+					if (tokens[i].length > 0) {
+						html += tokens[i] + '<br/>';
+					}
+				}
+				if (html.length > 0)
+					ee.text('').append(html.substring(0, html.length - 5));
+			});
+			
+			rows.find('td.action').each(function(i, e) {
+				var cell = $(this);
+				var row = cell.parent();
+				var status_id = row.find('td.status_id').text();
+				
+				var iconName, buttonText;
+				if (status_id == '1') {
+					iconName = 'ui-icon-unlocked';
+					buttonText = 'release this member';
+					row.addClass('banned');
+				} else {
+					iconName = 'ui-icon-locked';
+					buttonText = 'ban this member';
+				}
+				
+				var btnBanOrRelease = $('<button type="button" class="ban_or_release_member">' + buttonText + '</button>').button({icon: iconName, showLabel: false}).click(function() {
+					var row = $(this).parent().parent();
+					var old_status_id = row.find('td.status_id').text();
+					var status_id;
+					if (old_status_id == '0')
+						status_id = '1';
+					else
+						status_id = '0';
+					update_member_status(row, status_id);
+				});
+				
+				var btnHistory = $('<button type="button" style="margin-left: 4px;">View History</button>').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+					var cell = $(this);
+					var row = cell.parent().parent();
+					var member_id = row.find('td.member_id').text();
+					
+					sendRequest.relay({
+						data: {
+							'RelayId': RELAY_ID_MEMBER_POINT,
+							'action': 'get_histories',
+							'member_id': member_id
+						},
+						success: function(data) {
+							var tokens = data.split(char_31);
+							var size = parseInt(tokens.shift(), 10);
+							var html = '';
+							for (var i = 0; i < size; i++) {
+								var lm_time = tokens.shift();
+								var lm_user = tokens.shift();
+								var hst_name = tokens.shift();
+								var hst_desc = tokens.shift();
+								
+								html += '<tr class="even">';
+								html += '<td>' + lm_time + '</td>';
+								html += '<td>' + lm_user + '</td>';
+								html += '<td>' + hst_name + '</td>';
+								html += '<td>' + hst_desc + '</td>';
+								html += '</tr>\n';
+							}
+							$('#TABLE_HISTORY tbody').empty().append(html);
+							$('#DIALOG_HISTORY').dialog('open');
+						}
+					});
+				});
+				
+				if (disableBanOrReleaseMember) {
+					btnBanOrRelease.button('disable');
+				}
+				
+				cell.append(btnBanOrRelease).append(btnHistory);
+			});
+			
+			rows.find('td.is_print').each(function(i, e) {
+				var cell = $(e);
+				var is_print = cell.text();
+				if (is_print == "1") {
+					cell.parent().find('td.print').html('&#10003;');
+				}
+			});
+			
+			rows.find('td.wallet').each(function(i, e) {
+				var cell = $(e);
+				var wallet = cell.text();
+				
+				var btn = $('<button type="button" style="margin-left: 4px;">view history</button>').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+					var row = $(this).parent().parent();
+					var member_id = row.find('td.member_id').text();
+					window.open('page.html?menu_row_id=55&member_id=' + member_id, 'wallet_history', 'width=1024,height=768');
+				});
+				
+				cell.empty().append('<label class="wallet_value">' + wallet + '</label>').append(btn);
+			});
+		},
+		executeInsert: function(callback) {
+			$('#F').clearForm().resetForm();
+			$('#ADDRESS .area, #ADDRESS .road').empty();
+			$('#F .arc_photo').attr('src', $('#ARC_NO_PHOTO_URL').val());
+			$('#F select.sex_id').val('2');
+			$('#F button.ok').data('action', 'insert');
+			$('#F button.ok').data('callback', callback);
+			$('#AREA1').hide();
+			$('#AREA2').show();
+			
+			$('#FIX_ME').checkboxradio('disable');
+		},
+		executeUpdate: function(row, callback) {
+			var member_id = row.filter('.member_id').text();
+			
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID,
+					'action': 'getDataForUpdate',
+					'member_id': member_id
+				},
+				success: function(data) {
+					var o = data.split(char_31);
+					var member_name = o.shift();
+					var member_login_id = o.shift();
+					var phone_no = o.shift();
+					var arc_no = o.shift();
+					var arc_expire_date = o.shift();
+					var address = o.shift();
+					var birthday = o.shift();
+					var lm_time = o.shift();
+					var arc_photo_basename = o.shift();
+					var signature_photo_basename = o.shift();
+					var email = o.shift();
+					var arc_photo_url = o.shift();
+					var signature_photo_url = o.shift();
+					var signature_need_fix = o.shift() == '1';
+					var sex_id = o.shift();
+					
+					$('#F').clearForm().resetForm();
+					$('#F .member_id').val(member_id);
+					$('#F .member_name').val(member_name);
+					$('#F .member_login_id').val(member_login_id);
+					$('#F .phone_no').val(phone_no);
+					$('#F .arc_no').val(arc_no);
+					$('#F .arc_expire_date').datepicker('setDate', arc_expire_date);
+					$('#F .address').val(address);
+					$('#F .birthday').datepicker('setDate', birthday);
+					$('#F .lm_time').val(lm_time);
+					$('#F .arc_photo_basename').val(arc_photo_basename);
+					$('#F .signature_photo_basename').val(signature_photo_basename);
+					$('#F .email').val(email);
+					$('#F .arc_photo').attr('src', arc_photo_url);
+					$('#F .signature_photo').attr('src', signature_photo_url);
+					$('#FIX_ME').prop('checked', signature_need_fix);
+					$('#F select.sex_id').val(sex_id);
+					
+					var phone_tokens = phone_no.split('.');
+					for (var i = phone_tokens.length; i < 4; i++) {
+						phone_tokens.push('');
+					}
+					
+					$('#F input.phone_no1').autoNumeric('set', phone_tokens[1]);
+					$('#F input.phone_no2').autoNumeric('set', phone_tokens[2]);
+					$('#F input.phone_no3').autoNumeric('set', phone_tokens[3]);
+	
+					$('#ADDRESS .area, #ADDRESS .road').empty();
+					$('#F button.ok').data('action', 'update');
+					$('#F button.ok').data('callback', callback);
+					$('#AREA1').hide();
+					$('#AREA2').show();
+					
+					$('#FIX_ME').checkboxradio('enable');
+				}
+			});
+		},
+		executeDelete: function(row, callback) {
+			var member_id = row.filter('.member_id').text();
+			var member_name = row.filter('.member_name').text();
+			var lm_time = row.filter('.lm_time').text();
+	
+			if (confirm('are you sure to delete ' + member_name + '?')) {
+				sendRequest.relay({
+					data: {
+						'RelayId': RELAY_ID,
+						'action': 'delete',
+						'member_id': member_id,
+						'lm_time': lm_time
+					},
+					success: function(data) {
+						callback(data);
+					}
+				});
+			}
+		}
+	})[0];
+};
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var member_name = $('#QUERY .member_name').val();
+	if (member_name.length > 0) {
+		c.push('member_name');
+		o.push('LIKE');
+		v.push('%' + member_name + '%');
+	}
+	
+	var phone_no = $('#QUERY input.phone_no').val();
+	if (phone_no.length > 0) {
+		c.push('phone_no');
+		o.push('LIKE');
+		v.push('%.' + phone_no + '%');
+	}
+	
+	var arc_no = $('#QUERY input.arc_no').val();
+	if (arc_no.length > 0) {
+		c.push('arc_no');
+		o.push('LIKE');
+		v.push(arc_no + '%');
+	}
+	
+	var birthday_month = $('#QUERY select.birthday_month').val();
+	var birthday_date = $('#QUERY select.birthday_date').val();
+	if (birthday_month.length > 0 && birthday_date.length > 0) {
+		f1 = '(month(birthday) = ? and day(birthday) = ?)';
+		f2 = birthday_month + char_31 + birthday_date;
+	} else if (birthday_month.length > 0) {
+		f1 = 'month(birthday) = ?';
+		f2 = birthday_month;
+	} else if (birthday_date.length > 0) {
+		f1 = 'day(birthday) = ?';
+		f2 = birthday_date;
+	}
+	
+	var status_ids = [];
+	$('#QUERY input.status_id:checked').each(function(i, e) {
+		status_ids.push($(e).val());
+	});
+	
+	if (status_ids.length > 0) {
+		c.push('status_id');
+		o.push('IN');
+		v.push(status_ids.join(','));
+	}
+	
+	var signature_need_fix = $('#STATUS_SIGNATURE_NEED_FIX').prop('checked');
+	if (signature_need_fix) {
+		c.push('signature_need_fix');
+		o.push('=');
+		v.push('1');
+	}
+	
+	var is_print = $('#QUERY select.is_print').val();
+	if (is_print.length > 0) {
+		c.push('is_print');
+		o.push('=');
+		v.push(is_print);
+	}
+	
+	var app_verify_time_start = $('#QUERY input.app_verify_time_start').val();
+	var app_verify_time_end = $('#QUERY input.app_verify_time_end').val();
+	if (app_verify_time_start.length > 0 && app_verify_time_end.length > 0) {
+		c.push('app_verify_time');
+		o.push('BETWEEN');
+		v.push(app_verify_time_start + ' 00:00:00' + char_31 + app_verify_time_end + ' 23:59:59');
+	} else if (app_verify_time_start.length > 0) {
+		c.push('app_verify_time');
+		o.push('>=');
+		v.push(app_verify_time_start + ' 00:00:00');
+	} else if (app_verify_time_end.length > 0) {
+		c.push('app_verify_time');
+		o.push('<=');
+		v.push(app_verify_time_end + ' 23:59:59');
+	}
+	
+	TABLE.searchFor(c, o, v, f1, f2);
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var action = $(this).data('action');
+	var phone_no1 = $('#F input.phone_no1').autoNumeric('get');
+	var phone_no2 = $('#F input.phone_no2').autoNumeric('get');
+	var phone_no3 = $('#F input.phone_no3').autoNumeric('get');
+	var phone_no = '.' + phone_no1 + '.' + phone_no2 + '.' + phone_no3;
+	$('#F input.phone_no').val(phone_no);
+	
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID,
+			'action': action
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			var v = callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+			
+			if (action == 'insert') {
+				v.find('button.recipient_button').click();
+			}
+		}
+	});
+});
+
+funcAreaChange = function() {
+	var v = $('#ADDRESS select.city option:selected').val();
+	if (v.length == 0)
+		return;
+	
+	var tokens = v.split(String.fromCharCode(30));
+	var city = tokens[0];
+	
+	v = $('#ADDRESS select.area option:selected').val();
+	if (v.length == 0)
+		return;
+	
+	tokens = v.split(String.fromCharCode(31));
+	var area = tokens[0];
+	
+	sendRequest.relay({
+		data:
+		{
+			'RelayId': RELAY_ID,
+			'action': 'getAddressRoad',
+			'city': city,
+			'area': area
+		},
+		success: function(data) {
+			$('#ADDRESS select.road').empty().append(data);
+		}
+	});
+};
+
+funcClearAddress = function() {
+	$('#ADDRESS .reset').val('');
+	$('#ADDRESS .empty').empty();
+};
+
+$('#ADDRESS select.city').change(function() {
+	var v = $(this).val();
+	if (v.length == 0)
+		return;
+	
+	var tokens = v.split(String.fromCharCode(30));
+	var city = tokens[0];
+	
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID,
+			'action': 'getAddressArea',
+			'city': city
+		},
+		success: function(data) {
+			$('#ADDRESS select.area').empty().append(data);
+			funcAreaChange();
+		}
+	});
+});
+
+$('#ADDRESS select.area').change(funcAreaChange);
+$('#ADDRESS input.data').createNumericTextInput();
+$('#SET_ADDRESS').button().click(function() {
+	var v = $('#ADDRESS select.city option:selected').val();
+	if (v.length == 0)
+		return;
+	var tokens = v.split(String.fromCharCode(30));
+	var city_cname = tokens[0];
+	var city_ename = tokens[1];
+	
+	v = $('#ADDRESS select.area option:selected').val();
+	if (v.length == 0)
+		return;
+	tokens = v.split(String.fromCharCode(31));
+	var area_cname = tokens[0];
+	var area_ename = tokens[1];
+	
+	v = $('#ADDRESS select.road option:selected').val();
+	if (v.length == 0)
+		return;
+	tokens = v.split(String.fromCharCode(31));
+	var road_cname = tokens[0];
+	var road_ename = tokens[1];
+	var zipcode = tokens[2];
+	
+	var neighbor = $('#ADDRESS input.neighbor').val();
+	var lane = $('#ADDRESS input.lane').val();
+	var alley = $('#ADDRESS input.alley').val();
+	var no1 = $('#ADDRESS input.no1').val();
+	var no2 = $('#ADDRESS input.no2').val();
+	var floor1 = $('#ADDRESS input.floor1').val();
+	var floor2 = $('#ADDRESS input.floor2').val();
+	var room = $('#ADDRESS input.room').val();
+
+	var chinese = city_cname + area_cname + road_cname;
+	var english = road_ename + ', ' + area_ename + ', ' + city_ename + ' ' + zipcode + ', Taiwan (R.O.C.)';
+	
+	if (neighbor.length > 0) {
+		chinese += neighbor + '鄰';
+		english = 'Neighbor ' + neighbor + ', ' + english;
+	}
+	
+	if (lane.length > 0) {
+		chinese += lane + '巷';
+		english = 'Ln. ' + lane + ', ' + english;
+	}
+	
+	if (alley.length > 0) {
+		chinese += alley + '弄';
+		english = 'Aly. ' + alley + ', ' + english;
+	}
+	
+	if (no1.length > 0 && no2.length > 0) {
+		chinese += no1 + '號之' + no2;
+		english = 'No. ' + no1 + '-' + no2 + ', ' + english;
+	}
+	else if (no1.length > 0) {
+		chinese += no1 + '號';
+		english = 'No. ' + no1 + ', ' + english;
+	}
+	
+	if (floor1.length > 0 && floor2.length > 0) {
+		chinese += floor1 + '樓之' + floor2;
+		english = floor1 + 'F.-' + floor2 + ', ' + english;
+	}
+	else if (floor1.length > 0) {
+		chinese += floor1 + '樓';
+		english = floor1 + 'F., ' + english;
+	}
+	
+	if (room.length > 0) {
+		chinese += room + '室';
+		english = 'Rm. ' + room + ', ' + english;
+	}
+	
+	$('#F .address').val(chinese);
+});
+
+function doVerify() {
+	var t = VERIFY_LIST.shift();
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID,
+			'action': 'resolve_recipient_name',
+			'bank_code': t.bank_code,
+			'bank_acc': t.bank_acc
+		}, success: function(recipient_name) {
+			$('#TABLE_RECIPIENT_LIST tbody tr').each(function(i, e) {
+				var row = $(e);
+				var action_type = row.find('input.action_type').val();
+				var is_verified = row.find('input.is_verified').val();
+				if (is_verified == '0' && (action_type == 'update' || action_type == 'insert')) {
+					var bank_code = row.find('select.bank_code option:selected').text();
+					var bank_acc = row.find('input.bank_acc').autoNumeric('get');
+					if (bank_code == t.bank_code && bank_acc == t.bank_acc) {
+						row.find('input.recipient_name').val(recipient_name);
+						row.find('input.old_recipient_name').val(recipient_name);
+						row.find('input.is_verified').val('1');
+					}
+				}
+			});
+			setTimeout(doVerify, 1);
+		}, error: function(XMLHttpRequest, textStatus, errorThrown, code, errmsg, errstack) {
+			$('#TABLE_RECIPIENT_LIST tbody tr').each(function(i, e) {
+				var row = $(e);
+				var action_type = row.find('input.action_type').val();
+				var is_verified = row.find('input.is_verified').val();
+				if (is_verified == '0' && (action_type == 'update' || action_type == 'insert')) {
+					var bank_code = row.find('select.bank_code option:selected').text();
+					var bank_acc = row.find('input.bank_acc').autoNumeric('get');
+					if (bank_code == t.bank_code && bank_acc == t.bank_acc) {
+						row.addClass('verify_error');
+						row.find('input.recipient_name').val('');
+						row.find('input.is_verified').val('0');
+					}
+				}
+			});
+			setTimeout(doVerify, 1);
+		}
+	});
+}
+
+function doSubmit() {
+	var count = 0;
+	$('#TABLE_RECIPIENT_LIST tbody tr').each(function(i, e) {
+		var row = $(e);
+		var action_type = row.find('input.action_type').val();
+		var recipient_name = row.find('input.recipient_name').val();
+		if (recipient_name.length == 0 && (action_type == 'update' || action_type == 'insert')) {
+			count = count + 1;
+		}
+	});
+	
+	if (count > 0) {
+		page.showErrorDialog('Recipient Name Incomplete', 'There are some recipient names that empty', 'There are some recipient names that empty');
+	} else {
+		var rows = [];
+		$('#TABLE_RECIPIENT_LIST tbody tr').each(function(i, e) {
+			var row = $(e);
+			var action_type = row.find('input.action_type').val();
+			var recipient_id = row.find('input.recipient_id').val();
+			var recipient_name = row.find('input.recipient_name').val();
+			var bank_acc = row.find('input.bank_acc').autoNumeric('get');
+			var bank_code = row.find('select.bank_code option:selected').text();
+			if (bank_code == 'select one...')
+				bank_code = '';
+			var lm_time = row.find('input.lm_time').val();
+			var is_hidden = row.find('input.is_hidden').val();
+			var is_verified = row.find('input.is_verified').val();
+			var recipient_name_2 = row.find('input.recipient_name_2').val();
+			rows.push(action_type + char_31 +
+					recipient_id + char_31 +
+					recipient_name + char_31 +
+					bank_acc + char_31 +
+					bank_code + char_31 +
+					lm_time + char_31 +
+					is_hidden + char_31 +
+					is_verified + char_31 +
+					recipient_name_2);
+		});
+		
+		var rowsString = '';
+		if (rows.length > 0) {
+			rowsString = rows.join(char_30);
+			if (deleteMemberRecipients.length > 0)
+				rowsString = rowsString + char_30 + deleteMemberRecipients.join(char_30);
+		} else {
+			if (deleteMemberRecipients.length > 0) {
+				rowsString = deleteMemberRecipients.join(char_30);
+			}
+		}
+		
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID,
+				'action': 'updateRecipients',
+				'member_id': $('#FORM_RECIPIENT_LIST input.member_id').val(),
+				'rows': rowsString
+			},
+			success: function(data) {
+				$('#AREA3').hide();
+				$('#AREA1').show();
+			}
+		});
+	}
+}
+
+$('#FORM_RECIPIENT_LIST button.verify').button().click(function() {
+	VERIFY_LIST.length = 0;
+	$('#TABLE_RECIPIENT_LIST tbody tr').each(function(i, e) {
+		var row = $(e);
+		var action_type = row.find('input.action_type').val();
+		var is_verified = row.find('input.is_verified').val();
+		if (is_verified == '0' && (action_type == 'update' || action_type == 'insert')) {
+			row.removeClass('verify_error');
+			var bank_code = row.find('select.bank_code option:selected').text();
+			var bank_acc = row.find('input.bank_acc').autoNumeric('get');
+			VERIFY_LIST.push({
+				'bank_code': bank_code,
+				'bank_acc': bank_acc
+			});
+		}
+	});
+	
+	if (VERIFY_LIST.length > 0) {
+		doVerify();
+	}
+});
+
+$('#FORM_RECIPIENT_LIST button.ok').button().click(function() {
+	$('#TABLE_RECIPIENT_LIST tbody tr').each(function(i, e) {
+		var row = $(e);
+		var action_type = row.find('input.action_type').val();
+		if (action_type == 'update') {
+			var bank_code = row.find('select.bank_code option:selected').text();
+			var bank_acc = row.find('input.bank_acc').autoNumeric('get');
+			var old_bank_code = row.find('input.old_bank_code').val();
+			var old_bank_acc = row.find('input.old_bank_acc').val();
+			if (old_bank_code != bank_code || old_bank_acc != bank_acc) {
+				row.find('input.is_verified').val('0');
+			}
+		}
+		
+		if (action_type == 'update' || action_type == 'insert') {
+			var is_verified = row.find('input.is_verified').val();
+			if (is_verified == '1') {
+				var old_recipient_name = row.find('input.old_recipient_name').val();
+				var recipient_name = row.find('input.recipient_name').val();
+				if (recipient_name != old_recipient_name && !recipient_name.startsWith(old_recipient_name)) {
+					row.find('input.is_verified').val('0');
+				}
+			}
+		}
+	});
+	
+	doSubmit();
+});
+
+$('#FORM_RECIPIENT_LIST button.cancel').button().click(function() {
+	$('#AREA3').hide();
+	$('#AREA1').show();
+});
+
+$('#TABLE_RECIPIENT_LIST_BUTTON_ADD').button({icons: {primary: 'ui-icon-plus'}, text: false}).click(function() {
+	funcAppendMemberRecipient('<tr class="even"><td><button type="button" class="delete">delete</button><input type="hidden" class="is_verified" value="0"/><input type="hidden" class="action_type" value="insert"/><input type="hidden" class="old_recipient_name" value=""/><input type="hidden" class="old_recipient_name_2" value=""/><input type="hidden" class="is_hidden" value="0"/><input type="hidden" class="lm_time" value=""/><input type="hidden" class="recipient_id" value=""/></td><td><select class="bank_code" default_value=""></select></td><td><input type="text" class="bank_name" style="width: 400px;"/></td><td><input type="text" class="bank_acc" value=""/></td><td><input type="text" class="recipient_name uppercase" value=""/></td><td><input type="text" class="recipient_name_2 uppercase" value=""/></td></tr>\n');
+});
+
+funcAppendMemberRecipient = function(html) {
+	var jq = $(html);
+	jq.appendTo('#TABLE_RECIPIENT_LIST tbody');
+	jq.find('button.delete').button({icons: {primary: 'ui-icon-minus'}, text: false}).click(function() {
+		var row = $(this).parent().parent();
+		var action_type = 'delete';
+		var recipient_id = row.find('input.recipient_id').val();
+		if (recipient_id.length > 0) {
+			var recipient_name = row.find('input.recipient_name').val();
+			var bank_acc = row.find('input.bank_acc').val();
+			var bank_code = row.find('select.bank_code option:selected').text();
+			var lm_time = row.find('input.lm_time').val();
+			var is_hidden = row.find('input.is_hidden').val();
+			var is_verified = row.find('input.is_verified').val();
+			var recipient_name_2 = row.find('input.recipient_name_2').val();
+			var rowString = action_type + char_31 +
+					recipient_id + char_31 +
+					recipient_name + char_31 +
+					bank_acc + char_31 +
+					bank_code + char_31 +
+					lm_time + char_31 +
+					is_hidden + char_31 +
+					is_verified + char_31 +
+					recipient_name_2;
+			deleteMemberRecipients.push(rowString);
+		}
+		row.remove();
+	});
+	
+	jq.find('button.hide_or_show').each(function() {
+		var btn = $(this);
+		var row = btn.parent().parent();
+		var text = '';
+		var icon = '';
+		if (row.hasClass('hidden')) {
+			text = 'show it';
+			icon = 'ui-icon-blank';
+		} else {
+			text = 'hide it';
+			icon = 'ui-icon-lightbulb';
+		}
+		
+		btn.button({icon: icon, showLabel: false, label: text}).click(function() {
+			var text = '';
+			var icon = '';
+			if (row.hasClass('hidden')) {
+				row.removeClass('hidden');
+				row.find('input.is_hidden').val('0');
+				text = 'hide it';
+				icon = 'ui-icon-lightbulb';
+			} else {
+				row.addClass('hidden');
+				row.find('input.is_hidden').val('1');
+				text = 'show it';
+				icon = 'ui-icon-blank';
+			}
+			
+			btn.button({icon: icon, label: text}).attr('title', text);
+		});
+	});
+	
+	var htmlBankCode = $('#FORM_RECIPIENT_LIST').data('htmlBankCode');
+	
+	jq.find('select.bank_code').append(htmlBankCode).change(function() {
+		var e = $(this);
+		var bankCode = e.children('option:selected').text();
+		if (bankCode == 'select one...')
+			bankCode = '';
+		e.parent().parent().find('input.bank_name').val(BANK_CODE_TO_NAME[bankCode]);
+	});
+
+	jq.find('input.bank_name').keydown(function(e) {
+		if (e.which == 13) {
+			$(this).data('ui-autocomplete')._trigger('change');
+		}
+	}).autocomplete({
+		source: BANK_NAMES,
+		change: function(event, ui) {
+			var elem = $(this);
+			var elemBankCode = elem.parent().parent().find('select.bank_code');
+			
+			if (ui.item == null) {
+				var bank_name = elem.val().toUpperCase();
+				var bank_code = BANK_NAME_TO_CODE[bank_name];
+				if (bank_code) {
+					elemBankCode.val(bank_code);
+					elem.val(bank_name);
+				} else {
+					for (var i = 0; i < BANK_NAMES.length; i++) {
+						if (BANK_NAMES[i].indexOf(bank_name) > -1) {
+							bank_name = BANK_NAMES[i];
+							bank_code = BANK_NAME_TO_CODE[bank_name];
+							break;
+						}
+					}
+					
+					if (bank_code) {
+						elemBankCode.val(bank_code);
+						elem.val(bank_name);
+					} else {
+						elemBankCode.val('');
+						elem.val('').attr('title', bank_name + " didn't match any item").tooltip('open');
+					}
+				}
+			} else {
+				var bank_code = BANK_NAME_TO_CODE[ui.item.value];
+				elemBankCode.val(bank_code);
+			}
+		},
+		select: function(event, ui) {
+			var elem = $(this);
+			var elemBankCode = elem.parent().parent().find('select.bank_code');
+			
+			var bank_code = BANK_NAME_TO_CODE[ui.item.value];
+			elemBankCode.val(bank_code);
+		}
+	}).tooltip({
+		classes: { "ui-tooltip": "ui-state-highlight" }
+	});
+	
+	jq.find('select.bank_code').each(function(i, e) {
+		var ee = $(e);
+		var bank_code = ee.attr('default_value');
+		ee.find('option').each(function(i2, e2) {
+			var ee2 = $(e2);
+			if (ee2.text() == bank_code) {
+				ee2.prop('selected', true);
+				return false;
+			}
+		});
+	}).change();
+	
+	jq.find('input.bank_acc').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: '', lZero: 'keep', strictDigitOnly: true});
+};
+
+$('#FIX_ME').checkboxradio().change(function() {
+	var signature_need_fix = $(this).prop('checked');
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+			'action': 'mark_as_fixme',
+			'member_id': $('#F input.member_id').val(),
+			'signature_need_fix': signature_need_fix ? '1' : '0'
+		}, success: function(data) {
+			if (signature_need_fix) {
+				$('#USE_CURRENT_IMAGE_SIGNATURE').click();
+			}
+		}, error: function(XMLHttpRequest, textStatus, errorThrown) {
+			$('#FIX_ME').prop('checked', !signature_need_fix);
+		}
+	});
+});
+
+//# sourceURL=member.js
+
+</script>

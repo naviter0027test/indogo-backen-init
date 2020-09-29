@@ -1,0 +1,130 @@
+.ui-font-small, body.ui-font-small, .ui-font-small table, .ui-font-small div, .ui-font-small input, .ui-font-small button, .ui-font-small textarea {
+	font-size: 8pt;
+	font-family: Tahoma;
+}
+
+.ui-font-normal, body.ui-font-normal, .ui-font-normal table, .ui-font-normal div, .ui-font-normal input, .ui-font-normal button, ui-font-normal textarea {
+	font-size: 10pt;
+	font-family: Tahoma;
+}
+
+.ui-font-large, body.ui-font-large, .ui-font-large table, .ui-font-large div, .ui-font-large input, .ui-font-large button, ui-font-large textarea {
+	font-size: 12pt;
+	font-family: Tahoma;
+}
+
+.dialogEditInput[readonly] {
+	background-color: #cccccc;
+}
+
+h1.ui-subcategory {
+	width: 90%;
+	border-bottom: 1px solid gray;
+	font-style: italic;
+	color: gray;
+}
+
+#ueLoadingDialogProgressBar .ui-progressbar-value { background-image: url(img/pbar-ani.gif); }
+
+table.maintenance {
+	/*width: 100%;*/
+	background-color: #CDCDCD;
+}
+table.maintenance > tbody > tr {
+	background-color: #FFFFFF;
+	color: #000000;
+}
+table.maintenance > tbody > tr > td {
+	padding: 2px 8px 2px 8px;
+}
+table.maintenance > tbody > tr > td.category {
+	background-color: #e6EEEE;
+	color: #000000;
+	text-align: right;
+	font-weight: bold;
+	/*width: 25%;*/
+}
+/*
+table.maintenance > tbody > tr > td > input {
+	width: 95%;
+}
+table.maintenance > tbody > tr > td > textarea {
+	width: 95%;
+	height: 100px;
+}
+*/
+table.maintenance input[readonly], table.maintenance textarea[readonly] {
+	background-color: #CDCDCD;
+}
+table.maintenance > thead > tr > td {
+	background-color: #8dbdd8;
+	color: #000000;
+	text-align: center;
+	font-weight: bold;
+	font-size: 16pt;
+	padding: 8px;
+	border: 1px solid #FFF;
+}
+
+div.view {
+	background-color: #CDCDCD;
+	padding: 8px;
+	margin-bottom: 16px;
+}
+span.view.before {
+	color: #0000ff;
+	cursor: pointer;
+	text-decoration: underline;
+}
+span.view.current {
+	color: #000000;
+}
+span.view.after {
+	color: #aaaaaa;
+}
+
+table.query {
+	border-collapse: collapse;
+	background-color: #CDCDCD;
+}
+table.query tr td {
+	background-color: #FFFFFF;
+	color: #000000;
+	padding: 4px 8px 4px 8px;
+	border: 1px solid #ddd;
+}
+table.query tr td.category {
+	background-color: #e6EEEE;
+	color: #000000;
+	text-align: right;
+	font-weight: bold;
+}
+
+input[type=text] {
+	width: 400px;
+}
+
+.custom-combobox {
+	position: relative;
+	display: inline-block;
+}
+.custom-combobox-toggle {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin-left: -1px;
+	padding: 0;
+}
+.custom-combobox-input {
+	margin: 0;
+	padding: 5px 10px;
+}
+
+input.uppercase {
+	text-transform: uppercase;
+}
+
+textarea {
+	width: 400px;
+	height: 50px;
+}

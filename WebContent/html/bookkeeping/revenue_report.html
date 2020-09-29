@@ -1,0 +1,77 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category">Date Range</td>
+			<td><input type="text" class="start_date"/> ~ <input type="text" class="end_date"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE" class="winbond-table" style="margin-top: 20px;">
+		<thead>
+			<tr>
+				<td>Date</td>
+				<td>Total NTD sold</td>
+				<td>Average Kurs</td>
+				<td>Total IDR bought in</td>
+				<td>Total NTD income</td>
+				<td>Average Kurs</td>
+				<td>Total IDR transfered</td>
+				<td>Profit in IDR</td>
+				<td>Profit in NTD<br/>((Total NTD sold / Total IDR bought in) * Total IDR transfered) - Total NTD income</td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+
+<style type="text/css">
+#TABLE td.number {
+	text-align: right;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID = 'book.revenue';
+var char_30 = String.fromCharCode(30);
+var char_31 = String.fromCharCode(31);
+
+$('#QUERY input.start_date, #QUERY input.end_date').createDatePickerWritable();
+
+$('#QUERY button.ok').button().click(function() {
+	var start_date = $('#QUERY input.start_date').val();
+	var end_date = $('#QUERY input.end_date').val();
+	var close_hour = 8;
+	
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID,
+			'action': 'getCurrent',
+			'start_date': start_date,
+			'end_date': end_date,
+			'close_hour': close_hour
+		}, success: function(data) {
+			var rows = data.split(char_30);
+			var html = '';
+			for (var i = 0; i < rows.length; i++) {
+				var cells = rows[i].split(char_31);
+				var lm_time = cells[0];
+				var ntd_sell = cells[1];
+				var kurs_buy = cells[2];
+				var idr_buy = cells[3];
+				var ntd_buy = cells[4];
+				var kurs_sell = cells[5];
+				var idr_sell = cells[6];
+				var profit_idr = cells[7];
+				var profit_ntd = cells[8];
+				html = html + '<tr class="even"><td>' + lm_time + '</td><td class="number">' + ntd_sell + '</td><td class="number">' + kurs_buy + '</td><td class="number">' + idr_buy + '</td><td class="number">' + ntd_buy + '</td><td class="number">' + kurs_sell + '</td><td class="number">' + idr_sell + '</td><td class="number">' + profit_idr + '</td><td class="number">' + profit_ntd + '</td></tr>';
+			}
+			$('#TABLE tbody').empty().append(html);
+		}
+	});
+});
+
+</script>

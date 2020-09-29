@@ -1,0 +1,143 @@
+<div id="AREA1">
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<input type="hidden" class="category_id" name="category_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Category Name</td>
+					<td><input type="text" name="category_name" class="category_name"/></td>
+				</tr>
+				<tr>
+					<td class="category">Barcode Prefix</td>
+					<td><input type="text" name="item_name_prefix" class="item_name_prefix"/></td>
+				</tr>
+				<tr>
+					<td class="category">IMEI Check</td>
+					<td><input type="checkbox" class="imei_flag"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<style type="text/css">
+#TABLE td.imei_flag {
+	text-align: center;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_ITEM_CATEGORY = 'shop.item_category';
+$('#AREA2').hide();
+
+var TABLE = $('#TABLE').createTable({
+	className: 'com.indogo.relay.onlineshopping.ItemCategory',
+	disablePaging: true,
+	afterSetTableDataEvent: function(row) {
+		row.find('td.imei_flag').each(function(i, e) {
+			var cell = $(e);
+			var value = parseInt(cell.text(), 10);
+			if (value == 1) {
+				cell.empty().append('&#10003;');
+			} else {
+				cell.empty();
+			}
+		});
+	},
+	executeInsert: function(callback) {
+		$('#F').clearForm().resetForm();
+		$('#F button.ok').data('action', 'insert');
+		$('#F button.ok').data('callback', callback);
+		$('#AREA1').hide();
+		$('#AREA2').show();
+	},
+	executeUpdate: function(row, callback) {
+		var category_id = row.filter('.category_id').text();
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_ITEM_CATEGORY,
+				'action': 'get',
+				'category_id': category_id
+			},
+			success: function(data) {
+				var tokens = data.split(String.fromCharCode(31));
+				var category_name = tokens.shift();
+				var imei_flag = parseInt(tokens.shift(), 10);
+				var item_name_prefix = tokens.shift();
+				
+				$('#F input.category_id').val(category_id);
+				$('#F input.category_name').val(category_name);
+				$('#F input.imei_flag').prop('checked', imei_flag == 1);
+				$('#F input.item_name_prefix').val(item_name_prefix);
+				
+				$('#F button.ok').data('action', 'update');
+				$('#F button.ok').data('callback', callback);
+				$('#AREA1').hide();
+				$('#AREA2').show();
+			}
+		});
+	},
+	executeDelete: function(row, callback) {
+		var category_id = row.filter('.category_id').text();
+		var category_name = row.filter('.category_name').text();
+		if (confirm('are you sure to delete ' + category_name + '?')) {
+			sendRequest.relay({
+				data: {
+					'RelayId': RELAY_ID_ITEM_CATEGORY,
+					'action': 'delete',
+					'category_id': category_id
+				},
+				success: function(data) {
+					callback(data);
+				}
+			});
+		}
+	}
+})[0];
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var imei_flag;
+	if ($('#F input.imei_flag').prop('checked')) {
+		imei_flag = "1";
+	} else {
+		imei_flag = "0";
+	}
+	
+	var action = $(this).data('action');
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_ITEM_CATEGORY,
+			'action': action,
+			'imei_flag': imei_flag
+		},
+		success: function(data) {
+			var callback = $('#F button.ok').data('callback');
+			callback(data);
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+//# sourceURL=item_category.js
+</script>

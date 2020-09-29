@@ -1,0 +1,846 @@
+<div id="AREA1">
+	<input type="hidden" id="ARC_NO_PHOTO_URL"/>
+	<form id="F">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<input type="hidden" class="recipient_id recipient" name="recipient_id"/>
+		<input type="hidden" class="kurs_lm_time" name="kurs_lm_time"/>
+		<input type="hidden" class="hidden_service_charge" name="service_charge"/>
+		<input type="hidden" class="hidden_transfer_amount_ntd" name="transfer_amount_ntd"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="4">IndoGO Remittance</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Phone No</td>
+					<td><input type="text" class="phone_no" value="" style="width: 160px"/> <button type="button" id="SEARCH_MEMBER">search member</button> <button type="button" id="BROWSE_MEMBER">browse members</button></td>
+					<td class="category">Member Name</td>
+					<td><input type="text" class="member_name" value="" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="category">ARC Picture</td>
+					<td colspan="3">
+						<img alt="" src="" class="arc_photo" style="width: 320px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">ARC No</td>
+					<td><input type="text" class="arc_no" value="" style="width: 160px" readonly="readonly"/></td>
+					<td class="category">ARC Expire</td>
+					<td><input type="text" class="arc_expire_date" value="" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="category">Address</td>
+					<td colspan="3">
+						<input type="text" class="address" value="" style="width: 100%" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="category">Email</td>
+					<td><input type="text" class="email" value="" readonly="readonly"/></td>
+					<td class="category">Birthday</td>
+					<td><input type="text" class="birthday" value="" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="category">Recipient Name <button type="button" id="NEW_RECIPIENT">create new recipient</button></td>
+					<td><input type="text" class="recipient_name recipient uppercase" name="recipient_name" value=""/> <button type="button" id="SEARCH_RECIPIENT">search recipient</button> <button type="button" id="BROWSE_RECIPIENT">browse recipients</button></td>
+					<td class="category">Bank Code</td>
+					<td><select class="bank_code recipient ui-font-normal" name="bank_code"></select></td>
+				</tr>
+				<tr>
+					<td class="category">Bank Account</td>
+					<td><input type="text" class="bank_acc recipient" name="bank_acc" value="" readonly="readonly"/></td>
+					<td class="category">Bank Name</td>
+					<td><input type="text" class="bank_name recipient"/></td>
+				</tr>
+				<tr>
+					<td class="category">Ongkir</td>
+					<td><input type="text" class="service_charge" value=""/></td>
+					<td class="category">Kurs</td>
+					<td><label class="kurs_value"></label> <button type="button" id="REFRESH_KURS">refresh kurs</button></td>
+				</tr>
+				<tr>
+					<td class="category">Amount (NTD)</td>
+					<td><input type="text" class="transfer_amount_ntd" value=""/></td>
+					<td class="category">Amount (IDR)</td>
+					<td><label class="transfer_amount_idr"></label></td>
+				</tr>
+				<tr>
+					<td class="category">Total (NTD)</td>
+					<td colspan="3"><label class="total"></label></td>
+				</tr>
+				<tr>
+					<td class="category">Payment Type</td>
+					<td colspan="3">
+						<div>
+							<!--
+							<span class="image-radio">
+								<input type="radio" value="1" name="payment_id" class="payment_id"/>
+								<img src="ui/family_mart.png"></img>
+							</span>
+							-->
+							<span class="image-radio">
+								<input type="radio" value="2" name="payment_id" class="payment_id"/>
+								<img src="ui/mini_mart.jpg"></img>
+							</span>
+							<span class="image-radio">
+								<input type="radio" value="99" name="payment_id" class="payment_id"/>
+								<img src="ui/heimao.png"></img>
+							</span>
+							<span class="image-radio">
+								<input type="radio" value="3" name="payment_id" class="payment_id"/>
+								<img src="ui/cash.png"></img>
+							</span>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button" id="BUTTON_OK">Ok</button>
+						<button class="reset" type="button" id="BUTTON_RESET">Reset</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="AREA2">
+	<table id="QUERY_MEMBER" class="query">
+		<tr>
+			<td class="category">Phone No</td>
+			<td><input type="text" class="phone_no" style="width: 150px"/></td>
+			<td class="category">ARC</td>
+			<td><input type="text" class="arc_no uppercase" style="width: 150px"/></td>
+		</tr>
+		<tr>
+			<td class="category">Name</td>
+			<td colspan="3"><input type="text" class="member_name"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td colspan="3"><button type="button" class="ok">Search</button> <button type="button" class="select">Select Member</button> <button type="button" class="cancel">Cancel</button></td>
+		</tr>
+	</table>
+	<table id="MEMBER"></table>
+</div>
+
+<div id="AREA3">
+	<table id="QUERY_RECIPIENT" class="query">
+		<tr>
+			<td class="category">Name:</td>
+			<td><input type="text" class="recipient_name uppercase"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td colspan="3"><button type="button" class="ok">Search</button> <button type="button" class="select">Select Recipient</button> <button type="button" class="cancel">Cancel</button></td>
+		</tr>
+	</table>
+	<table id="RECIPIENT"></table>
+</div>
+
+<div id="DIALOG_CREATE_RECIPIENT" title="Create Recipient">
+	<form id="FORM_CREATE_RECIPIENT">
+		<input type="hidden" name="member_id" class="member_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Recipient Name</td>
+					<td><input type="text" class="recipient_name uppercase" name="recipient_name"/></td>
+				</tr>
+				<tr>
+					<td class="category">Account No</td>
+					<td><input type="text" class="bank_acc"/></td>
+				</tr>
+				<tr>
+					<td class="category">Bank Code</td>
+					<td><select class="bank_code" name="bank_code"></select></td>
+				</tr>
+				<tr>
+					<td class="category">Bank Name</td>
+					<td><input class="bank_name" style="width: 400px;"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Create</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_INVOICE_CREATE_RESULT" title="Invoice Successfully Created">
+	<table class="maintenance" id="TABLE_INVOICE_CREATE_RESULT">
+		<tbody>
+			<tr>
+				<td class="category">Payment Info</td>
+				<td><input type="text" class="payment_info" readonly="readonly"/> <button type="button" id="PRINT_AS_JPEG">print as JPEG</button><input type="hidden" class="txn_id"/></td>
+			</tr>
+			<tr>
+				<td class="category">Total (NTD)</td>
+				<td><input type="text" class="total" readonly="readonly"/></td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td></td>
+				<td>
+					<button class="ok" type="button">Close</button>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+<div id="DIALOG_CONFIRM_HIDE_RECIPIENT" title="Hide Recipient?">
+	<table class="maintenance" id="TABLE_CONFIRM_HIDE_RECIPIENT">
+		<tbody>
+			<tr>
+				<td>Are you sure to hide this recipient "<span class="recipient_name"></span>"?</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td>
+					<button class="ok" type="button">Ok</button>
+					<button class="cancel" type="button">Cancel</button>
+					<input type="hidden" class="member_id"/>
+					<input type="hidden" class="recipient_id"/>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+<style type="text/css">
+span.image-radio {
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+input.payment_id + img {
+	cursor: pointer;
+}
+input.payment_id:checked + img {
+    border: 5px solid red;
+}
+input.payment_id {
+	display: none
+}
+#RECIPIENT td.recipient_name label.verified {
+	color: red;
+	text-weight: bold;
+}
+</style>
+
+<script type="text/javascript">
+var char_30 = String.fromCharCode(30);
+var char_31 = String.fromCharCode(31);
+var RELAY_ID = 'member.money_transfer';
+var RELAY_ID_MEMBER = 'member.member_config';
+var BANK_NAME_TO_CODE = {};
+var BANK_CODE_TO_NAME = {};
+var BANK_NAMES = [];
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID,
+		'action': 'getCurrent'
+	},
+	success: function(data) {
+		var tokens = data.split(String.fromCharCode(31));
+		var kursValue = tokens.shift();
+		var kursLmTime = tokens.shift();
+		var serviceCharge = tokens.shift();
+		$('#F label.kurs_value').text(kursValue);
+		$('#F input.kurs_lm_time').val(kursLmTime);
+		$('#F input.service_charge').autoNumeric('set', serviceCharge);
+		
+		var bankCodeListSize = parseInt(tokens.shift(), 10);
+		var htmlBankCode = '<option value=""></option>';
+		for (var i = 0; i < bankCodeListSize; i++) {
+			var bankCode = tokens.shift();
+			var bankName = tokens.shift();
+			htmlBankCode = htmlBankCode + '<option value="' + bankCode + '">' + bankCode  + '</option>';
+			BANK_CODE_TO_NAME[bankCode] = bankName;
+		}
+		
+		bankCodeListSize = parseInt(tokens.shift(), 10);
+		for (var i = 0; i < bankCodeListSize; i++) {
+			var bankCode = tokens.shift();
+			var bankName = tokens.shift();
+			BANK_NAME_TO_CODE[bankName] = bankCode;
+			BANK_NAMES.push(bankName);
+		}
+		
+		$('#F select.bank_code').append(htmlBankCode).change(function() {
+			var bankCode = $(this).children('option:selected').text();
+			$('#F input.bank_name').val(BANK_CODE_TO_NAME[bankCode]);
+		});
+		$('#FORM_CREATE_RECIPIENT select.bank_code').append(htmlBankCode).change(function() {
+			var bankCode = $(this).children('option:selected').text();
+			$('#FORM_CREATE_RECIPIENT input.bank_name').val(BANK_CODE_TO_NAME[bankCode]);
+		});
+		
+		$('#F input.bank_name, #FORM_CREATE_RECIPIENT input.bank_name').keydown(function(e) {
+			if (e.which == 13) {
+				$(this).data('ui-autocomplete')._trigger('change');
+			}
+		}).autocomplete({
+			source: BANK_NAMES,
+			change: function(event, ui) {
+				var elem = $(this);
+				var elemBankCode;
+				if (elem.hasClass('recipient'))
+					elemBankCode = $('#F select.bank_code');
+				else
+					elemBankCode = $('#FORM_CREATE_RECIPIENT select.bank_code');
+				
+				if (ui.item == null) {
+					var bank_name = elem.val().toUpperCase();
+					var bank_code = BANK_NAME_TO_CODE[bank_name];
+					if (bank_code) {
+						elemBankCode.val(bank_code);
+						elem.val(bank_name);
+					} else {
+						for (var i = 0; i < BANK_NAMES.length; i++) {
+							if (BANK_NAMES[i].indexOf(bank_name) > -1) {
+								bank_name = BANK_NAMES[i];
+								bank_code = BANK_NAME_TO_CODE[bank_name];
+								break;
+							}
+						}
+						
+						if (bank_code) {
+							elemBankCode.val(bank_code);
+							elem.val(bank_name);
+						} else {
+							elemBankCode.val('');
+							elem.val('').attr('title', bank_name + " didn't match any item").tooltip('open');
+						}
+					}
+				} else {
+					var bank_code = BANK_NAME_TO_CODE[ui.item.value];
+					elemBankCode.val(bank_code);
+				}
+			},
+			select: function(event, ui) {
+				var elem = $(this);
+				var elemBankCode;
+				if (elem.hasClass('recipient'))
+					elemBankCode = $('#F select.bank_code');
+				else
+					elemBankCode = $('#FORM_CREATE_RECIPIENT select.bank_code');
+				
+				var bank_code = BANK_NAME_TO_CODE[ui.item.value];
+				elemBankCode.val(bank_code);
+			}
+		}).tooltip({
+			classes: { "ui-tooltip": "ui-state-highlight" }
+		});
+	}
+});
+
+$('#AREA2, #AREA3').hide();
+$('#FORM_CREATE_RECIPIENT input.bank_acc, #F input.bank_acc').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: '', lZero: 'keep', strictDigitOnly: true});
+
+$('#DIALOG_CREATE_RECIPIENT, #DIALOG_INVOICE_CREATE_RESULT').dialog({
+	modal: true,
+	width: 600,
+	autoOpen: false
+});
+
+$('#DIALOG_CONFIRM_HIDE_RECIPIENT').dialog({
+	modal: true,
+	width: 220,
+	height: 150,
+	autoOpen: false
+});
+
+$("#F .image-radio img").click(function(){
+	$(this).prev().prop('checked', true);
+})
+
+$('#SEARCH_MEMBER').button({icon: 'ui-icon-search', showLabel: false}).click(function() {
+	var e = $.Event('keydown', {which: $.ui.keyCode.ENTER});
+	$('#F input.phone_no').trigger(e);
+});
+
+$('#BROWSE_MEMBER').button({icons: {primary: 'ui-icon-folder-open'}, text: false}).click(function() {
+	$('#QUERY_MEMBER input').val('');
+	$('#AREA1').hide();
+	$('#AREA2').show();
+	$('#QUERY_MEMBER button.ok').click();
+});
+
+$('#SEARCH_RECIPIENT').button({icon: 'ui-icon-search', showLabel: false}).click(function() {
+	var e = $.Event('keydown', {which: $.ui.keyCode.ENTER});
+	$('#F input.recipient_name').trigger(e);
+});
+
+$('#BROWSE_RECIPIENT').button({icons: {primary: 'ui-icon-folder-open'}, text: false}).click(function() {
+	$('#QUERY_RECIPIENT input').val('');
+	$('#AREA1').hide();
+	$('#AREA3').show();
+	$('#QUERY_RECIPIENT button.ok').click();
+});
+
+$('#NEW_RECIPIENT').button({icon: 'ui-icon-plus', showLabel: false}).click(function() {
+	var e = $(this);
+	if (e.button('option', 'icon') == 'ui-icon-plus') {
+		e.button({icon: 'ui-icon-close'});
+		$('#SEARCH_RECIPIENT, #BROWSE_RECIPIENT').button('option', 'disabled', true);
+		$('#F input.recipient').val('').prop('readonly', false);
+		$('#F select.recipient').prop('disabled', false).val('');
+		$('#BUTTON_OK').button('option', 'disabled', false);
+	} else {
+		e.button({icon: 'ui-icon-plus'});
+		$('#SEARCH_RECIPIENT, #BROWSE_RECIPIENT').button('option', 'disabled', false);
+		$('#F input.bank_acc').val('').prop('readonly', true);
+		$('#F select.bank_name, #F select.bank_code').val('').prop('disabled', true);
+		$('#BUTTON_OK').button('option', 'disabled', true);
+	}
+});
+
+$('#REFRESH_KURS').button({icons: {primary: 'ui-icon-arrowrefresh-1-e'}, text: false}).click(function() {
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER,
+			'action': 'kurs_refresh'
+		}, success: function(data) {
+			var cells = data.split(char_31);
+			var kurs_value = cells[0];
+			var kurs_lm_time = cells[1];
+			$('#F label.kurs_value').text(kurs_value);
+			$('#F input.kurs_lm_time').val(kurs_lm_time);
+			funcUpdateTransferAmountIDR();
+		}
+	});
+});
+
+$('#F input.phone_no').keydown(function(e) {
+	if (e.which == 13) {
+		$('#QUERY_MEMBER input').val('');
+		$('#QUERY_MEMBER input.phone_no').val($(this).val());
+		$('#QUERY_MEMBER button.ok').click();
+	}
+});
+
+$('#F input.recipient_name').keydown(function(e) {
+	if (e.which == 13 && $('#NEW_RECIPIENT').button('option', 'icon') == 'ui-icon-plus') {
+		var recipient_name = $(this).val().toUpperCase();
+		$('#QUERY_RECIPIENT input').val('');
+		$('#QUERY_RECIPIENT input.recipient_name').val(recipient_name);
+		$('#QUERY_RECIPIENT button.ok').click();
+	}
+});
+
+var funcUpdateTransferAmountIDR = function() {
+	var amount = parseInt($('#F input.transfer_amount_ntd').autoNumeric('get'), 10);
+	var kurs = parseFloat($('#F label.kurs_value').text());
+	var idr = Math.floor(amount * kurs);
+	$('#F label.transfer_amount_idr').autoNumeric('set', idr);
+	
+	var ongkir = parseInt($('#F input.service_charge').autoNumeric('get'), 10);
+	var total = amount + ongkir;
+	$('#F label.total').autoNumeric('set', total);
+};
+
+$('#F input.transfer_amount_ntd, #F input.service_charge').keydown(function(e) {
+	if (e.which == 13) {
+		funcUpdateTransferAmountIDR();
+	}
+}).blur(funcUpdateTransferAmountIDR).autoNumeric('init', {vMin: '0', vMax: '999999999'});
+
+$('#F label.transfer_amount_idr, #F label.total').autoNumeric('init', {vMin: '0', vMax: '999999999'});
+
+$('#BUTTON_OK').button().click(function() {
+	var service_charge = $('#F input.service_charge').autoNumeric('get');
+	var transfer_amount_ntd = $('#F input.transfer_amount_ntd').autoNumeric('get');
+	$('#F input.hidden_service_charge').val(service_charge);
+	$('#F input.hidden_transfer_amount_ntd').val(transfer_amount_ntd);
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': 'member.money_transfer',
+			'action': 'insert'
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			var total = tokens[0];
+			var payment_info = tokens[1];
+			var family_mart_error_message = tokens[2];
+			var txn_id = tokens[3];
+			
+			if (family_mart_error_message.length > 0) {
+				page.showWarningDialog(family_mart_error_message);
+			}
+			
+			$('#TABLE_INVOICE_CREATE_RESULT input.total').val(total);
+			$('#TABLE_INVOICE_CREATE_RESULT input.payment_info').val(payment_info);
+			$('#TABLE_INVOICE_CREATE_RESULT input.txn_id').val(txn_id);
+			$('#F input.transfer_amount_ntd').autoNumeric('set', '');
+			$('#DIALOG_INVOICE_CREATE_RESULT').dialog('open');
+		}
+	});
+});
+
+$('#BUTTON_RESET').button().click(function() {
+	var service_charge = $('#F input.service_charge').val();
+	$('#F').clearForm().resetForm();
+	$('#F input.service_charge').val(service_charge);
+	$('#SEARCH_RECIPIENT, #BROWSE_RECIPIENT, #BUTTON_OK, #NEW_RECIPIENT').button('option', 'disabled', true);
+	$('#F input.recipient').prop('readonly', true);
+	$('#F select.recipient').prop('disabled', true);
+	$('#F .arc_photo').attr('src', '');
+}).click();
+
+var TABLE_MEMBER = $('#MEMBER').createTable({
+	className: 'com.indogo.relay.member.MemberView',
+	singleSelectMode: true,
+	showCheckBox: true,
+	viewMode: true,
+	afterSetTableColumnEvent: function() {
+		
+	},
+	afterSetTableDataEvent: function() {
+		var tableBody = TABLE_MEMBER.funcGetTableBody();
+		if (tableBody.children('tr').length == 1) {
+			TABLE_MEMBER.funcGetTableBody().find('input.winbond-table-cell-control-box-check').prop('checked', true);
+			$('#QUERY_MEMBER button.select').click();
+		} else {
+			$('#AREA2').show();
+			$('#AREA1').hide();
+		}
+		
+		tableBody.find('td.phone_no').each(function(i, e) {
+			var ee = $(e);
+			var tokens = ee.text().substring(1).split('.');
+			var html = '';
+			for (var i = 0; i < tokens.length; i++) {
+				if (tokens[i].length > 0) {
+					html += tokens[i] + '<br/>';
+				}
+			}
+			if (html.length > 0)
+				ee.text('').append(html.substring(0, html.length - 5));
+		});
+	},
+	singleSelectModeDblClick: function() {
+		$('#QUERY_MEMBER button.select').click();
+	}
+})[0];
+
+$('#QUERY_MEMBER button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var member_name = $('#QUERY_MEMBER .member_name').val();
+	var arc_no = $('#QUERY_MEMBER .arc_no').val();
+	var phone_no = $('#QUERY_MEMBER .phone_no').val();
+	
+	if (member_name.length > 0) {
+		c.push('member_name');
+		o.push('LIKE');
+		v.push('%' + member_name + '%');
+	}
+	
+	if (phone_no.length > 0) {
+		c.push('phone_no');
+		o.push('LIKE');
+		v.push('%.' + phone_no + '%');
+	}
+	
+	if (arc_no.length > 0) {
+		c.push('arc_no');
+		o.push('=');
+		v.push(arc_no);
+	}
+	
+	TABLE_MEMBER.searchFor(c, o, v, f1, f2);
+});
+
+$('#QUERY_MEMBER button.select').button().click(function() {
+	var rows = TABLE_MEMBER.funcGetCheckedRows();
+	if (rows.length <= 0)
+		return false;
+	
+	var row = rows[0];
+	
+	var member_id = row.find('.member_id').text();
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID,
+			'action': 'member_get_data_for_update',
+			'member_id': member_id
+		},
+		success: function(row) {
+			var o = row.split(char_31);
+			
+			var kurs_value = o.shift();
+			var kurs_lm_time = o.shift();
+			var service_charge = o.shift();
+			var member_name = o.shift();
+			var member_login_id = o.shift();
+			var phone_no = o.shift();
+			var arc_no = o.shift();
+			var arc_expire_date = o.shift();
+			var address = o.shift();
+			var birthday = o.shift();
+			var member_lm_time = o.shift();
+			var arc_photo_basename = o.shift();
+			var signature_photo_basename = o.shift();
+			var email = o.shift();
+			var arc_photo_url = o.shift();
+			var signature_photo_url = o.shift();
+			var signature_need_fix = o.shift();
+			
+			var phone_no_tokens = phone_no.substring(1).split('.');
+			var entered_phone_no = $('#F input.phone_no').val();
+			var selected_phone_no = '';
+			for (var i = 0; i < phone_no_tokens.length; i++) {
+				if (phone_no_tokens[i].startsWith(entered_phone_no)) {
+					selected_phone_no = phone_no_tokens[i];
+					break;
+				}
+			}
+			if (selected_phone_no.length == 0 && phone_no_tokens.length > 0) {
+				selected_phone_no = phone_no_tokens[0];
+			}
+
+			$('#BUTTON_RESET').click();
+			$('#F .member_id').val(member_id);
+			$('#F .member_name').val(member_name);
+			$('#F .phone_no').val(selected_phone_no);
+			$('#F .arc_no').val(arc_no);
+			$('#F .arc_expire_date').val(arc_expire_date);
+			$('#F .address').val(address);
+			$('#F .birthday').val(birthday);
+			$('#F .member_lm_time').val(member_lm_time);
+			$('#F .arc_photo_basename').val(arc_photo_basename);
+			$('#F .signature_photo_basename').val(signature_photo_basename);
+			$('#F .email').val(email);
+			$('#F .arc_photo').attr('src', arc_photo_url);
+			$('#F .signature_photo').attr('src', signature_photo_url);
+			$('#F label.kurs_value').text(kurs_value);
+			$('#F input.kurs_lm_time').val(kurs_lm_time);
+			$('#F input.service_charge').autoNumeric('set', service_charge);
+			
+			$('#F input.recipient_id').val('');
+			$('#SEARCH_RECIPIENT, #BROWSE_RECIPIENT, #NEW_RECIPIENT').button('option', 'disabled', false);
+			$('#F input.recipient_name').prop('readonly', false);
+			TABLE_RECIPIENT.funcEmptyTableBody();
+
+			$('#AREA2').hide();
+			$('#AREA1').show();
+		}
+	});
+});
+
+$('#QUERY_MEMBER button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#RECIPIENT_NAME').change(function() {
+	var row = $(this).val();
+	if (row.length > 0) {
+		var o = row.split(char_31);
+		var recipientId = o[0];
+		var recipientName = o[1];
+		var bankAccount = o[2];
+		var bankCode = o[3];
+		var bankName = o[4];
+		$('#F label.bank_acc').text(bankAccount);
+		$('#F label.bank_code').text(bankCode);
+		$('#F label.bank_name').text(bankName);
+		$('#F input.recipient_id').val(recipientId);
+	}
+});
+
+var TABLE_RECIPIENT = $('#RECIPIENT').createTable({
+	className: 'com.indogo.relay.member.RecipientView',
+	singleSelectMode: true,
+	showCheckBox: true,
+	viewMode: true,
+	afterSetTableColumnEvent: function() {
+		var buttonCreateRecipient = $('<button type="button" style="margin-right: 5px;">Create Recipient</button>').button({icon: 'ui-icon-plus', showLabel: false}).click(function() {
+			$('#FORM_CREATE_RECIPIENT').clearForm().resetForm();
+			var member_id = $('#F input.member_id').val();
+			$('#FORM_CREATE_RECIPIENT input.member_id').val(member_id);
+			$('#DIALOG_CREATE_RECIPIENT').dialog('open');
+		});
+		
+		$('#RECIPIENT button.mi-home').parent().prepend(buttonCreateRecipient);
+	},
+	afterSetTableDataEvent: function() {
+		var tableBody = TABLE_RECIPIENT.funcGetTableBody();
+		
+		tableBody.find('td.recipient_name').each(function(i, e) {
+			var cell = $(e);
+			var recipient_name = cell.text();
+			var button = $('<button type="button">hide</button>').button({icon: 'ui-icon-lightbulb', showLabel: false}).click(function() {
+				var row = $(this).parent().parent();
+				var member_id = $('#F .member_id').val();
+				var recipient_id = row.find('td.recipient_id').text();
+				var recipient_name = row.find('td.recipient_name label').text();
+				$('#TABLE_CONFIRM_HIDE_RECIPIENT input.member_id').val(member_id);
+				$('#TABLE_CONFIRM_HIDE_RECIPIENT input.recipient_id').val(recipient_id);
+				$('#TABLE_CONFIRM_HIDE_RECIPIENT span.recipient_name').text(recipient_name);
+				$('#DIALOG_CONFIRM_HIDE_RECIPIENT').dialog('open');
+			});
+			var is_verified = cell.parent().find('td.is_verified').text();
+			cell.empty().append(button).append('<label ' + (is_verified == '1' ? 'verified' : '') + '>' + recipient_name + '</label>');
+		});
+		
+		if ($('#AREA1').is(':visible')) {
+			if (tableBody.children('tr').length == 1) {
+				TABLE_RECIPIENT.funcGetTableBody().find('input.winbond-table-cell-control-box-check').prop('checked', true);
+				$('#QUERY_RECIPIENT button.select').click();
+			} else {
+				$('#AREA3').show();
+				$('#AREA1').hide();
+			}
+		}
+	},
+	singleSelectModeDblClick: function() {
+		$('#QUERY_RECIPIENT button.select').click();
+	}
+})[0];
+
+$('#QUERY_RECIPIENT button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var memberId = $('#F .member_id').val();
+	c.push('member_id');
+	o.push('=');
+	v.push(memberId);
+	
+	c.push('is_hidden');
+	o.push('=');
+	v.push('0');
+	
+	var recipient_name = $('#QUERY_RECIPIENT .recipient_name').val();
+	if (recipient_name.length > 0) {
+		c.push('recipient_name');
+		o.push('LIKE');
+		v.push('%' + recipient_name + '%');
+	}
+	
+	TABLE_RECIPIENT.searchFor(c, o, v, f1, f2);
+});
+
+$('#QUERY_RECIPIENT button.select').button().click(function() {
+	var rows = TABLE_RECIPIENT.funcGetCheckedRows();
+	if (rows.length <= 0)
+		return false;
+	
+	var row = rows[0];
+	
+	var recipient_id = row.find('.recipient_id').text();
+	var recipient_name = row.find('.recipient_name label').text();
+	var bank_code = row.find('.bank_code').text();
+	var bank_acc = row.find('.bank_acc').text();
+	var bank_name = row.find('.bank_name').text();
+	var lm_time = row.find('.lm_time').text();
+	
+	$('#F .recipient_id').val(recipient_id);
+	$('#F .recipient_name').val(recipient_name);
+	$('#F .bank_name').val(bank_name);
+	$('#F .bank_code').val(bank_code);
+	$('#F .bank_acc').val(bank_acc);
+	$('#F .member_recipient_lm_time').val(lm_time);
+	
+	$('#BUTTON_OK').button('option', 'disabled', false);
+	
+	$('#AREA3').hide();
+	$('#AREA1').show();
+});
+
+$('#QUERY_RECIPIENT button.cancel').button().click(function() {
+	$('#AREA3').hide();
+	$('#AREA1').show();
+});
+
+$('#FORM_CREATE_RECIPIENT button.ok').button().click(function() {
+	var bank_acc = $('#FORM_CREATE_RECIPIENT input.bank_acc').autoNumeric('get');
+	$('#FORM_CREATE_RECIPIENT').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_MEMBER,
+			'action': 'insertRecipient',
+			'bank_acc': bank_acc
+		}, success: function(data) {
+			TABLE_RECIPIENT.funcInsertRow(data);
+			$('#DIALOG_CREATE_RECIPIENT').dialog('close');
+		}
+	});
+});
+
+$('#FORM_CREATE_RECIPIENT button.cancel').button().click(function() {
+	$('#DIALOG_CREATE_RECIPIENT').dialog('close');
+});
+
+$('#TABLE_INVOICE_CREATE_RESULT button.ok').button().click(function() {
+	$('#DIALOG_INVOICE_CREATE_RESULT').dialog('close');
+});
+
+$('#TABLE_CONFIRM_HIDE_RECIPIENT button.cancel').button().click(function() {
+	$('#DIALOG_CONFIRM_HIDE_RECIPIENT').dialog('close');
+});
+
+$('#TABLE_CONFIRM_HIDE_RECIPIENT button.ok').button().click(function() {
+	var member_id = $('#TABLE_CONFIRM_HIDE_RECIPIENT input.member_id').val();
+	var recipient_id = $('#TABLE_CONFIRM_HIDE_RECIPIENT input.recipient_id').val();
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_MEMBER,
+			'action': 'hide_recipient',
+			'member_id': member_id,
+			'recipient_id': recipient_id,
+			'is_hidden': 1
+		}, success: function(data) {
+			var tableBody = TABLE_RECIPIENT.funcGetTableBody();
+			tableBody.find('td.recipient_id').each(function(i, e) {
+				var cell = $(e);
+				if (cell.text() == recipient_id) {
+					cell.parent().remove();
+				}
+			});
+			$('#DIALOG_CONFIRM_HIDE_RECIPIENT').dialog('close');
+		}
+	});
+});
+
+$('#PRINT_AS_JPEG').button({icon: 'ui-icon-print', showLabel: false}).click(function() {
+	var txn_id = $('#TABLE_INVOICE_CREATE_RESULT input.txn_id').val();
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID,
+			'action': 'print_as_image',
+			'txn_id': txn_id,
+			'print_label': 'print_yoho'
+		}, success: function(data) {
+			sendRequest.downloadFile(data, 'N');
+		}
+	});
+});
+
+//# sourceURL=money_transfer_create.js
+
+</script>

@@ -1,0 +1,70 @@
+<table>
+	<tr>
+		<td>X Axis</td>
+		<td colspan=2 style="width: 200px"><select id="chart-line-x"></select></td>
+	</tr>
+	<tr>
+		<td>Y Axis</td>
+		<td>
+			<select id="chart-line-y-opt">
+				<option value="COUNT">COUNT</option>
+				<option value="AVG">AVG</option>
+				<option value="SUM">SUM</option>
+			</select>
+		</td>
+		<td style="width: 200px"><select id="chart-line-y"></select></td>
+	</tr>
+	<tr>
+		<td>Group By</td>
+		<td colspan=2><select id="chart-line-category"></select></td>
+	</tr>
+	<tr>
+		<td colspan=3><input type="button" id="chart-line-draw" value="Draw"/></td>
+	</tr>
+</table>
+
+<script type="text/javascript">
+	sendRequest.basic({
+		data: {
+			'F': 'AutoPage',
+			'Action': 'col',
+			'PageId': PAGE_ID
+		},
+		success: function(data) {
+			var tmp = $('<table></table>').append(data);
+
+			var x = $('#chart-line-x, #chart-line-category');
+			tmp.find('tr td[DATA_TYPE!=NUMBER]').each(function(entryIndex, entry) {
+				x.append('<option value="' + $(entry).attr('COLUMN_NAME') + '">' + $(entry).text() + '</option>');
+			});
+			
+			var y = $('#chart-line-y');
+			tmp.find('tr td[DATA_TYPE=NUMBER]').each(function(entryIndex, entry) {
+				y.append('<option value="' + $(entry).attr('COLUMN_NAME') + '">' + $(entry).text() + '</option>');
+			});
+		}
+	});
+
+	$('#chart-line-draw').click(function() {
+		var y = $('#chart-line-y-opt').val();
+		if (y == 'COUNT')
+			y = 'COUNT(*)';
+		else
+			y = y + '(' + $('#chart-line-y').val() + ')';
+		
+		sendRequest.basic({
+			data: {
+				'F': 'AutoPage',
+				'Action': 'Chart',
+				'PageId': PAGE_ID,
+				'X': $('#chart-line-x').val(),
+				'Y': y,
+				'Category': $('#chart-line-category').val(),
+				'Title': 'test'
+			},
+			success: function(data) {
+				window.open(data);
+			}
+		});
+	});
+</script>

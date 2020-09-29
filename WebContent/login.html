@@ -1,0 +1,314 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Login</title>
+		<link rel="SHORTCUT ICON" href="favicon.ico"/>
+		<link rel="stylesheet" type="text/css" href="ui/jquery-ui/css-1.8.10/ui-lightness/jquery-ui-1.8.10.custom.css" />
+		<link rel="stylesheet" type="text/css" href="ui/lionsys/page.css" />
+		<script type="text/javascript" src="ui/jquery-ui/js/jquery-1.5.1.min.js"></script>
+		<script type="text/javascript" src="ui/jquery-ui/js/jquery-ui-1.8.10.custom.min.js"></script>
+		<script type="text/javascript" src="ui/jquery-plugin/jquery.query-2.1.7.js"></script>
+		<script type="text/javascript" src="ui/webtoolkit/webtoolkit.sha256.js"></script>
+		<script type="text/javascript" src="ui/jquery-plugin/js.cookie.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var showErrorDialog = function(msg, stack) {
+					if (msg == stack)
+						$('#btnErrorDetail').hide();
+					else
+						$('#btnErrorDetail').show();
+					$('#btnErrorDetail').val('detail');
+					$('#ueErrorDialog').find('.ui-msg').empty().append(msg.replace(/\n/g, '<br/>')).show().end().find('.ui-stack').empty().append(stack.replace(/\n/g, '<br/>')).hide().end().show();
+				}
+				$('#btnErrorClose').click(function() {
+					$('#ueErrorDialog').hide();
+				});
+				$('#ueUserName').focus();
+				$('#uePassword').keydown(function(e){
+					if (e.keyCode == 13) {
+						$('#btnLogin').click();
+					}
+				});
+				$('#imgLoading').hide();
+				$('#ueErrorDialog').hide();
+				$('#btnErrorDetail').val('detail').click(function(){
+					if ($(this).val() == 'detail') {
+						$(this).parent().find('.ui-msg').hide();
+						$(this).parent().find('.ui-stack').show();
+						$(this).val('short');
+					}
+					else {
+						$(this).parent().find('.ui-msg').show();
+						$(this).parent().find('.ui-stack').hide();
+						$(this).val('detail');
+					}
+				});
+				$('#btnLogin').button().click(function(){
+					var userName = $('#ueUserName').val();
+					if (userName.length <= 0) {
+						showErrorDialog("You have not enter the User Name", "You have not enter the User Name");
+						return;
+					}
+					var password = $('#uePassword').val();
+					if (password.length <= 0) {
+						showErrorDialog("You have not enter the Password", "You have not enter the Password");
+						return;
+					}
+					password = SHA256(password);
+					$.ajax({
+						url: 'servlet/UrlEncodedFormData',
+						type: 'POST',
+						data: {
+							'F': 'Login',
+							'U': userName,
+							'P': password
+						},
+						dataType: 'json',
+						success: function(data){
+							var code = data.ajaxerrcode;
+							if (code == 6) {
+								var ssoUrl = data.ajaxerrmsg;
+								window.location = ssoUrl;
+								return;
+							}
+							else if (code != 0) {
+								showErrorDialog(data.ajaxerrmsg, data.ajaxerrstack);
+								return;
+							}
+							var sid = data.ajaxdata;
+							Cookies.set('SID', sid, { expires: 1 });
+							window.location = 'page.html';
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown){
+							showErrorDialog(XMLHttpRequest.responseText, XMLHttpRequest.responseText);
+						},
+						beforeSend: function(){
+							$('#imgLoading').show();
+							$('#btnLogin').attr('disabled', true);
+							$('#ueErrorDialog').hide();
+							$('#ueUserName').attr('disabled', true);
+							$('#uePassword').attr('disabled', true);
+						},
+						complete: function(){
+							$('#imgLoading').hide();
+							$('#btnLogin').attr('disabled', false);
+							$('#ueUserName').attr('disabled', false);
+							$('#uePassword').attr('disabled', false);
+						}
+					});
+				});
+				
+				$("#dialogUpdatePassword").dialog({
+					autoOpen: false,
+					height: 200,
+					modal: true,
+					buttons: {
+						'Ok': function(){
+							var userName = $('#ueUserName').val();
+							var oldPassword = SHA256($('#ueOldPassword').val());
+							var newPassword = SHA256($('#ueNewPassword').val());
+							$.ajax({
+								url: 'servlet/UrlEncodedFormData',
+								type: 'POST',
+								data: {
+									'F': 'ChangePassword',
+									'UserName': userName,
+									'OldPassword': oldPassword,
+									'NewPassword': newPassword
+								},
+								dataType: 'json',
+								success: function(data){
+									var code = data.ajaxerrcode;
+									if (code != 0) {
+										showErrorDialog(data.ajaxerrmsg, data.ajaxerrstack);
+										return;
+									}
+									alert('change password success');
+									$('#ueUserName').val('').focus();
+									$('#uePassword').val('');
+								},
+								error: function(XMLHttpRequest, textStatus, errorThrown){
+									showErrorDialog(XMLHttpRequest.responseText, XMLHttpRequest.responseText);
+								},
+								beforeSend: function(){
+									$("#dialogUpdatePassword").dialog('close');
+									$('#imgLoading').show();
+									$('#btnLogin').attr('disabled', true);
+									$('#ueErrorDialog').hide();
+									$('#ueUserName').attr('disabled', true);
+									$('#uePassword').attr('disabled', true);
+								},
+								complete: function(){
+									$('#imgLoading').hide();
+									$('#btnLogin').attr('disabled', false);
+									$('#ueUserName').attr('disabled', false);
+									$('#uePassword').attr('disabled', false);
+								}
+							});
+						},
+						'Cancel': function(){
+							$(this).dialog('close');
+						}
+					},
+					close: function(){
+						$('#ueNewPassword').val('');
+						$('#ueOldPassword').val('');
+					}
+				});
+				
+				$('#btnChangePassword').button().click(function(){
+					if ($('#ueUserName').val().length <= 0) {
+						alert('Please enter a User Name');
+						$('#ueUserName').focus();
+						return false;
+					}
+					$("#dialogUpdatePassword").dialog('open').find('#ueOldPassword').focus();
+				});
+
+				$('#dialogConfirm').dialog({
+					autoOpen: false,
+					height: 280,
+					width: 320,
+					modal: true,
+					buttons: {
+						'Confirm Password': function() {
+							var confirmId = $('#ueConfirmId').val();
+							var userName = $('#ueConfirmUserName').val();
+							var password = SHA256($('#ueConfirmPassword').val());
+							var password2 = SHA256($('#ueConfirmPassword2').val());
+							if (password.length == 0) {
+								alert('password cannot be empty');
+								return;
+							}
+							if (password != password2) {
+								alert('password mismatch');
+								return;
+							}
+							$.ajax({
+								url: 'servlet/UrlEncodedFormData',
+								type: 'POST',
+								data: {
+									'F': 'ConfirmAccount',
+									'ConfirmId': confirmId,
+									'UserName': userName,
+									'NewPassword': password
+								},
+								dataType: 'json',
+								success: function(data){
+									var code = data.ajaxerrcode;
+									if (code != 0) {
+										alert(data.ajaxerrmsg);
+										return;
+									}
+									alert('Confirm account successful');
+									$('#ueUserName').val('');
+									$('#uePassword').val('');
+									$('#dialogConfirm').dialog('close');
+									$('#ueUserName').focus();
+								},
+								error: function(XMLHttpRequest, textStatus, errorThrown){
+									alert(XMLHttpRequest.responseText);
+								}
+							});
+						},
+						'Cancel': function() {
+							$(this).dialog('close');
+						}
+					}
+				});
+
+				var confirmId = $.query.get('ConfirmId');
+				var confirmUserName = $.query.get('UserName');
+				if (confirmId != undefined && confirmId.length > 0 && confirmUserName != undefined && confirmUserName.length > 0) {
+					$('#ueConfirmId').val(confirmId);
+					$('#ueConfirmUserName').val(confirmUserName);
+					$('#ueConfirmPassword').val('');
+					$('#ueConfirmPassword2').val('');
+					$('#dialogConfirm').dialog('open');
+					$('#ueConfirmPassword').focus();
+				}
+			});
+		</script>
+		<style type="text/css">
+			#login {
+				border: 1px solid #cccccc;
+				border-collapse: collapse;
+			}
+			input[type=text], input[type=password] {
+				width: 210px;
+			}
+		</style>
+	</head>
+	<body class="ui-font-normal">
+		<div style="margin-top: 50px;"></div>
+		<div id="ueErrorDialog" class="ui-widget">
+			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+				<input type="button" value="close" id="btnErrorClose"/>
+				<input type="button" value="detail" id="btnErrorDetail"/>
+				<p>
+					<span class="ui-msg"></span>
+					<span class="ui-stack"></span>
+				</p>
+			</div>
+		</div>
+		<div>
+			<table id="login" style="margin: auto auto auto auto">
+				<tr>
+					<td colspan="3" style="background-color: #eeeeee">
+						<img src="ui/logo.png" style="margin: 10px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" style="padding-top: 20px; padding-left: 20px; background-color: #eeeeee">id:</td>
+					<td style="padding-top: 20px; background-color: #eeeeee"><input id="ueUserName" type="text" value="" tabindex="1" style="width: 100%"/></td>
+					<td style="padding-top: 20px; padding-right: 20px; background-color: #eeeeee"></td>
+				</tr>
+				<tr>
+					<td align="right" style="padding-top: 20px; padding-bottom: 20px; background-color: #eeeeee">password:</td>
+					<td style="padding-top: 20px; padding-bottom: 20px; background-color: #eeeeee"><input id="uePassword" type="password" value="" tabindex="2" style="width: 100%"/></td>
+					<td style="padding-top: 20px; padding-bottom: 20px; background-color: #eeeeee"></td>
+				</tr>
+				<tr>
+					<td colspan=2 align="right" style="padding-top: 10px; padding-bottom: 10px; background-color: #D3DCE3">
+						<input id="btnChangePassword" type="button" value="Change Password" tabindex="4" />
+						<input id="btnLogin" type="button" value="Login" tabindex="3"/>
+					</td>
+					<td style="padding-top: 10px; padding-bottom: 10px; background-color: #D3DCE3"><img id="imgLoading" src="ui/jquery-ui/ajax-loader.gif"/></td>
+				</tr>
+			</table>
+		</div>
+		<div id="dialogUpdatePassword" title="Change Password">
+			<table>
+				<tr>
+					<td align="right">Old Password:</td>
+					<td><input id="ueOldPassword" type="password" value="" /></td>
+				</tr>
+				<tr>
+					<td align="right">New Password:</td>
+					<td><input id="ueNewPassword" type="password" value="" /></td>
+				</tr>
+			</table>
+		</div>
+		<div id="dialogConfirm" title="Confirm Account">
+			<table>
+				<tr>
+					<td align="right">Confirm Id:</td>
+					<td><input id="ueConfirmId" type="text" value="" readonly /></td>
+				</tr>
+				<tr>
+					<td align="right">User Name:</td>
+					<td><input id="ueConfirmUserName" type="text" value="" readonly /></td>
+				</tr>
+				<tr>
+					<td align="right">Password:</td>
+					<td><input id="ueConfirmPassword" type="password" value="" /></td>
+				</tr>
+				<tr>
+					<td align="right">Confirm Password:</td>
+					<td><input id="ueConfirmPassword2" type="password" value="" /></td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

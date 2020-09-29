@@ -1,0 +1,226 @@
+<div id="CHART_AREA" class="container-fluid">
+	<ul class="nav nav-pills">
+		<li style="padding: 2px 15px;">Chart Date: </li>
+		<li><input type="text" id="END_DATE"/></li>
+	</ul>
+	<ul class="nav nav-pills">
+		<li style="padding: 10px 15px;">Chart Timeline: </li>
+		<li class="timeline"><a href="#" class="timeline">7d</a><input type="hidden" value="7"/></li>
+		<li class="active timeline"><a href="#" class="timeline">30d</a><input type="hidden" value="30"/></li>
+		<li class="timeline"><a href="#" class="timeline">3m</a><input type="hidden" value="90"/></li>
+		<li class="timeline"><a href="#" class="timeline">1y</a><input type="hidden" value="365"/></li>
+	</ul>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_CHART_TOOL = 'admin.chart_tool';
+var char_31 = String.fromCharCode(31);
+var char_30 = String.fromCharCode(30);
+var CHARTS = {};
+
+$('#END_DATE').createDatePicker();
+$('#END_DATE').datepicker('setDate', new Date());
+
+$('#END_DATE').change(function() {
+	refresh();
+});
+
+$('a.timeline').click(function() {
+	$('li.timeline').removeClass('active');
+	$(this).parent().addClass('active');
+	refresh();
+	return false;
+});
+
+var series_colors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5'];
+
+function refresh() {
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_CHART_TOOL,
+			'action': 'init',
+			'end_date': $('#END_DATE').val(),
+			'timeline': $('li.active input').val()
+		}, success: function(data) {
+			var tokens = data.split(char_31);
+			
+			var chart_size = parseInt(tokens.shift(), 10);
+			for (var i = 0; i < chart_size; i++) {
+				var chart_id = tokens.shift();
+				var chart_name = tokens.shift();
+				var x_labels = tokens.shift().split(char_30);
+				var series_size = parseInt(tokens.shift(), 10);
+				
+				var chart = CHARTS[chart_id];
+				
+				chart.data.labels.length = 0;
+				for (var j = 0; j < x_labels.length; j++) {
+					chart.data.labels.push(x_labels[j]);
+				}
+				
+				chart.data.datasets.length = 0;
+				for (var j = 0; j < series_size; j++) {
+					var series_id = tokens.shift();
+					var series_name = tokens.shift();
+					var dataStrings = tokens.shift().split(char_30);
+					var datas = [];
+					for (var k = 0; k < dataStrings.length; k++) {
+						datas.push(parseFloat(dataStrings[k]));
+					}
+					
+					chart.data.datasets.push({
+						label: series_name,
+						borderColor: series_colors[j],
+						backgroundColor: series_colors[j],
+						fill: false,
+						data: datas,
+						lineTension: 0
+					});
+				}
+				
+				chart.update();
+			}
+		}
+	});
+}
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_CHART_TOOL,
+		'action': 'init',
+		'end_date': $('#END_DATE').val(),
+		'timeline': $('li.active input').val()
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		
+		var chart_size = parseInt(tokens.shift(), 10);
+		
+		var chart_area = $('#CHART_AREA');
+		for (var i = 0; i < chart_size; ) {
+			var row = $('<div class="row"></div>');
+			row.append('<div class="col-md-6" style="min-width: 940px;"><div style="margin: 25px;"><canvas id="CHART_' + i + '"></canvas></div></div>');
+			i++;
+			if (i < chart_size) {
+				row.append('<div class="col-md-6" style="min-width: 940px;"><div style="margin: 25px;"><canvas id="CHART_' + i + '"></canvas></div></div>');
+				i++;
+			}
+			chart_area.append(row);
+		}
+		
+		for (var i = 0; i < chart_size; i++) {
+			var chart_id = tokens.shift();
+			var chart_name = tokens.shift();
+			var x_labels = tokens.shift().split(char_30);
+			var series_size = parseInt(tokens.shift(), 10);
+			
+			var datasets = [];
+			for (var j = 0; j < series_size; j++) {
+				var series_id = tokens.shift();
+				var series_name = tokens.shift();
+				var dataStrings = tokens.shift().split(char_30);
+				var datas = [];
+				for (var k = 0; k < dataStrings.length; k++) {
+					datas.push(parseFloat(dataStrings[k]));
+				}
+				
+				datasets.push({
+					label: series_name,
+					borderColor: series_colors[j],
+					backgroundColor: series_colors[j],
+					fill: false,
+					data: datas,
+					lineTension: 0
+				});
+			}
+			
+			var line_chart = {
+				labels: x_labels,
+				datasets: datasets
+			};
+			
+			var ctx = $('#CHART_' + i).get()[0].getContext('2d');
+			var chart = new Chart(ctx, {
+				type: 'line',
+				data: line_chart,
+				options: {
+					title:{
+						display: true,
+						text: chart_name
+					},
+					legend: {
+                        position: 'right',
+    					onClick: function(e, legendItem) {
+    						var index = legendItem.datasetIndex;
+    						var ci = this.chart;
+    						var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;			 
+    						var anyOthersAlreadyHidden = false;
+    						var allOthersHidden = true;
+
+    						// figure out the current state of the labels
+    						ci.data.datasets.forEach(function(e, i) {
+    							var meta = ci.getDatasetMeta(i);
+
+    							if (i !== index) {
+    								if (meta.hidden) {
+    									anyOthersAlreadyHidden = true;
+    								} else {
+    									allOthersHidden = false;
+    								}
+    							}
+    						});
+
+    						// if the label we clicked is already hidden 
+    						// then we now want to unhide (with any others already unhidden)
+    						if (alreadyHidden) {
+    							ci.getDatasetMeta(index).hidden = null;
+    						} else { 
+    							// otherwise, lets figure out how to toggle visibility based upon the current state
+    							ci.data.datasets.forEach(function(e, i) {
+    								var meta = ci.getDatasetMeta(i);
+
+    								if (i !== index) {
+    									// handles logic when we click on visible hidden label and there is currently at least
+    									// one other label that is visible and at least one other label already hidden
+    									// (we want to keep those already hidden still hidden)
+    									if (anyOthersAlreadyHidden && !allOthersHidden) {
+    										meta.hidden = true;
+    									} else {
+    										// toggle visibility
+    										meta.hidden = meta.hidden === null ? !meta.hidden : null;
+    									}
+    								} else {
+    									meta.hidden = null;
+    								}
+    							});
+    						}
+
+    						ci.update();
+    					}
+                    },
+					scales: {
+			            xAxes: [{
+			                stacked: false
+			            }],
+			            yAxes: [{
+			                stacked: false
+			            }]
+			        },
+			        responsive: true,
+			        hover: {
+						mode: 'index',
+						intersect: false
+					},
+					tooltips: {
+						mode: 'index',
+						intersect: false
+					}
+				}
+			});
+			
+			CHARTS[chart_id] = chart;
+		}
+	}
+})
+
+//# sourceURL=chart_tool.js
+</script>

@@ -1,0 +1,748 @@
+<div id="AREA1">
+	<table id="QUERY" class="query">
+		<tr>
+			<td class="category">Phone No:</td>
+			<td><input type="text" class="phone_no"/></td>
+			<td class="category">ARC No:</td>
+			<td><input type="text" class="arc_no uppercase"/></td>
+		</tr>
+		<tr>
+			<td class="category">Name:</td>
+			<td><input type="text" class="member_name uppercase"/></td>
+			<td class="category">Birthday:</td>
+			<td>
+				<select class="birthday_month">
+					<option value=""></option>
+					<option value="1">01</option>
+					<option value="2">02</option>
+					<option value="3">03</option>
+					<option value="4">04</option>
+					<option value="5">05</option>
+					<option value="6">06</option>
+					<option value="7">07</option>
+					<option value="8">08</option>
+					<option value="9">09</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+				</select> / <select class="birthday_date">
+					<option value=""></option>
+					<option value="1">01</option>
+					<option value="2">02</option>
+					<option value="3">03</option>
+					<option value="4">04</option>
+					<option value="5">05</option>
+					<option value="6">06</option>
+					<option value="7">07</option>
+					<option value="8">08</option>
+					<option value="9">09</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+					<option value="13">13</option>
+					<option value="14">14</option>
+					<option value="15">15</option>
+					<option value="16">16</option>
+					<option value="17">17</option>
+					<option value="18">18</option>
+					<option value="19">19</option>
+					<option value="20">20</option>
+					<option value="21">21</option>
+					<option value="22">22</option>
+					<option value="23">23</option>
+					<option value="24">24</option>
+					<option value="25">25</option>
+					<option value="26">26</option>
+					<option value="27">27</option>
+					<option value="28">28</option>
+					<option value="29">29</option>
+					<option value="30">30</option>
+					<option value="31">31</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="category">Include other status:</td>
+			<td colspan="3">
+				<input type="checkbox" class="status_id" name="status_id" id="status_id_1" value="1"/><label for="status_id_1">banned</label>
+			</td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td colspan="3"><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<table id="QUERY_REMIT_POINT" class="query">
+		<tr>
+			<td class="category">Member Name:</td>
+			<td><label class="member_name"></label></td>
+		</tr>
+		<tr>
+			<td class="category">Total Point:</td>
+			<td><label class="total_point"></label></td>
+		</tr>
+		<tr>
+			<td class="category"><input type="hidden" class="member_id" name="member_id"/></td>
+			<td><button type="button" class="cancel">Close</button></td>
+		</tr>
+	</table>
+	<table id="TABLE_REMIT_POINT"></table>
+</div>
+
+<div id="AREA3">
+	<form id="F">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<input type="hidden" class="hidden_remit_point" name="remit_point"/>
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Remit Point</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category">Point</td>
+					<td><input type="text" class="remit_point"/></td>
+				</tr>
+				<tr>
+					<td class="category">Description</td>
+					<td><input type="text" name="reason_desc" class="reason_desc"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_CHANGE_PASSWORD" title="Change Password">
+	<form id="FORM_CHANGE_PASSWORD">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Password</td>
+					<td><input type="password" name="password" class="password1"/></td>
+				</tr>
+				<tr>
+					<td class="category">Type Again</td>
+					<td><input type="password" class="password2"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_EDIT_PHONE" title="Edit Phone Number">
+	<form id="FORM_EDIT_PHONE">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Phone No</td>
+					<td><input type="text" name="app_phone_no" class="app_phone_no" style="width: 150px;"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_EDIT_LOGIN" title="Edit Login Id">
+	<form id="FORM_EDIT_LOGIN">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Login Id</td>
+					<td><input type="text" name="member_login_id" class="member_login_id" style="width: 150px;"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Ok</button>
+						<button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_SMS" title="Send SMS">
+	<form id="FORM_SMS">
+		<input type="hidden" class="member_id" name="member_id"/>
+		<table class="maintenance">
+			<tr>
+				<td class="category">Message</td>
+				<td><textarea class="sms_message" name="sms_message" style="width: 500px; height: 200px;"></textarea></td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<div id="DIALOG_HISTORY" title="History">
+	<table id="TABLE_HISTORY" class="winbond-table">
+		<thead>
+			<tr>
+				<td>Timestamp</td>
+				<td>User</td>
+				<td>Description</td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>
+
+<style type="text/css">
+#TABLE tr.banned td {
+	background-color: gray;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_MEMBER_POINT = 'member.member_point';
+var RELAY_ID_MEMBER_POINT_HISTORY = 'member.member_point_history';
+var RELAY_ID_MEMBER_APP_REGISTER = 'member.member_app_register';
+var MSG_FOOTNOTE = '';
+var char_31 = String.fromCharCode(31);
+var char_30 = String.fromCharCode(30);
+var TABLE;
+
+$('#AREA2, #AREA3').hide();
+$('#F input.remit_point').autoNumeric('init', {vMin: '-99999999999999999999999999999', vMax: '99999999999999999999999999999'});
+
+$('#DIALOG_CHANGE_PASSWORD, #DIALOG_EDIT_PHONE, #DIALOG_EDIT_LOGIN').dialog({
+	modal: true,
+	width: 300,
+	autoOpen: false
+});
+
+$('#DIALOG_HISTORY').dialog({
+	modal: true,
+	width: 600,
+	autoOpen: false
+});
+
+$('#DIALOG_SMS').dialog({
+	modal: true,
+	width: 650,
+	autoOpen: false,
+	buttons: {
+		'Ok': function() {
+			$('#FORM_SMS').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_MEMBER_APP_REGISTER,
+					'action': 'send_sms'
+				},
+				success: function(data) {
+					$('#DIALOG_SMS').dialog('close');
+				}
+			});
+		},
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
+	}
+});
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_MEMBER_POINT,
+		'action': 'init'
+	},
+	success: function(data) {
+		var tokens = data.split(char_31);
+		
+		var roleIdsSize = parseInt(tokens.shift(), 10);
+		var roleIds = [];
+		for (var i = 0; i < roleIdsSize; i++) {
+			var roleId = parseInt(tokens.shift(), 10);
+			roleIds.push(roleId);
+		}
+		
+		MSG_FOOTNOTE = tokens.shift();
+		
+		var isAllowedEditPhoneNo = false;
+		var isAllowedEditLoginId = false;
+		var isAllowedAddPoint = false;
+		var isAllowedChangePassword = false;
+		if ($.inArray(1, roleIds) > -1 || $.inArray(2, roleIds) > -1) {
+			isAllowedEditPhoneNo = true;
+			isAllowedEditLoginId = true;
+			isAllowedAddPoint = true;
+			isAllowedChangePassword = true;
+		} else if ($.inArray(3, roleIds) > -1) {
+			isAllowedEditPhoneNo = true;
+			isAllowedAddPoint = true;
+			isAllowedChangePassword = true;
+		}
+		
+		TABLE = $('#TABLE').createTable({
+			className: 'com.indogo.relay.member.MemberPoint',
+			viewMode: true,
+			afterSetTableColumnEvent: function() {
+				$('#QUERY button.ok').click();
+			},
+			afterSetTableDataEvent: function(rows) {
+				rows.find('td.action').each(function(i, e) {
+					var buttonEditPoint = $('<button type="button">Edit Point</button>').button({icon: 'ui-icon-wrench', showLabel: false}).click(function() {
+						var cell = $(this);
+						var row = cell.parent().parent();
+						var member_id = row.find('.member_id').text();
+						var member_name = row.find('.member_name').text();
+						var total_point = row.find('.remit_point').text();
+						
+						$('#QUERY_REMIT_POINT input.member_id').val(member_id);
+						$('#QUERY_REMIT_POINT label.member_name').text(member_name);
+						$('#QUERY_REMIT_POINT label.total_point').text(total_point);
+						
+						var c = [];
+						var o = [];
+						var v = [];
+						var f1 = '', f2 = '';
+						
+						c.push('member_id');
+						o.push('=');
+						v.push(member_id);
+						
+						TABLE_REMIT_POINT.searchFor(c, o, v, f1, f2);
+						
+						$('#AREA1').hide();
+						$('#AREA2').show();
+					});
+					
+					if (!isAllowedAddPoint) {
+						buttonEditPoint.button('disable');
+					}
+					
+					var buttonPassword = $('<button type="button" style="margin-left: 4px;">Change Password</button>').button({icon: 'ui-icon-key', showLabel: false}).click(function() {
+						var cell = $(this);
+						var row = cell.parent().parent();
+						var member_id = row.find('.member_id').text();
+						
+						$('#FORM_CHANGE_PASSWORD input.member_id').val(member_id);
+						$('#DIALOG_CHANGE_PASSWORD').dialog('open');
+					});
+					
+					if (!isAllowedChangePassword) {
+						buttonPassword.button('disable');
+					}
+					
+					var btnPasswordHistory = $('<button type="button" style="margin-left: 4px;">View Password Change History</button>').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+						var cell = $(this);
+						var row = cell.parent().parent();
+						var member_id = row.find('.member_id').text();
+						
+						sendRequest.relay({
+							data: {
+								'RelayId': RELAY_ID_MEMBER_POINT,
+								'action': 'get_history',
+								'member_id': member_id,
+								'hst_id': '1'
+							},
+							success: function(data) {
+								var tokens = data.split(char_31);
+								var size = parseInt(tokens.shift(), 10);
+								var html = '';
+								for (var i = 0; i < size; i++) {
+									var lm_time = tokens.shift();
+									var lm_user = tokens.shift();
+									var hst_desc = tokens.shift();
+									
+									html += '<tr class="even">';
+									html += '<td>' + lm_time + '</td>';
+									html += '<td>' + lm_user + '</td>';
+									html += '<td>' + hst_desc + '</td>';
+									html += '</tr>\n';
+								}
+								$('#TABLE_HISTORY tbody').empty().append(html);
+								$('#DIALOG_HISTORY').dialog('open');
+							}
+						});
+					});
+					
+					$(e).append(buttonEditPoint).append(buttonPassword).append(btnPasswordHistory);
+				});
+				
+				rows.find('td.app_phone_no').each(function(i, e) {
+					var buttonEditPhone = $('<button type="button" style="margin-left: 4px;">Edit Phone No</button>').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+						var cell = $(this);
+						var row = cell.parent().parent();
+						var member_id = row.find('.member_id').text();
+						var app_phone_no = row.find('.app_phone_no label').text();
+						
+						$('#FORM_EDIT_PHONE input.member_id').val(member_id);
+						$('#FORM_EDIT_PHONE input.app_phone_no').val(app_phone_no);
+						$('#DIALOG_EDIT_PHONE').dialog('open');
+					});
+					
+					var button_sms = $('<button type="button">Send SMS</button>').button({icon: 'ui-icon-mail-closed', showLabel: false}).click(function() {
+						var button = $(this);
+						var row = button.parent().parent();
+						var member_id = row.find('td.member_id').text();
+						$('#FORM_SMS').resetForm().clearForm();
+						$('#FORM_SMS input.member_id').val(member_id);
+						$('#FORM_SMS textarea.sms_message').val(MSG_FOOTNOTE);
+						$('#DIALOG_SMS').dialog('open');
+					});
+					
+					var btnEditPhoneHistory = $('<button type="button" style="margin-left: 4px;">View Edit Phone History</button>').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+						var cell = $(this);
+						var row = cell.parent().parent();
+						var member_id = row.find('.member_id').text();
+						
+						sendRequest.relay({
+							data: {
+								'RelayId': RELAY_ID_MEMBER_POINT,
+								'action': 'get_history',
+								'member_id': member_id,
+								'hst_id': '2'
+							},
+							success: function(data) {
+								var tokens = data.split(char_31);
+								var size = parseInt(tokens.shift(), 10);
+								var html = '';
+								for (var i = 0; i < size; i++) {
+									var lm_time = tokens.shift();
+									var lm_user = tokens.shift();
+									var hst_desc = tokens.shift();
+									
+									html += '<tr class="even">';
+									html += '<td>' + lm_time + '</td>';
+									html += '<td>' + lm_user + '</td>';
+									html += '<td>' + hst_desc + '</td>';
+									html += '</tr>\n';
+								}
+								$('#TABLE_HISTORY tbody').empty().append(html);
+								$('#DIALOG_HISTORY').dialog('open');
+							}
+						});
+					});
+					
+					if (!isAllowedEditPhoneNo) {
+						buttonEditPhone.button('disable');
+					}
+					
+					var thisElement = $(e);
+					
+					var app_phone_no = thisElement.text();
+					
+					thisElement.empty().append(button_sms).append(buttonEditPhone).append(btnEditPhoneHistory).append('<label style="margin-left: 4px;">' + app_phone_no + '</label>');
+				});
+				
+				rows.find('td.member_login_id').each(function(i, e) {
+					var buttonEditLogin = $('<button type="button">Edit Login Id</button>').button({icon: 'ui-icon-pencil', showLabel: false}).click(function() {
+						var cell = $(this);
+						var row = cell.parent().parent();
+						var member_id = row.find('.member_id').text();
+						var member_login_id = row.find('.member_login_id label').text();
+						
+						$('#FORM_EDIT_LOGIN input.member_id').val(member_id);
+						$('#FORM_EDIT_LOGIN input.member_login_id').val(member_login_id);
+						$('#DIALOG_EDIT_LOGIN').dialog('open');
+					});
+					
+					var btnEditLoginHistory = $('<button type="button" style="margin-left: 4px;">View Edit Login Id History</button>').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+						var cell = $(this);
+						var row = cell.parent().parent();
+						var member_id = row.find('.member_id').text();
+						
+						sendRequest.relay({
+							data: {
+								'RelayId': RELAY_ID_MEMBER_POINT,
+								'action': 'get_history',
+								'member_id': member_id,
+								'hst_id': '3'
+							},
+							success: function(data) {
+								var tokens = data.split(char_31);
+								var size = parseInt(tokens.shift(), 10);
+								var html = '';
+								for (var i = 0; i < size; i++) {
+									var lm_time = tokens.shift();
+									var lm_user = tokens.shift();
+									var hst_desc = tokens.shift();
+									
+									html += '<tr class="even">';
+									html += '<td>' + lm_time + '</td>';
+									html += '<td>' + lm_user + '</td>';
+									html += '<td>' + hst_desc + '</td>';
+									html += '</tr>\n';
+								}
+								$('#TABLE_HISTORY tbody').empty().append(html);
+								$('#DIALOG_HISTORY').dialog('open');
+							}
+						});
+					});
+					
+					if (!isAllowedEditLoginId) {
+						buttonEditLogin.button('disable');
+					}
+					
+					var thisElement = $(e);
+					
+					var member_login_id = thisElement.text();
+					
+					thisElement.empty().append(buttonEditLogin).append(btnEditLoginHistory).append('<label style="margin-left: 4px;">' + member_login_id + '</label>');
+				});
+				
+				rows.find('td.remit_point').each(function(i, e) {
+					var btn = $('<button type="button" style="margin-left: 4px;">Show Point History</button>').button({icon: 'ui-icon-script', showLabel: false}).click(function() {
+						var cell = $(this);
+						var row = cell.parent().parent();
+						var member_id = row.find('.member_id').text();
+						
+						window.open('page.html?menu_row_id=54&member_id=' + member_id, 'point_history', 'width=1024,height=768');
+					});
+					
+					var thisElement = $(e);
+					var remit_point = thisElement.text();
+					thisElement.empty().append('<label>' + remit_point + '</label>').append(btn);
+				});
+			}
+		})[0];
+	}
+});
+
+$('#QUERY button.ok').button().click(function() {
+	var c = [];
+	var o = [];
+	var v = [];
+	var f1 = '', f2 = '';
+	
+	var member_name = $('#QUERY input.member_name').val();
+	if (member_name.length > 0) {
+		c.push('member_name');
+		o.push('LIKE');
+		v.push('%' + member_name + '%');
+	}
+	
+	var phone_no = $('#QUERY input.phone_no').val();
+	if (phone_no.length > 0) {
+		c.push('app_phone_no');
+		o.push('LIKE');
+		v.push(phone_no + '%');
+	}
+	
+	var arc_no = $('#QUERY input.arc_no').val();
+	if (arc_no.length > 0) {
+		c.push('arc_no');
+		o.push('LIKE');
+		v.push(arc_no + '%');
+	}
+	
+	var birthday_month = $('#QUERY select.birthday_month').val();
+	var birthday_date = $('#QUERY select.birthday_date').val();
+	if (birthday_month.length > 0 && birthday_date.length > 0) {
+		f1 = '(month(birthday) = ? and day(birthday) = ?)';
+		f2 = birthday_month + char_31 + birthday_date;
+	} else if (birthday_month.length > 0) {
+		f1 = 'month(birthday) = ?';
+		f2 = birthday_month;
+	} else if (birthday_date.length > 0) {
+		f1 = 'day(birthday) = ?';
+		f2 = birthday_date;
+	}
+	
+	var status_ids = [];
+	status_ids.push('0');
+	$('#QUERY input.status_id:checked').each(function(i, e) {
+		status_ids.push($(e).val());
+	});
+	
+	c.push('status_id');
+	o.push('IN');
+	v.push(status_ids.join(','));
+	
+	TABLE.searchFor(c, o, v, f1, f2);
+});
+
+var TABLE_REMIT_POINT = $('#TABLE_REMIT_POINT').createTable({
+	className: 'com.indogo.relay.member.MemberPointHistory',
+	disableUpdate: true,
+	disableDelete: true,
+	executeInsert: function(callback) {
+		$('#F').clearForm().resetForm();
+		var member_id = $('#QUERY_REMIT_POINT input.member_id').val();
+		$('#F input.member_id').val(member_id);
+		$('#F button.ok').data('action', 'insert');
+		$('#F button.ok').data('callback', callback);
+		$('#AREA2').hide();
+		$('#AREA3').show();
+	},
+	afterSetTableColumnEvent: function() {
+		
+	},
+	afterSetTableDataEvent: function(rows) {
+		
+	}
+})[0];
+
+$('#QUERY_REMIT_POINT button.cancel').button().click(function() {
+	$('#AREA2').hide();
+	$('#AREA1').show();
+});
+
+$('#F button.ok').button().click(function() {
+	var remit_point = $('#F input.remit_point').autoNumeric('get');
+	$('#F input.hidden_remit_point').val(remit_point);
+	var action = $(this).data('action');
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_MEMBER_POINT_HISTORY,
+			'action': action
+		},
+		success: function(total_point) {
+			$('#QUERY_REMIT_POINT label.total_point').text(total_point);
+			$('#AREA3').hide();
+			$('#AREA2').show();
+			
+			var member_id = $('#F input.member_id').val();
+			TABLE.funcGetTableBody().find('tr').each(function(i, e) {
+				var row = $(e);
+				if (member_id == row.find('.member_id').text()) {
+					row.find('.remit_point').text(total_point);
+					return false;
+				}
+			});
+			
+			var c = [];
+			var o = [];
+			var v = [];
+			var f1 = '', f2 = '';
+			
+			c.push('member_id');
+			o.push('=');
+			v.push(member_id);
+			
+			TABLE_REMIT_POINT.searchFor(c, o, v, f1, f2);
+		}
+	});
+});
+
+$('#F button.cancel').button().click(function() {
+	$('#AREA3').hide();
+	$('#AREA2').show();
+});
+
+$('#FORM_CHANGE_PASSWORD button.ok').button().click(function() {
+	var password1 = $('#FORM_CHANGE_PASSWORD input.password1').val();
+	var password2 = $('#FORM_CHANGE_PASSWORD input.password2').val();
+	
+	if (password1.length == 0)
+		return false;
+	if (password1.length != password2.length) {
+		alert('password not match');
+		return false;
+	}
+	
+	$('#FORM_CHANGE_PASSWORD').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_MEMBER_POINT,
+			'action': 'change_password'
+		},
+		success: function(total_point) {
+			$('#DIALOG_CHANGE_PASSWORD').dialog('close');
+		}
+	});
+});
+
+$('#FORM_CHANGE_PASSWORD button.cancel').button().click(function() {
+	$('#DIALOG_CHANGE_PASSWORD').dialog('close');
+});
+
+$('#FORM_EDIT_PHONE button.ok').button().click(function() {
+	$('#FORM_EDIT_PHONE').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_MEMBER_POINT,
+			'action': 'modify_app_phone_no'
+		},
+		success: function(total_point) {
+			var current_member_id = $('#FORM_EDIT_PHONE input.member_id').val();
+			var current_app_phone_no = $('#FORM_EDIT_PHONE input.app_phone_no').val();
+			var rows = TABLE.funcGetTableBody();
+			rows.find('td.member_id').each(function(i, e) {
+				var cell = $(e);
+				var member_id = cell.text();
+				if (member_id == current_member_id) {
+					var row = cell.parent();
+					row.find('td.app_phone_no label').text(current_app_phone_no);
+					return false;
+				}
+			});
+			$('#DIALOG_EDIT_PHONE').dialog('close');
+		}
+	});
+});
+
+$('#FORM_EDIT_PHONE button.cancel').button().click(function() {
+	$('#DIALOG_EDIT_PHONE').dialog('close');
+});
+
+$('#FORM_EDIT_LOGIN button.ok').button().click(function() {
+	$('#FORM_EDIT_LOGIN').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_MEMBER_POINT,
+			'action': 'modify_member_login_id'
+		},
+		success: function(total_point) {
+			var current_member_id = $('#FORM_EDIT_LOGIN input.member_id').val();
+			var current_member_login_id = $('#FORM_EDIT_LOGIN input.member_login_id').val();
+			var rows = TABLE.funcGetTableBody();
+			rows.find('td.member_id').each(function(i, e) {
+				var cell = $(e);
+				var member_id = cell.text();
+				if (member_id == current_member_id) {
+					var row = cell.parent();
+					row.find('td.member_login_id label').text(current_member_login_id);
+					return false;
+				}
+			});
+			$('#DIALOG_EDIT_LOGIN').dialog('close');
+		}
+	});
+});
+
+$('#FORM_EDIT_LOGIN button.cancel').button().click(function() {
+	$('#DIALOG_EDIT_LOGIN').dialog('close');
+});
+
+//# sourceURL=member_point.js
+</script>

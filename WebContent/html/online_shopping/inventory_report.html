@@ -1,0 +1,94 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"><label class="category_name">Product Category</label></td>
+			<td id="QUERY_ITEM_CATEGORY"></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_INVENTORY_REPORT = 'shop.inventory_report';
+var TABLE;
+
+var method = {
+	init: function() {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INVENTORY_REPORT,
+				'action': 'init'
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				var size = parseInt(tokens.shift(), 10);
+				var html = '';
+				for (var i = 0; i < size; i++) {
+					var category_id = tokens.shift();
+					var category_name = tokens.shift();
+					var item_name_prefix = tokens.shift();
+					html = html + '<label for="QUERY_ITEM_CATEGORY_' + category_id + '"><input type="checkbox" value="' + category_id + '" id="QUERY_ITEM_CATEGORY_' + category_id + '"/> ' + category_name + '</label>';
+				}
+				$('#QUERY_ITEM_CATEGORY').append(html);
+				
+				TABLE = $('#TABLE').createTable({
+					className: 'com.indogo.relay.onlineshopping.InventoryReport',
+					viewMode: true,
+					maxRow: 50,
+					afterSetTableColumnEvent: function() {
+						method.query();
+					},
+					afterSetTableDataEvent: function(rows) {
+					}
+				})[0];
+			}
+		});
+	},
+	query: function() {
+		var category_ids = [];
+		$('#QUERY_ITEM_CATEGORY input:checked').each(function(i, e) {
+			category_ids.push($(e).val());
+		});
+		
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INVENTORY_REPORT,
+				'action': 'get',
+				'category_ids': $.join(category_ids)
+			},
+			success: function(data) {
+				var count = parseInt(data, 10);
+				if (count > 0) {
+					var c = [];
+					var o = [];
+					var v = [];
+					var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+					
+					c.push('session_id');
+					o.push('=');
+					v.push(GLOBAL_SID);
+					
+					c.push('page_id');
+					o.push('=');
+					v.push('inventory_report');
+					
+					TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+				} else {
+					TABLE.funcEmptyTableBody();
+				}
+			}
+		});
+	}
+};
+
+$('#QUERY button.ok').button().click(method.query);
+
+method.init();
+
+//# sourceURL=inventory_report.js
+</script>

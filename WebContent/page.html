@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="PRAGMA" content="NO-CACHE" />
+		<meta http-equiv="CACHE-CONTROL" content="NO-STORE, NO-CACHE, MUST-REVALIDATE, POST-CHECK=0, PRE-CHECK=0" />
+		<meta http-equiv="EXPIRES" content="01 Jan 1970 00:00:00 GMT" />
+		<meta http-equiv="Last-Modified" content="01 Jan 1970 00:00:00 GMT" />
+		<meta http-equiv="If-Modified-Since" content="01 Jan 1970 00:00:00 GMT" />
+		<title></title>
+		<link rel="SHORTCUT ICON" href="favicon.ico"/>
+		<link rel="stylesheet" type="text/css" href="ui/lionsys/page.css" />
+		<link rel="stylesheet" type="text/css" href="ui/jquery-ui-1.12.1.custom/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="ui/lionsys/table.css" />
+		<link rel="stylesheet" type="text/css" href="ui/lionsys/menu.css" />
+		<link rel="stylesheet" type="text/css" href="ui/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="ui/jquery-plugin/spectrum-1.8.0/spectrum.css" />
+		<script type="text/javascript" src="ui/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
+		<script type="text/javascript" src="ui/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+		<script type="text/javascript" src="ui/jquery-ui/js/jquery.form-2.64.js"></script>
+		<script type="text/javascript" src="ui/jquery-plugin/jquery.query-2.1.7.js"></script>
+		<script type="text/javascript" src="ui/webtoolkit/webtoolkit.sha256.js"></script>
+		<script type="text/javascript" src="ui/jquery-plugin/js.cookie.js"></script>
+		<script type="text/javascript" src="ui/lionsys/menu.js"></script>
+		<script type="text/javascript" src="ui/lionsys/page.js"></script>
+		<script type="text/javascript" src="ui/lionsys/table.js"></script>
+		<script type="text/javascript" src="ui/jquery-plugin/autoNumeric.js"></script>
+		<script type="text/javascript" src="ui/jquery-plugin/jQuery.print.min.js"></script>
+		<script type="text/javascript" src="ui/Chart.bundle.min.js"></script>
+		<script type="text/javascript" src="ui/jquery-plugin/spectrum-1.8.0/spectrum.js"></script>
+		<script type="text/javascript" src="ui/moment-2.20.1/moment.js"></script>
+		<script type="text/javascript" src="ui/moment-2.20.1/locale/zh-tw.js"></script>
+		<style type="text/css">
+			#footer{
+				position:fixed;
+				left:0px;
+				right:0px;
+				bottom:0;
+				height:48px;
+				overflow:hidden;
+			}
+		</style>
+		<!--[if lt IE 7]>
+		<style type="text/css">
+			#footer{
+				position: absolute;
+				right: auto;
+				bottom: auto;
+				left: expression( ( -10 - footer.offsetWidth + ( document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth ) + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+				top: expression( ( 0 - footer.offsetHeight + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+			}
+		</style>
+		<![endif]-->
+	</head>
+	<body class="ui-font-normal" style="background-color: #fffff; margin: 0px;">
+		<div id="ueMenuDialog" class="ui-widget ui-widget-content ui-widget-header" style="position: fixed; right: 0; left: 0; z-index: 10; top: 0;">
+			<table>
+				<tr>
+					<td nowrap style="width: 16px; height: 16px"><img src="ui/jquery-ui/ajax-loader.gif" id="winbond-menu-loading"/></td>
+					<td nowrap><table style="border-collapse: collapse" class="ui-widget"><tr><td nowrap class="ui-state-default" style="padding: 5px; cursor: pointer;"><span id="ueLogout">Logout</span></td></tr></table></td>
+					<td nowrap id="winbond-menu"></td>
+				</tr>
+			</table>
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$('#ueLogout').parent().hover(
+						function() {
+							$(this).addClass('ui-state-hover');
+						}, function() {
+							$(this).removeClass('ui-state-hover');
+						}
+					);
+				});
+			</script>
+		</div>
+		<div id="ueMenuDialogMargin" style="margin-top: 50px;"></div>
+		<div id="ueErrorDialog" class="ui-widget ui-font-normal" style="margin-top: 15px;">
+			<div class="ui-state-error ui-corner-all" style="padding: 5px .7em;">
+				<table width="100%">
+					<tr>
+						<td>
+							<input id="btnErrorDialogClose" type="button" value="close"/>
+							<input id="btnErrorDialog" type="button" value="detail"/>
+						</td>
+					</tr>
+					<tr>
+						<td nowrap>
+							<h2>Error at function: <span style="font-weight: bold" id="ueErrorTag"></span></h2>
+						</td>
+					</tr>
+					<tr>
+						<td nowrap>
+							<span id="ueErrorMsg">&nbsp;</span>
+							<span id="ueErrorStack">&nbsp;</span>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="ueWarningDialog" class="ui-widget ui-font-normal" style="margin-top: 15px;">
+			<div class="ui-state-highlight ui-corner-all" style="padding: 5px .7em;">
+				<table width="100%">
+					<tr>
+						<td>
+							<input id="btnWarningDialogClose" type="button" value="close"/>
+						</td>
+					</tr>
+					<tr>
+						<td nowrap>
+							<pre id="ueWarningMsg"></pre>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="ueLoadingDialog" title="Please wait a moment">
+			<div id="ueLoadingDialogProgressBar"></div>
+		</div>
+		<div style="margin-top: 15px; margin-bottom:60px; padding-left: 10px; padding-right: 10px" id="winbond-page" class="ui-font-normal">
+		</div>
+		<div id="footer">
+			<table style="width:100%; height:100%; background-color:#aaaaaa" cellspacing=1>
+				<tr style="background-color:#dddddd">
+					<td nowrap style="padding:0 5px 0 5px; border:1px solid #ffffff;" colspan="10">navigation:&nbsp;<span id="winbond-menu-nav" style="font-weight: bold"></span><span id="winbond-menu-nav-title" style="font-weight: bold"></span></td>
+				</tr>
+				<tr style="background-color:#dddddd">
+					<td nowrap style="padding:0 5px 0 5px; border:1px solid #ffffff;">id: <span id="ueUserInfo" style="font-weight:bold;"></span></td>
+					<td nowrap style="padding:0 5px 0 5px; border:1px solid #ffffff;">name: <span id="ueAliasId" style="font-weight:bold;"></span></td>
+					<td nowrap style="padding:0 5px 0 5px; border:1px solid #ffffff;">role: <span id="ueRoleName" style="font-weight:bold;"></span></td>
+					<td nowrap style="padding:0 5px 0 5px; border:1px solid #ffffff;">idle time:&nbsp;<span id="ueIdleTime" style="font-weight:bold;"></span>&nbsp;second(s)</td>
+					<td nowrap style="padding:0 5px 0 5px; border:1px solid #ffffff;">version: <span id="ueServerVersion" style="font-weight:bold;"></span></td>
+					<td nowrap style="padding:0 5px 0 5px; border:1px solid #ffffff;">server: <span id="ueServerName" style="font-weight:bold;"></span></td>
+					<td nowrap style="padding:0 5px 0 5px; border:1px solid #ffffff;">environment: <span id="ueEnvironmentName" style="font-weight:bold;"></span></td>
+					<td nowrap style="padding-left:10px; border:1px solid #ffffff; width:100%">&nbsp;</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

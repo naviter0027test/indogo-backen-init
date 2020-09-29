@@ -1,0 +1,128 @@
+<div id="AREA1">
+	<form id="F">
+		<table class="maintenance">
+			<tbody>
+				<tr>
+					<td class="category">Excel File</td>
+					<td><input type="file" name="upload"/></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="ok" type="button">Upload</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+	<table id="TABLE" class="winbond-table" style="margin-top: 20px;">
+		<thead>
+			<tr>
+				<td>No.</td>
+				<td>Shipping Date</td>
+				<td>Office</td>
+				<td>Shipping Number</td>
+				<td>Destination Area</td>
+				<td>Invoice No</td>
+				<td>Expected Money</td>
+				<td>Collected Money</td>
+				<td>Fee</td>
+				<td>Comment</td>
+				<td>Filename</td>
+				<td>Sales Status</td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<button type="button" id="IMPORT_HEIMAO_SUBMIT" style="margin-top: 20px;">Submit</button>
+</div>
+
+<style type="text/css">
+#TABLE tbody tr.error td {
+	background-color: red;
+	color: white;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_SALES_IMPORT_HEIMAO = 'shop.sales_import_heimao';
+
+function refreshTable() {
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_SALES_IMPORT_HEIMAO,
+			'action': 'get'
+		}, success: function(data) {
+			if (data.length > 0) {
+				var tokens = data.split(char_31);
+				var html = '';
+				for (var i = 0; i < tokens.length; i++) {
+					var cells = tokens[i].split(char_30);
+					
+					var is_error = false;
+					if (cells[12].length > 0) {
+						var status_id = parseInt(cells[12], 10);
+						is_error = status_id != 3;
+					} else {
+						is_error = true;
+					}
+					
+					if (is_error) {
+						html = html + '<tr class="even error">';
+					} else {
+						html = html + '<tr class="even">';
+					}
+					
+					for (var j = 0; j < 12; j++) {
+						html = html + '<td>' + cells[j] + '</td>';
+					}
+					html = html + '</tr>';
+				}
+				$('#TABLE tbody').append(html);
+			}
+		}
+	});
+}
+
+$('#F button.ok').button().click(function() {
+	$('#F').formSubmit({
+		data: {
+			'F': 'Relay',
+			'RelayId': RELAY_ID_SALES_IMPORT_HEIMAO,
+			'action': 'upload'
+		}, success: function(data) {
+			$('#F').clearForm().resetForm();
+			$('#TABLE tbody').empty();
+			
+			var insert_count = parseInt(data, 10);
+			if (insert_count > 0) {
+				refreshTable();
+			}
+		}
+	});
+});
+
+refreshTable();
+
+$('#IMPORT_HEIMAO_SUBMIT').button().click(function() {
+	var error_count = $('#TABLE tbody tr.error').length;
+	if (error_count > 0) {
+		page.showWarningDialog('there are ' + error_count + ' error count');
+		return false;
+	}
+	
+	sendRequest.relay({
+		data: {
+			'RelayId': RELAY_ID_SALES_IMPORT_HEIMAO,
+			'action': 'insert'
+		}, success: function(data) {
+			$('#TABLE tbody').empty();
+		}
+	});
+});
+
+//# sourceURL=sales_import_heimao.js
+</script>

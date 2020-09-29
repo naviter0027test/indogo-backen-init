@@ -1,0 +1,180 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category">Invoice No.</td>
+			<td><input type="text" class="sales_id"/></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table class="receipt">
+		<tr>
+			<td>
+				<table class="maintenance">
+					<tbody>
+						<tr>
+							<td class="category" rowspan="3">To</td>
+							<td class="member_name"></td>
+						</tr>
+						<tr>
+							<td class="final_phone_no"></td>
+						</tr>
+						<tr>
+							<td><span class="ship_address"></span><span class="freight_info" style="font-style: italic;"></span></td>
+						</tr>
+						<tr>
+							<td class="category">Date</td>
+							<td class="lm_time_created"></td>
+						</tr>
+						<tr>
+							<td class="category">Sales ID</td>
+							<td><span id="SHOW_SALES_ID"></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td style="text-align: right;">
+				<div style="margin-left: 50px;">
+					<img src="ui/logo.png" style="width: 200px;"/>
+					<div class="company_address"></div>
+					<div>Telp: <span class="customer_service_phone"></span></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<table id="ITEM_LIST" class="winbond-table receipt" style="margin-top: 20px">
+		<thead>
+			<tr>
+				<td>No</td>
+				<td>Nama</td>
+				<td>Kode</td>
+				<td>Warna</td>
+				<td>Ukuran</td>
+				<td>Qty</td>
+				<td>Price (NT$)</td>
+				<td>Total (NT$)</td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+		<tfoot>
+			<tr>
+				<td colspan="7" style="text-align: right;">Ongkos Kirim (NT$)</td>
+				<td class="ship_fee" style="text-align: right; background-color: white;"></td>
+			</tr>
+			<tr id="WALLET_USED_ROW">
+				<td colspan="7" style="text-align: right;">Uang Saku (NT$)</td>
+				<td class="wallet_used" style="text-align: right; background-color: white;"></td>
+			</tr>
+			<tr>
+				<td colspan="7" style="text-align: right; font-weight: bold;">Total (NT$)</td>
+				<td class="total_amount" style="text-align: right; background-color: white; font-weight: bold;"></td>
+			</tr>
+			<tr>
+				<td colspan="7" style="text-align: right; font-weight: bold;">Poin yang dipakai</td>
+				<td class="point_used" style="text-align: right; background-color: white; font-weight: bold;"></td>
+			</tr>
+			<tr>
+				<td colspan="8" style="text-align: center; padding-top: 20px; padding-bottom: 20px;"><b>Terima Kasih</b><br/>Anda telah berbelanja di IndoGO</td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+<style type="text/css">
+table.receipt {
+	min-width: 980px;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_SALES_ITEM_RECEIPT = 'shop.sales_item_receipt';
+var IS_POPUP_WINDOW = $.query.get('menu_row_id') == '35';
+
+$('#QUERY button.ok').button().click(function() {
+	var sales_id = $('#QUERY input.sales_id').val();
+	if (sales_id.length > 0) {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_SALES_ITEM_RECEIPT,
+				'action': 'init',
+				'sales_id': sales_id
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				
+				var company_name = tokens.shift();
+				var company_address = tokens.shift();
+				var customer_service_phone = tokens.shift();
+				var member_name = tokens.shift();
+				var final_phone_no = tokens.shift();
+				var ship_address = tokens.shift();
+				var lm_time_created = tokens.shift();
+				var ship_fee = tokens.shift();
+				var total_amount = tokens.shift();
+				var point_used = tokens.shift();
+				var freight_id = tokens.shift();
+				var wallet_used = tokens.shift();
+				
+				$('#AREA1 .company_address').text(company_address);
+				$('#AREA1 .customer_service_phone').text(customer_service_phone);
+				$('#AREA1 .member_name').text(member_name);
+				$('#AREA1 .final_phone_no').text(final_phone_no);
+				$('#AREA1 .ship_address').text(ship_address);
+				$('#AREA1 .lm_time_created').text(lm_time_created);
+				$('#AREA1 .ship_fee').text(ship_fee);
+				$('#AREA1 .total_amount').text(total_amount);
+				$('#AREA1 .point_used').text(point_used);
+				if (freight_id == '3') {
+					$('#AREA1 .freight_info').append('<div>KIRIM VIA POST</div>')
+				}
+				if (wallet_used.length > 0) {
+					$('#AREA1 .wallet_used').text('-' + wallet_used);
+					$('#WALLET_USED_ROW').show();
+				} else {
+					$('#AREA1 .wallet_used').text('');
+					$('#WALLET_USED_ROW').hide();
+				}
+				$('#SHOW_SALES_ID').text(sales_id);
+
+				var html = '';
+				var item_count = parseInt(tokens.shift(), 10);
+				for (var i = 0; i < item_count; i++) {
+					var item_desc = tokens.shift();
+					var item_name = tokens.shift();
+					var sales_qty = tokens.shift();
+					var sales_price = tokens.shift();
+					var sales_total = tokens.shift();
+					var color_name = tokens.shift();
+					var size_name = tokens.shift();
+					
+					html = html + '<tr class="even">';
+					html = html + '<td>' + (i+1) + '</td>';
+					html = html + '<td>' + item_desc + '</td>';
+					html = html + '<td>' + item_name + '</td>';
+					html = html + '<td>' + color_name + '</td>';
+					html = html + '<td>' + size_name + '</td>';
+					html = html + '<td style="text-align: right;">' + sales_qty + '</td>';
+					html = html + '<td style="text-align: right;">' + sales_price + '</td>';
+					html = html + '<td style="text-align: right;">' + sales_total + '</td>';
+					html = html + '</tr>';
+				}
+				$('#ITEM_LIST tbody').empty().append(html);
+			}
+		});
+	}
+});
+
+$('#SIGNATURE').text('Print by ' + $('#ueAliasId').text());
+$('#TIMESTAMP').text(new Date());
+
+if (IS_POPUP_WINDOW) {
+	var SALES_ID = '' + $.query.get('sales_id');
+	$('#QUERY input.sales_id').val(SALES_ID);
+	$('#QUERY button.ok').click();
+	$('#QUERY').hide();
+}
+
+//# sourceURL=sales_item_receipt.js
+</script>

@@ -1,0 +1,428 @@
+<div id="AREA1">
+	<table id="QUERY" class="query" style="margin-bottom: 10px;">
+		<tr>
+			<td class="category"><span class="lang_shop_name">Shop</span></td>
+			<td id="QUERY_SHOP"></td>
+		</tr>
+		<tr>
+			<td class="category">Adjust Time</td>
+			<td><input type="text" class="start_date"/> <select class="start_hour"></select>:<select class="start_min"></select>:<select class="start_sec"></select> to <input type="text" class="end_date"/> <select class="end_hour"></select>:<select class="end_min"></select>:<select class="end_sec"></select></td>
+		</tr>
+		<tr>
+			<td class="category"></td>
+			<td><button type="button" class="ok">Search</button></td>
+		</tr>
+	</table>
+	<table id="TABLE">
+	</table>
+</div>
+
+<div id="AREA2">
+	<form id="F">
+		<table class="maintenance">
+			<thead>
+				<tr>
+					<td class="category" colspan="2">Inventory Adjust</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="category"><span class="lang_shop_name">shop_name</span></td>
+					<td><select class="shop_name" name="shop_id"></select></td>
+				</tr>
+				<tr>
+					<td class="category"><span class="lang_item_list">item_list</span></td>
+					<td>
+						<table id="ITEM_LIST_ADD" class="query" style="margin-bottom: 10px; margin-top: 10px;">
+							<tr>
+								<td class="category"><span class="lang_item_desc">item_desc</span></td>
+								<td><input type="text" class="item_desc"/></td>
+							</tr>
+							<tr>
+								<td class="category"><span class="lang_item_name">item_name</span></td>
+								<td><textarea class="item_name"></textarea></td>
+							</tr>
+							<tr>
+								<td class="category"></td>
+								<td><button id="ADD_ITEM" type="button"><span class="lang_add_item">add item</span></button> <button id="BROWSE_ITEM" type="button"><span class="lang_browse_item">browse item</span></button></td>
+							</tr>
+						</table>
+						<table id="ITEM_LIST" class="winbond-table" style="margin-bottom: 10px;">
+							<thead>
+								<tr>
+									<td><input type="checkbox" id="ITEM_LIST_CHECK_ALL"/></td>
+									<td><button type="button" id="ITEM_LIST_DELETE_CHECKED">delete_checked</button></td>
+									<td><span class="lang_comment">Comment</span></td>
+									<td><span class="lang_adjust_qty">adjust_qty</span></td>
+									<td><span class="lang_current_qty">current_qty</span></td>
+									<td><span class="lang_item_image">item_image</span></td>
+									<td><span class="lang_item_name">item_name</span></td>
+									<td><span class="lang_item_desc">item_desc</span></td>
+									<td><span class="lang_category_name">category_name</span></td>
+									<td><span class="lang_color_name">color_name</span></td>
+									<td><span class="lang_size_name">size_name</span></td>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td>
+						<button class="create" type="button">Adjust</button> <button class="cancel" type="button">Cancel</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+
+<div id="AREA3">
+	<table id="TABLE_ITEM">
+	</table>
+</div>
+
+<script type="text/javascript">
+var RELAY_ID_INVENTORY_ADJUST = 'shop.inventory_adjust';
+var RELAY_ID_ITEM = 'shop.item';
+var RELAY_ID_INVENTORY = 'shop.inventory';
+var TABLE, TABLE_ITEM;
+var SINGLE_SHOP_ID;
+
+$('#AREA2, #AREA3').hide();
+$('#QUERY input.start_date, #QUERY input.end_date').createDatePicker();
+$('#QUERY input.start_date, #QUERY input.end_date').datepicker('setDate', new Date());
+
+var html = '';
+for (var i = 0; i <= 23; i++) {
+	html = html + '<option value="' + i + '">' + i + '</option>';
+}
+$('#QUERY select.start_hour, #QUERY select.end_hour').append(html);
+$('#QUERY select.start_hour').val('0');
+$('#QUERY select.end_hour').val('23');
+
+html = '';
+for (var i = 0; i <= 59; i++) {
+	html = html + '<option value="' + i + '">' + i + '</option>';
+}
+$('#QUERY select.start_min, #QUERY select.start_sec, #QUERY select.end_min, #QUERY select.end_sec').append(html);
+$('#QUERY select.start_min, #QUERY select.start_sec').val('0');
+$('#QUERY select.end_min, #QUERY select.end_sec').val('59');
+
+function onItemSelected(row) {
+	var item_id = row.find('td.item_id').text();
+	if ($('#ITEM_LIST tbody').find('input.item_id_' + item_id).length == 0) {
+		var item_image_url = row.find('td.item_image img').attr('src');
+		var item_name = row.find('td.item_name').text();
+		var item_desc = row.find('td.item_desc').text();
+		var category_name = row.find('td.category_name').text();
+		var color_name = row.find('td.color_name').text();
+		var size_name = row.find('td.size_name').text();
+
+		var shop_id = $('#F select.shop_name').val();
+
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INVENTORY_ADJUST,
+				'action': 'get_current_qty',
+				'shop_id': shop_id,
+				'item_id': item_id
+			},
+			success: function(current_qty) {
+				var html = '<tr class="even"><td><input type="checkbox" class="item_check"/></td><td><button type="button" class="item_delete">item_delete</button></td>';
+				html = html + '<td><input type="text" class="comment" style="width: 200px;"/></td>';
+				html = html + '<td><input type="text" class="adjust_qty" style="width: 100px;"/></td>';
+				html = html + '<td>' + current_qty + '</td>';
+				html = html + '<td><img src="' + item_image_url + '"/><input type="hidden" class="item_id item_id_' + item_id + '" value="' + item_id + '"/></td>';
+				html = html + '<td>' + item_name + '</td>';
+				html = html + '<td>' + item_desc + '</td>';
+				html = html + '<td>' + category_name + '</td>';
+				html = html + '<td>' + color_name + '</td>';
+				html = html + '<td>' + size_name + '</td>';
+				html = html + '</tr>';
+				
+				var newRow = $(html);
+				newRow.find('button.item_delete').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+					$(this).parent().parent().remove();
+				});
+				
+				newRow.find('input.adjust_qty').autoNumeric('init', {vMin: '0', vMax: '99999999999999999999999999999', aSep: ',', strictDigitOnly: true}).incrementOnEnter();
+				
+				$('#ITEM_LIST tbody').append(newRow);
+			}
+		});
+	}
+};
+
+var method = {
+	init: function() {
+		sendRequest.relay({
+			data: {
+				'RelayId': RELAY_ID_INVENTORY_ADJUST,
+				'action': 'init'
+			},
+			success: function(data) {
+				var tokens = data.split(char_31);
+				
+				var shop_list_size = parseInt(tokens.shift(), 10);
+				var html_query_shop = '';
+				var html_shop_select = '';
+				if (shop_list_size > 1) {
+					html_shop_select = '<option value=""></option>';
+				}
+				for (var i = 0; i < shop_list_size; i++) {
+					var shop_id = tokens.shift();
+					var shop_name = tokens.shift();
+					html_query_shop = html_query_shop + '<label for="QUERY_SHOP_' + shop_id + '"><input type="checkbox" value="' + shop_id + '" id="QUERY_SHOP_' + shop_id + '"/>' + shop_name + '</label> ';
+					html_shop_select = html_shop_select + '<option value="' + shop_id + '">' + shop_name + '</option>';
+					SINGLE_SHOP_ID = shop_id;
+				}
+				$('#QUERY_SHOP').append(html_query_shop);
+				$('#F select.shop_name').append(html_shop_select);
+				
+				var lang_shop_name = tokens.shift();
+				var lang_item_list = tokens.shift();
+				var lang_item_desc = tokens.shift();
+				var lang_item_name = tokens.shift();
+				var lang_add_item = tokens.shift();
+				var lang_browse_item = tokens.shift();
+				var lang_current_qty = tokens.shift();
+				var lang_adjust_qty = tokens.shift();
+				var lang_item_image = tokens.shift();
+				var lang_category_name = tokens.shift();
+				var lang_color_name = tokens.shift();
+				var lang_size_name = tokens.shift();
+				
+				$('span.lang_shop_name').text(lang_shop_name);
+				$('span.lang_item_list').text(lang_item_list);
+				$('span.lang_item_desc').text(lang_item_desc);
+				$('span.lang_item_name').text(lang_item_name);
+				$('span.lang_add_item').text(lang_add_item);
+				$('span.lang_browse_item').text(lang_browse_item);
+				$('span.lang_current_qty').text(lang_current_qty);
+				$('span.lang_adjust_qty').text(lang_adjust_qty);
+				$('span.lang_item_image').text(lang_item_image);
+				$('span.lang_category_name').text(lang_category_name);
+				$('span.lang_color_name').text(lang_color_name);
+				$('span.lang_size_name').text(lang_size_name);
+				
+				TABLE = $('#TABLE').createTable({
+					className: 'com.indogo.relay.onlineshopping.InventoryAdjust',
+					viewMode: true,
+					afterSetTableColumnEvent: function() {
+						var button_new_adjust = $('<button style="margin-left: 4px;">New Adjust</button>').button().click(function() {
+							$('#F').clearForm().resetForm();
+							$('#ITEM_LIST tbody').empty();
+							$('#AREA2').show();
+							$('#AREA1').hide();
+							
+							if ($('#F select.shop_name option').length == 1) {
+								$('#F select.shop_name').val(SINGLE_SHOP_ID);
+							}
+						});
+						
+						$('#TABLE button.export-to-excel').parent().append(button_new_adjust);
+						
+						method.query();
+					},
+					afterSetTableDataEvent: function(rows) {
+						
+					}
+				})[0];
+				
+				TABLE_ITEM = $('#TABLE_ITEM').createTable({
+					className: 'com.indogo.relay.onlineshopping.Item',
+					viewMode: true,
+					afterSetTableColumnEvent: function() {
+						
+					},
+					afterSetTableDataEvent: function(rows) {
+						rows.each(function(i, e) {
+							onItemSelected($(e));
+						});
+					}
+				})[0];
+				
+				$('#ADD_ITEM').button().click(function() {
+					var shop_id = $('#F select.shop_name').val();
+					if (shop_id.length <= 0) {
+						page.showWarningDialog('shop cannot empty');
+						return false;
+					}
+					
+					var item_name = $.trim($('#ITEM_LIST_ADD textarea.item_name').val());
+					var item_desc = $('#ITEM_LIST_ADD input.item_desc').val();
+					
+					if (item_name.length > 0) {
+						sendRequest.relay({
+							data: {
+								'RelayId': RELAY_ID_ITEM,
+								'action': 'sql_temp_table',
+								'item_name': item_name
+							}, success: function(data) {
+								var count = parseInt(data, 10);
+								if (count > 0) {
+									var c = [];
+									var o = [];
+									var v = [];
+									var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+									
+									if (item_desc.length > 0) {
+										c.push('item_desc');
+										o.push('LIKE');
+										v.push('%' + item_desc + '%');
+									}
+									
+									sessionId = GLOBAL_SID;
+									pageId = 'item';
+									joinSql = 'a.item_id = b.long1';
+									
+									TABLE_ITEM.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+								}
+								
+								$('#ITEM_LIST_ADD textarea.item_name').val('');
+							}
+						});
+					} else if (item_desc.length > 0) {
+						var c = [];
+						var o = [];
+						var v = [];
+						var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+						
+						c.push('item_desc');
+						o.push('LIKE');
+						v.push('%' + item_desc + '%');
+						
+						TABLE_ITEM.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+					}
+				});
+				
+				$('#BROWSE_ITEM').button().click(function() {
+					var shop_id = $('#F select.shop_name').val();
+					if (shop_id.length <= 0) {
+						page.showWarningDialog('shop cannot empty');
+						return false;
+					}
+
+					window.open('page.html?menu_row_id=23&item_disabled=0&item_hide=0', 'browse_item', 'width=800,height=600');
+				});
+				
+				$('#ITEM_LIST_DELETE_CHECKED').button({icon: 'ui-icon-trash', showLabel: false}).click(function() {
+					$('#ITEM_LIST tbody input.item_check:checked').each(function(i, e) {
+						$(e).parent().parent().remove();
+					});
+					$('#ITEM_LIST_CHECK_ALL').prop('checked', false);
+				});
+
+				$('#ITEM_LIST_CHECK_ALL').change(function() {
+					var value = $(this).prop('checked');
+					$('#ITEM_LIST tbody input.item_check').prop('checked', value);
+				});
+				
+				$('#F button.create').button().click(method.insert);
+				
+				$('#F button.cancel').button().click(function() {
+					$('#AREA2').hide();
+					$('#AREA1').show();
+				});
+			}
+		});
+	},
+	query: function() {
+		var c = [];
+		var o = [];
+		var v = [];
+		var f1 = '', f2 = '', sessionId = '', pageId = '', joinSql = '';
+		
+		var shop_ids = [];
+		$('#QUERY_SHOP input:checked').each(function(i, e) {
+			shop_ids.push($(e).val());
+		});
+		if (shop_ids.length == 0) {
+			$('#QUERY_SHOP input').each(function(i, e) {
+				shop_ids.push($(e).val());
+			});
+		}
+		
+		c.push('shop_id');
+		o.push('IN');
+		v.push($.join(shop_ids, ','));
+		
+		var start_date = $('#QUERY input.start_date').val();
+		var end_date = $('#QUERY input.end_date').val();
+		if (start_date.length > 0 && end_date.length > 0) {
+			var start_hour = $('#QUERY select.start_hour').val();
+			var start_min = $('#QUERY select.start_min').val();
+			var start_sec = $('#QUERY select.start_sec').val();
+			
+			var end_hour = $('#QUERY select.end_hour').val();
+			var end_min = $('#QUERY select.end_min').val();
+			var end_sec = $('#QUERY select.end_sec').val();
+			
+			c.push('lm_time');
+			o.push('BETWEEN');
+			v.push(start_date + ' ' + start_hour + ':' + start_min + ':' + start_sec + char_31 + end_date + ' ' + end_hour + ':' + end_min + ':' + end_sec);
+		} else if (start_date.length > 0) {
+			var start_hour = $('#QUERY select.start_hour').val();
+			var start_min = $('#QUERY select.start_min').val();
+			var start_sec = $('#QUERY select.start_sec').val();
+			
+			c.push('lm_time');
+			o.push('>=');
+			v.push(start_date + ' ' + start_hour + ':' + start_min + ':' + start_sec);
+		} else if (end_date.length > 0) {
+			var end_hour = $('#QUERY select.end_hour').val();
+			var end_min = $('#QUERY select.end_min').val();
+			var end_sec = $('#QUERY select.end_sec').val();
+			
+			c.push('lm_time');
+			o.push('<=');
+			v.push(end_date + ' ' + end_hour + ':' + end_min + ':' + end_sec);
+		}
+		
+		TABLE.searchFor(c, o, v, f1, f2, sessionId, pageId, joinSql);
+	},
+	insert: function() {
+		var items = [];
+		$('#ITEM_LIST tbody tr').each(function(i, e) {
+			var row = $(e);
+			var item_id = row.find('input.item_id').val();
+			var adjust_qty = row.find('input.adjust_qty').autoNumeric('get');
+			if (adjust_qty.length == 0) {
+				page.showWarningDialog('adjust qty cannot empty');
+				return false;
+			}
+			var comment = row.find('input.comment').val();
+			items.push(item_id + char_30 + adjust_qty + char_30 + comment);
+		});
+		
+		if (items.length > 0) {
+			$('#F').formSubmit({
+				data: {
+					'F': 'Relay',
+					'RelayId': RELAY_ID_INVENTORY_ADJUST,
+					'action': 'insert',
+					'items': $.join(items)
+				}, success: function(row) {
+					TABLE.funcInsertRow(row);
+					$('#AREA2').hide();
+					$('#AREA1').show();
+				}
+			});
+		}
+	}
+};
+
+$('#QUERY button.ok').button().click(method.query);
+
+$('#F select.shop_name').change(function() {
+	$('#ITEM_LIST tbody').empty();
+});
+
+method.init();
+
+//# sourceURL=inventory_adjust.js
+</script>

@@ -1,0 +1,64 @@
+<div id="AREA1">
+	<table class="query">
+		<tr>
+			<td class="category">Total Point</td>
+			<td><label id="TOTAL_POINT"></label></td>
+		</tr>
+		<tr>
+			<td class="category">Free Point Transaction Count</td>
+			<td><label id="FREE_POINT_COUNT"></label></td>
+		</tr>
+		<tr>
+			<td class="category">Free Point Used</td>
+			<td><label id="FREE_POINT_USED"></label></td>
+		</tr>
+	</table>
+	<table id="REPORT" class="query" style="margin-top: 8px;">
+		<thead>
+			<tr>
+				<td class="category">Point</td>
+				<td class="category">Member Count</td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+
+<style type="text/css">
+#REPORT tbody tr td {
+	text-align: right;
+}
+</style>
+
+<script type="text/javascript">
+var RELAY_ID_MEMBER_POINT_REPORT = 'member.member_point_report';
+var char_31 = String.fromCharCode(31);
+var char_30 = String.fromCharCode(30);
+
+sendRequest.relay({
+	data: {
+		'RelayId': RELAY_ID_MEMBER_POINT_REPORT,
+		'action': 'init'
+	}, success: function(data) {
+		var tokens = data.split(char_31);
+		
+		var total_point = parseInt(tokens.shift(), 10);
+		$('#TOTAL_POINT').text(toCurrency(total_point));
+		
+		var table = $('#REPORT tbody');
+		var size = parseInt(tokens.shift(), 10);
+		for (var i = 0; i < size; i++) {
+			var cells = tokens.shift().split(char_30);
+			var remit_point = parseInt(cells.shift(), 10);
+			var member_count = parseInt(cells.shift(), 10);
+			table.append('<tr><td>' + toCurrency(remit_point) + '</td><td>' + toCurrency(member_count) + '</td></tr>');
+		}
+		
+		var free_point_count = parseInt(tokens.shift(), 10);
+		var free_point_used = parseInt(tokens.shift(), 10);
+		$('#FREE_POINT_COUNT').text(toCurrency(free_point_count));
+		$('#FREE_POINT_USED').text(toCurrency(free_point_used));
+	}
+});
+</script>

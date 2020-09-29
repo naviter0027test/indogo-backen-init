@@ -1,0 +1,343 @@
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Data Selection</a></li>
+		<li><a href="#tabs-2">View</a></li>
+		<li><a href="#tabs-3">Chart</a></li>
+	</ul>
+	<div id="tabs-1">
+		%auto-page%
+	</div>
+	<div id="tabs-2">
+		<span id="toolbar">
+			<button id="btnExport">Export</button>
+		</span>
+		<table id="result"></table>
+	</div>
+	<div id="tabs-3">
+		<span id="toolbar-chart">
+			<button class="chart-type" name="Line">Trend</button>&nbsp;
+			<button class="chart-type" name="Bar">Bar</button>
+		</span>
+		<br/><br/>
+		<div id="divChartSelection">
+		</div>
+	</div>
+</div>
+
+<div id="dialogExport" title="Export">
+	<p><input type="radio" name="exportItem" value="Excel" checked />Excel</p>
+	<p><input type="radio" name="exportItem" value="CSV" />CSV</p>
+</div>
+
+<style type="text/css">
+	#ds-table {
+		border-collapse: collapse;
+	}
+	#ds-table tr td {
+		border: 1px solid #eee;
+		padding: 4px 12px 4px 12px;
+	}
+	#ds-table .component.list table {
+		border-collapse: collapse;
+	}
+	#ds-table .component.list table tr td {
+		border: 0px;
+	}
+</style>
+
+<script type="text/javascript">
+	var PAGE_ID = $('#ds-table').attr('pageid');
+	
+	var AutoPageQueryFunction = function(options) {
+		options.data.F = 'AutoPage';
+		options.data.PageId = PAGE_ID;
+		sendRequest.basic(options);
+	};
+	var tableFunctionList = $('#result').createTable({
+		ajaxFunction: AutoPageQueryFunction,
+		tableName: 'SESSION_TABLE',
+		rowCanBeHighlighted: true
+	});
+
+	$('#btnExport').button({
+		icons: {
+			primary: 'ui-icon-disk'
+		}
+	}).click(function() {
+		$('#dialogExport').dialog('open');
+	});
+
+	$('.chart-type').button().click(function() {
+		var v = $(this).attr('name');
+		$('#divChartSelection').empty();
+		sendRequest.basic({
+			data: {
+				'F': 'AutoPage',
+				'Action': 'ChartSelection',
+				'Type': v,
+				'PageId': PAGE_ID
+			},
+			success: function(data) {
+				$('#divChartSelection').empty().append(data);
+			}
+		});
+	});
+	
+	$('#dialogExport').dialog({
+		autoOpen: false,
+		modal: true,
+		width: 200,
+		height: 160,
+		buttons: {
+			'Cancel': function() {
+				$(this).dialog('close');
+			},
+			'Ok': function() {
+				var v = $('#dialogExport input:checked').val();
+				sendRequest.basic({
+					data: {
+						'F': 'AutoPage',
+						'Action': 'Export',
+						'Type': v,
+						'PageId': PAGE_ID
+					},
+					success: function(data) {
+						sendRequest.downloadFile(data);
+					}
+				});
+				$('#dialogExport').dialog('close');
+			}
+		}
+	});
+
+	$('#tabs').tabs();
+	$('#ds-table .show').hide();
+	$('#ds-table .component.datetime').createDateTimePicker();
+	$('#ds-table .component.date').createDatePicker();
+	$('#ds-table .component.list').each(function(entryIndex, entry) {
+		var div = $(entry);
+		var name = div.attr('name');
+
+		div.append('<table class="ui-widget ui-widget-content"><tr>' +
+				'<td><select class="source" multiple size=8 style="width: 15em"></select></td>' +
+				'<td><input type="button" class="move-r" style="width: 3.5em; margin:0" value="&gt;"/><br/>' +
+				'<input type="button" class="move-rr" style="width: 3.5em; margin:0" value="&gt;&gt;"/><br/>' +
+				'<input type="button" class="move-l" style="width: 3.5em; margin:0" value="&lt;"/><br/>' +
+				'<input type="button" class="move-ll" style="width: 3.5em; margin:0" value="&lt;&lt;"/><br/></td>' +
+				'<td><select class="target" multiple size=8 style="width: 15em"></select></td></tr>' +
+				'</table>');
+
+		var source = div.find('select.source');
+		var target = div.find('select.target');
+		source.dblclick(function() {
+			div.find('input.move-r').click();
+		});
+		target.dblclick(function() {
+			div.find('input.move-l').click();
+		});
+		div.find('input.move-r').click(function() {
+			source.find('option:selected').remove().clone().appendTo(target);
+		});
+		div.find('input.move-l').click(function() {
+			target.find('option:selected').remove().clone().appendTo(source);
+		});
+		div.find('input.move-rr').click(function() {
+			source.find('option').remove().clone().appendTo(target);
+		});
+		div.find('input.move-ll').click(function() {
+			target.find('option').remove().clone().appendTo(source);
+		});
+	});
+
+	var totalStep = Number($('#ds-table').attr('totalstep'));
+	for (var i = 1; i < totalStep; i++) {
+		$('#area-'+i).hide();
+		$('#show-'+i).show();
+	}
+	$('#area-0 .component.button.cancel').hide();
+
+	var getListData = function(p1, p2) {
+		var input = p1;
+		var step = p2;
+		
+		var form = $('<form enctype="multipart/form-data"></form>');
+		var v;
+		var hidden;
+		for (var i = 0; i < step; i++) {
+			v = $('#input-'+i);
+			hidden = $('<input type="hidden" name="' + v.attr('name') + '"/>');
+			hidden.val($.data(v[0], 'send'));
+			form.append(hidden);
+		}
+		var source = input.find('select.source');
+		source.empty();
+		input.find('select.target').empty();
+		form.formSubmit({
+			data: {
+				'F': 'AutoPage',
+				'Action': 'SelectionList',
+				'PageId': PAGE_ID,
+				'InputName': input.attr('name')
+			},
+			success: function(data) {
+				source.append(data);
+			}
+		});
+	}
+
+	var getComboBoxData = function(p1, p2) {
+		var input = p1;
+		var step = p2;
+		
+		var form = $('<form enctype="multipart/form-data"></form>');
+		var v;
+		var hidden;
+		for (var i = 0; i < step; i++) {
+			v = $('#input-'+i);
+			hidden = $('<input type="hidden" name="' + v.attr('name') + '"/>');
+			hidden.val($.data(v[0], 'send'));
+			form.append(hidden);
+		}
+		input.empty();
+		form.formSubmit({
+			data: {
+				'F': 'AutoPage',
+				'Action': 'SelectionList',
+				'PageId': PAGE_ID,
+				'InputName': input.attr('name')
+			},
+			success: function(data) {
+				input.append(data);
+			}
+		});
+	}
+
+	var input0 = $('#input-0');
+	if (input0.hasClass('list'))
+		getListData(input0, 0);
+	else if (input0.hasClass('combobox'))
+		getComboBoxData(input0, 0);
+
+	$('#ds-table .component.button').click(function() {
+		var button = $(this);
+		var step = Number(button.attr('step'));
+		if (button.hasClass('ok')) {
+			var input = $('#input-'+step);
+			var val;
+			var text;
+			if (input.hasClass('list')) {
+				val = '';
+				input.find('select.target option').each(function(entryIndex, entry) {
+					if (entryIndex == 0) {
+						text = $(entry).text();
+					}
+					else if (entryIndex < 5) {
+						text += ',' + $(entry).text();
+					}
+					else if (entryIndex == 5) {
+						text += ',...';
+					}
+					val += $(entry).text() + String.fromCharCode(31);
+				});
+			}
+			else {
+				val = input.val();
+				if (val == undefined)
+					val = input.attr('value');
+				else if (val.length == 0)
+					val = input.attr('value');
+				text = val;
+			}
+			
+			if (val == undefined)
+				return;
+			if (val.length == 0)
+				return;
+
+			$.data(input[0], 'send', val);
+			
+			$('#show-'+step).empty().append(text).show();
+			$('#area-'+step).hide();
+			$('#goto-'+step).removeAttr('disabled');
+			step++;
+			$('#show-'+step).hide();
+			$('#area-'+step).show();
+			$('#goto-'+step).attr('disabled', true);
+
+			input = $('#input-'+step);
+			if (input.hasClass('list')) {
+				getListData(input, step);
+			}
+			else if (input.hasClass('combobox')) {
+				getComboBoxData(input, step);
+			}
+		}
+		else if (button.hasClass('cancel')) {
+			$('#show-'+step).empty().show();
+			$('#area-'+step).hide();
+			$('#goto-'+step).attr('disabled', true);
+			step--;
+			$('#show-'+step).hide();
+			$('#area-'+step).show();
+			$('#goto-'+step).attr('disabled', true);
+		}
+		else if (button.hasClass('step')) {
+			for (var i = step+1; i < totalStep; i++) {
+				$('#show-'+i).empty().show();
+				$('#area-'+i).hide();
+				$('#goto-'+i).attr('disabled', true);
+			}
+			$('#area-'+step).show();
+			$('#show-'+step).empty().hide();
+			$('#goto-'+step).attr('disabled', true);
+		}
+
+		if ($('#ds-table .component.button.step:disabled').length == 0) {
+			$('#btnQuery').removeAttr('disabled');
+		}
+		else {
+			$('#btnQuery').attr('disabled', true);
+		}
+	});
+
+	if ($('#ds-table .component.button.step:disabled').length == 0) {
+		$('#btnQuery').removeAttr('disabled');
+	}
+	else {
+		$('#btnQuery').attr('disabled', true);
+	}
+
+	$('#btnQuery').click(function() {
+		var form = $('<form enctype="multipart/form-data"></form>');
+		var v;
+		var hidden;
+		for (var i = 0; i < totalStep; i++) {
+			v = $('#input-'+i);
+			hidden = $('<input type="hidden" name="' + v.attr('name') + '"/>');
+			hidden.val($.data(v[0], 'send'));
+			form.append(hidden);
+		}
+		form.formSubmit({
+			showLoadingDialog: true,
+			data: {
+				'F': 'AutoPage',
+				'Action': 'Query',
+				'PageId': PAGE_ID
+			},
+			success: function(data) {
+				var rowCount = Number(data);
+				for (var i = 0; i < tableFunctionList.length; i++) {
+					tableFunctionList[i].funcSetMaxRow(rowCount);
+					tableFunctionList[i].funcReload();
+				}
+				$('#tabs').tabs('select', 1);
+			},
+			beforeSend: function() {
+				$('#btnQuery').attr('disabled', true);
+			},
+			complete: function() {
+				$('#btnQuery').removeAttr('disabled');
+			}
+		});
+	});
+</script>
